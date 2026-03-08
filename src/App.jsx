@@ -39,6 +39,7 @@ import { Treino } from './components/Treino';
 import { Sono } from './components/Sono';
 import { Nutricao } from './components/Nutricao';
 import { BrainDump } from './components/BrainDump';
+import { Auth } from './components/Auth';
 import { supabase } from './supabase';
 
 // --- CONFIGURAÇÕES INICIAIS E DADOS MOCKADOS ---
@@ -410,49 +411,24 @@ export default function App() {
   const [newCr, setNewCr] = useState({ disciplina: '', nota: '', creditos: '4' });
   const [expandedSubject, setExpandedSubject] = useState(null);
   const [syncStatus, setSyncStatus] = useState(null); // null | 'saving' | 'saved' | 'error'
-  const [isLocked, setIsLocked] = useState(() => {
-    return localStorage.getItem('hubvida_session') !== 'active';
-  });
-  const [passcode, setPasscode] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
+  const [session, setSession] = useState(null);
 
-  // Bloqueio de Segurança (Anti-Inspect solicitado)
   useEffect(() => {
-    if (isLocked) return;
-    const handleContextMenu = (e) => e.preventDefault();
-    const handleKeyDown = (e) => {
-      // Bloqueia F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
-      if (
-        e.keyCode === 123 || 
-        (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
-        (e.ctrlKey && e.keyCode === 85)
-      ) {
-        e.preventDefault();
-      }
-    };
-    document.addEventListener('contextmenu', handleContextMenu);
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('contextmenu', handleContextMenu);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isLocked]);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
 
-  const handleUnlock = (e) => {
-    e?.preventDefault();
-    if (passcode === '2024') {
-      setIsLocked(false);
-      localStorage.setItem('hubvida_session', 'active');
-    } else {
-      setErrorMsg('Código incorreto.');
-      setTimeout(() => setErrorMsg(''), 2000);
-    }
-  };
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
 
-  const handleLogout = () => {
-    setIsLocked(true);
-    localStorage.removeItem('hubvida_session');
-    setPasscode('');
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
   };
 
   // Listener de eventos de sync
@@ -654,6 +630,10 @@ export default function App() {
       totalDisciplinas: faculdadeData.length,
     };
   }, [faculdadeData]);
+
+  if (!session) {
+    return <Auth />;
+  }
 
   // Use the merged components logic in return
   return (
