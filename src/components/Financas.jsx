@@ -39,7 +39,7 @@ export const Financas = ({
         </div>
       </div>
 
-      <div className="flex overflow-x-auto bg-[#12141a] border border-[#1f222a] rounded-xl p-1 shadow-md custom-scrollbar snap-x">
+      <div className="flex overflow-x-auto bg-[#12141a] border border-[#1f222a] rounded-xl p-1 shadow-md scrollbar-hide snap-x">
         {MONTHS.map((month) => (
           <button
             key={month}

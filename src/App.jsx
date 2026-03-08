@@ -24,6 +24,8 @@ import {
   ShieldCheck,
   Lock,
   ChevronRight,
+  Utensils,
+  Lightbulb,
 } from 'lucide-react';
 
 import { VisaoGeral } from './components/VisaoGeral';
@@ -35,6 +37,8 @@ import { Roadmap } from './components/Roadmap';
 import { Rotina } from './components/Rotina';
 import { Treino } from './components/Treino';
 import { Sono } from './components/Sono';
+import { Nutricao } from './components/Nutricao';
+import { BrainDump } from './components/BrainDump';
 import { supabase } from './supabase';
 
 // --- CONFIGURAÇÕES INICIAIS E DADOS MOCKADOS ---
@@ -781,9 +785,11 @@ export default function App() {
             { name: 'Visão Geral', icon: Home },
             { name: 'Ph.D. Roadmap', icon: GraduationCap },
             { name: 'Rotina Diária', icon: Calendar },
+            { name: 'Nutrição & Base', icon: Utensils },
             { name: 'Controle de Sono', icon: Moon },
-            { name: 'Produção Acadêmica', icon: FileText },
             { name: 'Academia (Treino)', icon: Dumbbell },
+            { name: 'Brain Dump', icon: Lightbulb },
+            { name: 'Produção Acadêmica', icon: FileText },
             { name: 'Competências', icon: Brain },
             { name: 'Faculdade (ADM)', icon: Library },
             { name: 'Finanças', icon: Wallet },
@@ -961,6 +967,10 @@ export default function App() {
                sleepGoal={sleepGoal} setSleepGoal={setSleepGoal}
                sleepData={sleepData} setSleepData={setSleepData}
             />
+          ) : activeTab === 'Nutrição & Base' ? (
+            <Nutricao />
+          ) : activeTab === 'Brain Dump' ? (
+            <BrainDump />
           ) : activeTab === 'Ph.D. Roadmap' ? (
             <Roadmap
               crData={crData}

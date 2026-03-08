@@ -1,3 +1,10 @@
 @import "tailwindcss";
 
-/* Opcional: Adicionar variáveis ou personalizações de CSS abaixo, mas mantendo a base limpa para o Tailwind. */
+/* Ocultar barra de rolagem mas manter funcionalidade touch/mouse */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
