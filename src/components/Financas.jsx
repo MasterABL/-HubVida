@@ -39,12 +39,12 @@ export const Financas = ({
         </div>
       </div>
 
-      <div className="flex bg-[#12141a] border border-[#1f222a] rounded-xl overflow-hidden p-1 shadow-md">
+      <div className="flex overflow-x-auto bg-[#12141a] border border-[#1f222a] rounded-xl p-1 shadow-md custom-scrollbar snap-x">
         {MONTHS.map((month) => (
           <button
             key={month}
             onClick={() => setActiveMonth(month)}
-            className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${
+            className={`flex-none snap-start px-6 py-3 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${
               activeMonth === month
                 ? 'bg-yellow-500 text-slate-900 shadow'
                 : 'text-slate-500 hover:text-white hover:bg-[#1a1d24]'
