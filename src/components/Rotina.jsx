@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Plus,
   Trash2,
@@ -42,6 +42,24 @@ export const Rotina = ({
   const progress = routine.timeline.length > 0
     ? Math.round((checkedCount / routine.timeline.length) * 100)
     : 0;
+
+  // Gerenciamento do Tracker de Academia Semanal usando Local Storage Simples
+  const [gymAttendance, setGymAttendance] = useState(() => {
+    const saved = localStorage.getItem('hubvida_gym_tracker');
+    return saved ? JSON.parse(saved) : { 0: 'pending', 1: 'pending', 2: 'pending', 3: 'pending', 4: 'pending', 5: 'pending', 6: 'pending' };
+  });
+
+  useEffect(() => {
+    localStorage.setItem('hubvida_gym_tracker', JSON.stringify(gymAttendance));
+  }, [gymAttendance]);
+
+  const toggleGymAttendance = (dayIndex) => {
+    setGymAttendance(prev => {
+      const current = prev[dayIndex];
+      const nextMap = { 'pending': 'done', 'done': 'missed', 'missed': 'pending' };
+      return { ...prev, [dayIndex]: nextMap[current] };
+    });
+  };
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -168,44 +186,39 @@ export const Rotina = ({
             <p className="text-sm text-slate-300 leading-relaxed">{routine.meta}</p>
           </div>
 
-          {/* Frequência semanal */}
+          {/* Frequência semanal da Academia (Tracker) */}
           <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-6 shadow-sm">
             <h3 className="font-bold text-slate-300 flex items-center gap-2 mb-4 text-xs uppercase tracking-wider">
-              <Dumbbell className="w-4 h-4 text-rose-500" /> Frequência Semanal
+              <Dumbbell className="w-4 h-4 text-rose-500" /> Frequência da Academia
             </h3>
-            <div className="flex justify-between gap-1 mb-3">
-              {dias.map((d, i) => (
-                <div
-                  key={i}
-                  className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold shadow-sm ${
-                    diasAtivos.includes(i)
-                      ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
-                      : 'bg-[#0f1015] text-slate-600 border border-[#1f222a]'
-                  }`}
-                >
-                  {d}
-                </div>
-              ))}
-            </div>
-            <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">
-              * Academia: Ter, Qui, Sex e Domingo
-            </p>
-          </div>
+            <div className="flex justify-between gap-1 mb-4">
+              {dias.map((d, i) => {
+                const status = gymAttendance[i];
+                let colorClass = 'bg-[#0f1015] text-slate-600 border border-[#1f222a] hover:bg-slate-800'; // pending
+                
+                if (status === 'done') {
+                  colorClass = 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+                } else if (status === 'missed') {
+                  colorClass = 'bg-rose-500/20 text-rose-400 border border-rose-500/30';
+                }
 
-          {/* Gym essentials */}
-          <div className="bg-rose-500/5 border border-rose-500/20 rounded-xl p-6">
-            <h3 className="font-bold text-rose-400 flex items-center gap-2 mb-4 text-xs uppercase tracking-wider">
-              <Briefcase className="w-4 h-4" /> GYM ESSENTIALS
-            </h3>
-            <div className="space-y-2 text-xs text-rose-300 font-medium">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-rose-500 flex-shrink-0" />
-                Garrafinha de Água
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-rose-500 flex-shrink-0" />
-                Shorts / Tênis
-              </div>
+                return (
+                  <button
+                    key={i}
+                    onClick={() => toggleGymAttendance(i)}
+                    title={status === 'done' ? 'Fui!' : status === 'missed' ? 'Faltei!' : 'Clique para marcar status'}
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold shadow-sm transition-all sm:hover:scale-105 active:scale-95 ${colorClass}`}
+                  >
+                    {d}
+                  </button>
+                );
+              })}
+            </div>
+            
+            <div className="flex flex-wrap gap-x-4 gap-y-2 text-[9px] font-bold text-slate-600 uppercase tracking-widest pt-3 border-t border-[#1f222a]/50">
+               <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-[#1f222a]"></div> Pendente/Descanso</span>
+               <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-emerald-500/70"></div> Fui</span>
+               <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-rose-500/70"></div> Faltei</span>
             </div>
           </div>
         </div>

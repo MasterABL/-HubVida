@@ -104,10 +104,10 @@ export const VisaoGeral = ({
       <div className="bg-gradient-to-r from-[#12141a] to-[#1a1d24] border border-yellow-500/20 rounded-xl p-6 md:p-8 shadow-xl flex flex-col md:flex-row justify-between items-center gap-6">
         <div>
           <h1 className="text-2xl font-black italic tracking-wider text-yellow-500 uppercase flex items-center gap-3">
-            <Zap className="w-6 h-6" /> Mente de Elite
+            <Zap className="w-6 h-6" /> Comando Central
           </h1>
           <p className="text-sm text-slate-400 mt-2 font-medium">
-            Centro de Comando e Visão Estratégica Acadêmica
+            Visão Estratégica e Controle de Performance Pessoal
           </p>
         </div>
         {/* Cotações em Tempo Real */}

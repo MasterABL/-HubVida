@@ -120,93 +120,128 @@ export const Nutricao = () => {
         <Brain className="w-4 h-4" /> Plano de Guerra: Seg à Sex
       </h2>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="space-y-6">
         
-        {/* BLOCO: MANHÃ */}
+        {/* BLOCO 1: CAFÉ DA MANHÃ (3 OPÇÕES) */}
         <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-5 md:p-6 shadow-md relative overflow-hidden">
-           <div className="absolute top-0 right-0 p-4 opacity-10">
-              <Coffee className="w-24 h-24" />
+           <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+              <Coffee className="w-40 h-40" />
            </div>
            
-           <div className="inline-block px-3 py-1 bg-sky-500/10 text-sky-400 rounded-lg text-xs font-bold uppercase tracking-wider mb-4 border border-sky-500/20">
-             07:50 - Empresa
+           <div className="mb-6 relative z-10">
+             <div className="inline-block px-3 py-1 bg-sky-500/10 text-sky-400 rounded-lg text-xs font-bold uppercase tracking-wider mb-2 border border-sky-500/20">
+               07:50 - Empresa
+             </div>
+             <h3 className="text-xl font-bold text-white">Café da Manhã: Ganho de Massa</h3>
+             <p className="text-sm text-slate-400 mt-1">Escolha 1 das 3 opções formadoras de músculo diariamente.</p>
            </div>
-           <h3 className="text-xl font-bold text-white mb-2">Café da Manhã Sustentável</h3>
-           
-           <div className="bg-[#1a1d24] border border-slate-700/50 rounded-lg p-4 mb-4">
-             <ul className="space-y-3">
-               <li className="flex gap-3 text-slate-300">
-                 <div className="mt-1 w-1.5 h-1.5 rounded-full bg-yellow-500 shrink-0"></div>
-                 <p><span className="font-bold text-white">Carboidrato:</span> Pão com manteiga (Garante energia rápida pro cérebro logo cedo).</p>
-               </li>
-               <li className="flex gap-3 text-emerald-400 font-medium">
-                 <div className="mt-1 w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></div>
-                 <p><span className="font-bold">Proteína Padrão-Ouro (Adição Obrigatória):</span> Tomar 1 porção de Whey Protein junto para ancorar o índice glicêmico e segurar a fome até o almoço.</p>
-               </li>
-             </ul>
-           </div>
-        </div>
 
-        {/* BLOCO: ALMOÇO */}
-        <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-5 md:p-6 shadow-md relative overflow-hidden">
-           <div className="absolute top-0 right-0 p-4 opacity-10">
-              <Flame className="w-24 h-24" />
-           </div>
-           
-           <div className="inline-block px-3 py-1 bg-amber-500/10 text-amber-500 rounded-lg text-xs font-bold uppercase tracking-wider mb-4 border border-amber-500/20">
-             12:xx - Almoço Farto
-           </div>
-           <h3 className="text-xl font-bold text-white mb-2">A Base do Superávit Modesto</h3>
-           
-           <div className="bg-[#1a1d24] border border-slate-700/50 rounded-lg p-4 mb-4">
-             <ul className="space-y-3">
-               <li className="flex gap-3 text-slate-300">
-                 <div className="mt-1 w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></div>
-                 <p><span className="font-bold text-white">Prato Colorido:</span> Arroz, Feijão (ferro/fribra), saladas/verduras à vontade.</p>
-               </li>
-               <li className="flex gap-3 text-slate-300">
-                 <div className="mt-1 w-1.5 h-1.5 rounded-full bg-red-500 shrink-0"></div>
-                 <p><span className="font-bold text-white">Proteína Magra:</span> Asas opções de mistura da empresa (Corte Magro ou Frango) + Os ovos mexidos, se disponíveis.</p>
-               </li>
-             </ul>
-           </div>
-           <p className="text-xs text-slate-400 italic mt-3 bg-slate-800/30 p-2 rounded border border-slate-700/50">
-             *Essa refeição rica é tão protetora que te blindará contra a fome na parte da tarde e te sustentará para o treino do final do dia.
-           </p>
-        </div>
-
-        {/* BLOCO: PRE-TREINO */}
-        <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-5 md:p-6 shadow-md relative overflow-hidden lg:col-span-2">
-           <div className="absolute top-0 right-0 p-4 opacity-5">
-              <BatteryCharging className="w-32 h-32" />
-           </div>
-           
-           <div className="inline-block px-3 py-1 bg-purple-500/10 text-purple-400 rounded-lg text-xs font-bold uppercase tracking-wider mb-4 border border-purple-500/20">
-             Ter/Qui/Sex - Falta de Tempo
-           </div>
-           <h3 className="text-xl font-bold text-white mb-2">O Pré-Treino Dinâmico</h3>
-           
-           <p className="text-sm text-slate-300 mb-6 max-w-2xl">
-              Nesses dias corridos da semana, onde não há janela de horas para digestão pré-academia, o plano é não "encher o estômago pesado" e confiar na digestão longa do almoço:
-           </p>
-
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-[#1a1d24] border-l-4 border-l-purple-500 shadow-sm rounded-r-lg p-4">
-                 <h4 className="font-bold text-purple-400 mb-1">A Opção Líquida + Adrenalina (Ideal)</h4>
-                 <p className="text-sm text-slate-400">Jejum calórico estratégico (apenas água gelada) na janela entre almoço e treino. A sensação de estômago vazio eleva noradrenalina, dando mais agressividade lá dentro da SmartFit.</p>
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative z-10">
+              <div className="bg-[#1a1d24] border border-slate-700/50 hover:border-sky-500/30 transition-colors rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                  <h4 className="font-bold text-sky-400 mb-2">Opção 1: Clássico Prático</h4>
+                  <ul className="text-sm text-slate-300 space-y-1.5 mb-4">
+                    <li>• 1 a 2 Pães (com manteiga)</li>
+                    <li>• 1 scoop de Whey (água ou leite)</li>
+                  </ul>
+                </div>
+                <div>
+                  <div className="flex justify-between text-[10px] font-mono text-slate-500 bg-[#0f1115] p-2 rounded mb-2 border border-[#1f222a]">
+                    <span>30g P</span><span>25g C</span><span>12g G</span>
+                  </div>
+                  <p className="text-xs font-bold text-emerald-500 text-right">R$ 130/mês</p>
+                </div>
               </div>
 
-              <div className="bg-[#1a1d24] border-l-4 border-l-emerald-500 shadow-sm rounded-r-lg p-4">
-                 <h4 className="font-bold text-emerald-400 mb-1">A Opção Sólida Rápida (Plano B)</h4>
-                 <p className="text-sm text-slate-400">Bateu tontura nervosa no fim da tarde? Uma (1) banana na saída do trabalho ou um scoop isolado de Whey com água garantem estabilidade.</p>
+              <div className="bg-[#1a1d24] border border-slate-700/50 hover:border-amber-500/30 transition-colors rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                  <h4 className="font-bold text-amber-500 mb-2">Opção 2: Ovos (Proteína Pura)</h4>
+                  <ul className="text-sm text-slate-300 space-y-1.5 mb-4">
+                    <li>• 3 Ovos Mexidos</li>
+                    <li>• 1 Fatia de Queijo</li>
+                    <li>• (Pão Opcional)</li>
+                  </ul>
+                </div>
+                <div>
+                  <div className="flex justify-between text-[10px] font-mono text-slate-500 bg-[#0f1115] p-2 rounded mb-2 border border-[#1f222a]">
+                    <span>22g P</span><span>0g C</span><span>15g G</span>
+                  </div>
+                  <p className="text-xs font-bold text-emerald-500 text-right">R$ 80/mês</p>
+                </div>
+              </div>
+
+              <div className="bg-[#1a1d24] border border-slate-700/50 hover:border-purple-500/30 transition-colors rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                  <h4 className="font-bold text-purple-400 mb-2">Opção 3: Iogurte Proteico</h4>
+                  <ul className="text-sm text-slate-300 space-y-1.5 mb-4">
+                    <li>• 1 Iogurte Natural (170g)</li>
+                    <li>• 1 Scoop de Whey</li>
+                    <li>• 1 Banana amasadinha</li>
+                  </ul>
+                </div>
+                <div>
+                  <div className="flex justify-between text-[10px] font-mono text-slate-500 bg-[#0f1115] p-2 rounded mb-2 border border-[#1f222a]">
+                    <span>35g P</span><span>35g C</span><span>5g G</span>
+                  </div>
+                  <p className="text-xs font-bold text-emerald-500 text-right">R$ 170/mês</p>
+                </div>
               </div>
            </div>
-           <p className="text-xs text-white font-bold tracking-wide mt-4 flex items-center gap-2">
-             <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
-             LEI MAIOR PARA ESSES DIAS: CREATINA DEVE SER TOMADA NO MEIO DA TARDE INFALIVELMENTE.
-           </p>
         </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* BLOCO 2: ALMOÇO E JANTA (REFEIÇÕES BASE) */}
+          <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-5 shadow-md flex flex-col justify-between">
+            <div>
+              <div className="inline-block px-3 py-1 bg-amber-500/10 text-amber-500 rounded-lg text-xs font-bold uppercase tracking-wider mb-4 border border-amber-500/20">
+                12:00 - Almoço da Empresa
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">A Base do Superávit Modesto</h3>
+              <p className="text-sm text-slate-300 mb-4 border-l-2 border-amber-500 pl-3">
+                Arroz, Feijão, saladas à vontade + Proteína Magra (Frango / Opções da empresa) ou Ovos. Essa é sua maior injeção de energia sustentável pro resto do dia.
+              </p>
+            </div>
+            <div className="border-t border-[#1f222a] pt-4 mt-auto">
+              <div className="inline-block px-3 py-1 bg-slate-500/10 text-slate-400 rounded-lg text-xs font-bold uppercase tracking-wider mb-2 border border-slate-500/20">
+                20:30+ - Opcional Pós-Treino / Janta
+              </div>
+              <p className="text-sm text-slate-300 border-l-2 border-slate-500 pl-3">
+                Não complique. Replique a lógica do almoço em menor quantidade, OU repita a "Opção 1" do Café (Pão com Ovos ou Pão com Whey) para não dormir de estômago tão cheio e prejudicar o sono.
+              </p>
+            </div>
+          </div>
+
+          {/* BLOCO 3: SUPLEMENTAÇÃO E PRÉ-TREINO T/Q/S */}
+          <div className="bg-[#12141a] border border-indigo-500/30 rounded-xl p-5 shadow-md flex flex-col justify-between relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-3 opacity-5 pointer-events-none">
+              <Zap className="w-24 h-24" />
+            </div>
+            
+            <div className="relative z-10">
+              <div className="inline-block px-3 py-1 bg-indigo-500/10 text-indigo-400 rounded-lg text-xs font-bold uppercase tracking-wider mb-4 border border-indigo-500/20">
+                Guia de Suplementos & Pré-Treino
+              </div>
+              <h3 className="text-lg font-bold text-white mb-4">A Lógica da Mente Focada</h3>
+              
+              <ul className="space-y-3">
+                <li className="bg-[#1a1d24] p-3 rounded-lg border border-slate-700/50">
+                  <span className="font-bold text-indigo-400 block mb-1">A Regra da Creatina (5g)</span>
+                  <p className="text-xs text-slate-300">Horário livre. O importante é tomar todos os dias sem falta. Como o almoço é forte, tomar após o almoço ajuda na absorção pelos carboidratos da refeição.</p>
+                </li>
+                
+                <li className="bg-[#1a1d24] p-3 rounded-lg border border-slate-700/50">
+                  <span className="font-bold text-emerald-400 block mb-1">Ter/Qui/Sex (A Salvação Rápida)</span>
+                  <p className="text-xs text-slate-300">Ir treinar assim que sai do inglês cria o "Jejum de Adrenalina". Se precisar comer pra não ter tontura: Um iogurte no "Boa" ou uma (1) Banana madura 30 minutos antes do treino salvarão a sua vida e energia.</p>
+                </li>
+                
+                <li className="bg-[#1a1d24] p-3 rounded-lg border border-slate-700/50">
+                  <span className="font-bold text-sky-400 block mb-1">Whey Protein</span>
+                  <p className="text-xs text-slate-300">Use primariamente no Café da Manhã. Misturá-lo somente com Água ajuda a acelerar a digestão matinal e bater os macros rápido antes de trampar.</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
