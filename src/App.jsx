@@ -671,57 +671,6 @@ export default function App() {
         </button>
       </div>
 
-      {isLocked && (
-        <div className="fixed inset-0 z-[10000] bg-[#0a0b0e] flex items-center justify-center p-4">
-          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-yellow-500/10 rounded-full blur-[120px]" />
-          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-yellow-500/5 rounded-full blur-[120px]" />
-
-          <div className="w-full max-w-sm bg-[#12141a] border border-[#1f222a] rounded-3xl p-8 shadow-2xl relative overflow-hidden text-center animate-in zoom-in-95 duration-500">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent" />
-            
-            <div className="w-20 h-20 bg-yellow-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-yellow-500/20 shadow-[0_0_30px_rgba(234,179,8,0.1)]">
-              <Lock className="w-10 h-10 text-yellow-500" />
-            </div>
-
-            <h1 className="text-2xl font-black text-white italic tracking-tight mb-2 uppercase">
-              Portal de <span className="text-yellow-500">Acesso</span>
-            </h1>
-            <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-8">
-              HubVida — Proteção Ativa
-            </p>
-
-            <form onSubmit={handleUnlock} className="space-y-4">
-              <div className="relative group">
-                <input
-                  type="password"
-                  placeholder="Código Mestre"
-                  value={passcode}
-                  onChange={(e) => setPasscode(e.target.value)}
-                  autoFocus
-                  className="w-full bg-[#0a0b0e] border border-[#1f222a] rounded-xl px-4 py-4 text-center text-xl font-black tracking-[0.5em] text-yellow-500 focus:outline-none focus:border-yellow-500/50 transition-all placeholder:text-slate-800 placeholder:tracking-normal placeholder:font-bold placeholder:text-xs"
-                />
-              </div>
-
-              {errorMsg && (
-                <p className="text-rose-500 text-[9px] font-black uppercase tracking-widest animate-pulse">
-                  {errorMsg}
-                </p>
-              )}
-
-              <button
-                type="submit"
-                className="w-full bg-yellow-500 hover:bg-yellow-400 text-slate-900 font-black uppercase tracking-widest py-4 rounded-xl transition-all shadow-[0_10px_20px_rgba(0,0,0,0.3)] hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2"
-              >
-                AUTORIZAR <ChevronRight className="w-4 h-4" />
-              </button>
-            </form>
-            
-            <p className="mt-8 text-[9px] text-slate-700 font-bold uppercase tracking-widest">
-              Dashboard Privado · Dr. Abimael Balbino
-            </p>
-          </div>
-        </div>
-      )}
 
       {/* Overlay for mobile clicking */}
       {isMobileMenuOpen && (
