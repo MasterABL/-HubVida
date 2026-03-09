@@ -93,18 +93,18 @@ export const BrainDump = () => {
         <div className="inline-flex items-center justify-center p-4 bg-indigo-500/10 rounded-full mb-4 border border-indigo-500/20">
            <Brain className="w-10 h-10 text-indigo-400" />
         </div>
-        <h1 className="text-3xl font-black italic tracking-widest text-white mb-2">
+        <h1 className="text-3xl font-black italic tracking-widest text-hub-strong mb-2">
           BRAIN <span className="text-indigo-400">DUMP</span>
         </h1>
-        <p className="text-slate-400 text-sm max-w-xl mx-auto">
+        <p className="text-hub-muted text-sm max-w-xl mx-auto">
           O armazenamento externo da sua mente. Não guarde tarefas aleatórias ou estresse no seu cérebro de Ph.D. Descarregue aqui e libere memória RAM orgânica.
         </p>
       </div>
 
       {/* INPUT EDITOR (CAIXA DE ENTRADA) */}
-      <div className="bg-[#12141a] border border-[#1f222a] rounded-2xl p-4 md:p-6 shadow-xl relative mt-8">
+      <div className="bg-hub-surface border border-hub-border rounded-2xl p-4 md:p-6 shadow-xl relative mt-8">
          <div className="flex gap-3 mb-4 overflow-x-auto scrollbar-hide pb-2">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center mr-2 flex-none">
+            <span className="text-xs font-bold text-hub-faint uppercase tracking-widest flex items-center mr-2 flex-none">
                Humores:
             </span>
             {moods.map(mood => {
@@ -117,7 +117,7 @@ export const BrainDump = () => {
                   className={`flex-none flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-bold transition-all ${
                     isSelected 
                       ? `${mood.bg} ${mood.border} ${mood.color} ring-2 ring-indigo-500/50` 
-                      : 'bg-[#1a1d24] border-slate-700/50 text-slate-400 hover:bg-slate-800 hover:text-white'
+                      : 'bg-hub-hover border-slate-700/50 text-hub-muted hover:bg-slate-800 hover:text-hub-strong'
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5" /> {mood.label}
@@ -136,13 +136,13 @@ export const BrainDump = () => {
                   onChange={e => setNewMoodName(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleCreateMood()}
                   onBlur={handleCreateMood}
-                  className="bg-[#0f1115] border border-indigo-500/50 rounded-full px-3 py-1.5 text-xs text-white focus:outline-none w-24"
+                  className="bg-hub-inner border border-indigo-500/50 rounded-full px-3 py-1.5 text-xs text-hub-strong focus:outline-none w-24"
                 />
               </div>
             ) : (
               <button 
                 onClick={() => setIsAddingMood(true)}
-                className="flex-none flex items-center gap-1 px-3 py-1.5 rounded-full border border-dashed border-slate-600 text-xs font-bold text-slate-500 hover:text-indigo-400 hover:border-indigo-400 transition-colors"
+                className="flex-none flex items-center gap-1 px-3 py-1.5 rounded-full border border-dashed border-slate-600 text-xs font-bold text-hub-faint hover:text-indigo-400 hover:border-indigo-400 transition-colors"
               >
                 + Criar
               </button>
@@ -154,12 +154,12 @@ export const BrainDump = () => {
               value={noteText}
               onChange={(e) => setNoteText(e.target.value)}
               placeholder="O que está pesando na mente agora?"
-              className="w-full bg-[#1a1d24] border border-slate-700/50 rounded-xl p-4 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 resize-none min-h-[120px] transition-all"
+              className="w-full bg-hub-hover border border-slate-700/50 rounded-xl p-4 text-hub-strong placeholder-slate-500 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 resize-none min-h-[120px] transition-all"
             />
             <button
                onClick={handleAddNote}
                disabled={!noteText.trim()}
-               className="absolute bottom-3 right-3 bg-indigo-500 hover:bg-indigo-400 disabled:bg-slate-700 disabled:text-slate-500 text-white p-2.5 rounded-lg transition-colors flex items-center gap-2 font-bold text-sm"
+               className="absolute bottom-3 right-3 bg-indigo-500 hover:bg-indigo-400 disabled:bg-slate-700 disabled:text-hub-faint text-white p-2.5 rounded-lg transition-colors flex items-center gap-2 font-bold text-sm"
             >
                <Send className="w-4 h-4" /> <span className="hidden sm:inline">Descarregar</span>
             </button>
@@ -168,7 +168,7 @@ export const BrainDump = () => {
 
       {/* TIMELINE DE NOTAS (HISTÓRICO) */}
       <div className="mt-12">
-        <h2 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6 px-1 flex items-center gap-2">
+        <h2 className="text-xs font-bold text-hub-faint uppercase tracking-widest mb-6 px-1 flex items-center gap-2">
           <Clock className="w-4 h-4" /> Extrato Cognitivo (Histórico)
         </h2>
 
@@ -187,12 +187,12 @@ export const BrainDump = () => {
                 </div>
                 
                 {/* Card da Nota */}
-                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] ml-12 md:ml-0 p-4 rounded-xl bg-[#12141a] border border-[#1f222a] shadow-md group-hover:border-indigo-500/30 transition-all relative">
+                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] ml-12 md:ml-0 p-4 rounded-xl bg-hub-surface border border-hub-border shadow-md group-hover:border-indigo-500/30 transition-all relative">
                    <div className="flex justify-between items-start mb-2">
-                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{note.date}</span>
+                      <span className="text-[10px] font-bold text-hub-faint uppercase tracking-wider">{note.date}</span>
                       <button 
                         onClick={() => handleDelete(note.id)}
-                        className="text-slate-600 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100 p-1"
+                        className="text-hub-faint hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100 p-1"
                       >
                          <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -211,7 +211,7 @@ export const BrainDump = () => {
                      })}
                    </div>
 
-                   <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-wrap">
+                   <p className="text-sm text-hub-content leading-relaxed whitespace-pre-wrap">
                       {note.text}
                    </p>
                 </div>
@@ -220,8 +220,8 @@ export const BrainDump = () => {
           })}
 
           {notes.length === 0 && (
-            <div className="text-center p-8 bg-[#12141a] border border-dashed border-slate-700 rounded-xl relative z-10">
-               <p className="text-slate-500 text-sm">A mente está limpa. Nenhuma descarga cognitiva recente.</p>
+            <div className="text-center p-8 bg-hub-surface border border-dashed border-slate-700 rounded-xl relative z-10">
+               <p className="text-hub-faint text-sm">A mente está limpa. Nenhuma descarga cognitiva recente.</p>
             </div>
           )}
 

@@ -1,5 +1,49 @@
 @import "tailwindcss";
 
+@theme {
+  --color-hub-base: var(--hub-base);
+  --color-hub-surface: var(--hub-surface);
+  --color-hub-inner: var(--hub-inner);
+  --color-hub-hover: var(--hub-hover);
+  --color-hub-border: var(--hub-border);
+  --color-hub-border-hover: var(--hub-border-hover);
+  
+  --color-hub-content: var(--hub-content);
+  --color-hub-muted: var(--hub-muted);
+  --color-hub-faint: var(--hub-faint);
+  --color-hub-strong: var(--hub-strong);
+}
+
+:root {
+  /* LIGHT MODE - Um branco suave (como #f8fafc) não ofusca a visão */
+  --hub-base: #f8fafc;
+  --hub-surface: #ffffff;
+  --hub-inner: #f1f5f9;
+  --hub-hover: #e2e8f0;
+  --hub-border: #cbd5e1;
+  --hub-border-hover: #94a3b8;
+  
+  --hub-content: #334155;
+  --hub-muted: #475569;
+  --hub-faint: #64748b;
+  --hub-strong: #0f172a;
+}
+
+.dark {
+  /* DARK MODE - O padrão antigo */
+  --hub-base: #0a0b0e;
+  --hub-surface: #12141a;
+  --hub-inner: #0f1115;
+  --hub-hover: #1a1d24;
+  --hub-border: #1f222a;
+  --hub-border-hover: #2d333b;
+  
+  --hub-content: #cbd5e1;
+  --hub-muted: #94a3b8;
+  --hub-faint: #64748b;
+  --hub-strong: #ffffff;
+}
+
 /* Ocultar barra de rolagem mas manter funcionalidade touch/mouse */
 .scrollbar-hide::-webkit-scrollbar {
     display: none;

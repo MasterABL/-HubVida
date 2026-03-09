@@ -26,17 +26,17 @@ export const Producao = ({
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-xl font-black italic tracking-wider text-white">
+        <h1 className="text-xl font-black italic tracking-wider text-hub-strong">
           PRODUÇÃO ACADÊMICA
         </h1>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-6 shadow-xl">
+          <div className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl">
             <h2 className="text-yellow-500 font-bold italic mb-6">
               RASTREADOR DE PRODUÇÃO
             </h2>
-            <div className="flex flex-col md:flex-row gap-3 mb-8 bg-[#0f1115] p-3 rounded-lg border border-[#1f222a]">
+            <div className="flex flex-col md:flex-row gap-3 mb-8 bg-hub-inner p-3 rounded-lg border border-hub-border">
               <input
                 type="text"
                 placeholder="Título do Artigo"
@@ -44,14 +44,14 @@ export const Producao = ({
                 onChange={(e) =>
                   setNewProd({ ...newProd, title: e.target.value })
                 }
-                className="flex-1 bg-transparent border border-slate-800 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-yellow-500"
+                className="flex-1 bg-transparent border border-slate-800 rounded px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500"
               />
               <select
                 value={newProd.type}
                 onChange={(e) =>
                   setNewProd({ ...newProd, type: e.target.value })
                 }
-                className="bg-transparent border border-slate-800 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-yellow-500"
+                className="bg-transparent border border-slate-800 rounded px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500"
               >
                 <option value="Artigo" className="bg-slate-900">
                   Artigo
@@ -68,7 +68,7 @@ export const Producao = ({
                 onChange={(e) =>
                   setNewProd({ ...newProd, status: e.target.value })
                 }
-                className="bg-transparent border border-slate-800 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-yellow-500"
+                className="bg-transparent border border-slate-800 rounded px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500"
               >
                 <option value="Ideia" className="bg-slate-900">
                   Ideia
@@ -91,8 +91,8 @@ export const Producao = ({
               </button>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm text-slate-300">
-                <thead className="text-[10px] uppercase text-slate-500 border-b border-[#1f222a]">
+              <table className="w-full text-left text-sm text-hub-content">
+                <thead className="text-[10px] uppercase text-hub-faint border-b border-hub-border">
                   <tr>
                     <th className="pb-3 font-semibold w-1/2">Título</th>
                     <th className="pb-3 font-semibold">Tipo</th>
@@ -105,7 +105,7 @@ export const Producao = ({
                     <tr>
                       <td
                         colSpan="4"
-                        className="py-8 text-center text-slate-600 text-sm italic"
+                        className="py-8 text-center text-hub-faint text-sm italic"
                       >
                         Nenhum artigo em produção.
                       </td>
@@ -114,12 +114,12 @@ export const Producao = ({
                     productions.map((prod) => (
                       <tr
                         key={prod.id}
-                        className="group hover:bg-[#16181e] transition-colors"
+                        className="group hover:bg-hub-hover transition-colors"
                       >
-                        <td className="py-4 font-medium text-white">
+                        <td className="py-4 font-medium text-hub-strong">
                           {prod.title}
                         </td>
-                        <td className="py-4 text-slate-400 text-xs">
+                        <td className="py-4 text-hub-muted text-xs">
                           {prod.type}
                         </td>
                         <td className="py-4">
@@ -130,7 +130,7 @@ export const Producao = ({
                         <td className="py-4 text-right">
                           <button
                             onClick={() => handleDeleteProduction(prod.id)}
-                            className="text-slate-600 hover:text-rose-500 transition-colors"
+                            className="text-hub-faint hover:text-rose-500 transition-colors"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -142,8 +142,8 @@ export const Producao = ({
               </table>
             </div>
           </div>
-          <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-6 shadow-xl">
-            <h2 className="text-white font-bold mb-4 flex items-center gap-2 text-sm">
+          <div className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl">
+            <h2 className="text-hub-strong font-bold mb-4 flex items-center gap-2 text-sm">
               <Lightbulb className="w-4 h-4 text-yellow-500" /> BANCO DE IDEIAS
             </h2>
             <div className="flex gap-2 mb-4">
@@ -153,7 +153,7 @@ export const Producao = ({
                 value={newIdea}
                 onChange={(e) => setNewIdea(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleAddIdea()}
-                className="flex-1 bg-transparent border border-slate-700 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-yellow-500"
+                className="flex-1 bg-transparent border border-slate-700 rounded-lg px-4 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500"
               />
               <button
                 onClick={handleAddIdea}
@@ -162,23 +162,23 @@ export const Producao = ({
                 <Plus className="w-5 h-5" />
               </button>
             </div>
-            <div className="border border-dashed border-[#1f222a] rounded-lg p-4 min-h-[80px] space-y-2">
+            <div className="border border-dashed border-hub-border rounded-lg p-4 min-h-[80px] space-y-2">
               {ideas.length === 0 ? (
-                <p className="text-center text-slate-600 text-xs italic mt-2 uppercase tracking-widest">
+                <p className="text-center text-hub-faint text-xs italic mt-2 uppercase tracking-widest">
                   Espaço para novos insights...
                 </p>
               ) : (
                 ideas.map((idea) => (
                   <div
                     key={idea.id}
-                    className="flex justify-between items-center bg-[#16181e] p-3 rounded text-sm text-slate-300"
+                    className="flex justify-between items-center bg-hub-hover p-3 rounded text-sm text-hub-content"
                   >
                     <span>{idea.text}</span>
                     <button
                       onClick={() =>
                         setIdeas(ideas.filter((i) => i.id !== idea.id))
                       }
-                      className="text-slate-600 hover:text-rose-500"
+                      className="text-hub-faint hover:text-rose-500"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -189,8 +189,8 @@ export const Producao = ({
           </div>
         </div>
         <div className="space-y-6">
-          <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-6 shadow-xl">
-            <h2 className="text-white font-bold mb-4 flex items-center gap-2 text-xs uppercase tracking-wider">
+          <div className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl">
+            <h2 className="text-hub-strong font-bold mb-4 flex items-center gap-2 text-xs uppercase tracking-wider">
               <ExternalLink className="w-4 h-4 text-yellow-500" /> Recursos de
               Pesquisa
             </h2>
@@ -224,37 +224,37 @@ export const Producao = ({
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between p-3 rounded-lg border border-[#1f222a] hover:border-yellow-500/50 hover:bg-[#16181e] transition-all group"
+                    className="flex items-center justify-between p-3 rounded-lg border border-hub-border hover:border-yellow-500/50 hover:bg-hub-hover transition-all group"
                   >
-                    <div className="flex items-center gap-3 text-sm text-slate-300 group-hover:text-white font-medium">
-                      <IconComponent className="w-4 h-4 text-slate-500 group-hover:text-yellow-500" />{' '}
+                    <div className="flex items-center gap-3 text-sm text-hub-content group-hover:text-hub-strong font-medium">
+                      <IconComponent className="w-4 h-4 text-hub-faint group-hover:text-yellow-500" />{' '}
                       {link.name}
                     </div>
-                    <ExternalLink className="w-3 h-3 text-slate-600 group-hover:text-yellow-500" />
+                    <ExternalLink className="w-3 h-3 text-hub-faint group-hover:text-yellow-500" />
                   </a>
                 );
               })}
             </div>
           </div>
-          <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-6 shadow-xl">
-            <h2 className="text-white font-bold mb-4 flex items-center gap-2 text-xs uppercase tracking-wider">
+          <div className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl">
+            <h2 className="text-hub-strong font-bold mb-4 flex items-center gap-2 text-xs uppercase tracking-wider">
               <CalendarIcon className="w-4 h-4 text-yellow-500" /> Calendário de
               Editais
             </h2>
             <div className="space-y-3">
-              <div className="bg-[#0f1115] p-4 rounded-lg border border-[#1f222a]">
+              <div className="bg-hub-inner p-4 rounded-lg border border-hub-border">
                 <h3 className="text-yellow-500 font-bold text-xs uppercase tracking-wider">
                   ENANPAD 2026
                 </h3>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-hub-faint mt-1">
                   Submissões: Março/Abril
                 </p>
               </div>
-              <div className="bg-[#0f1115] p-4 rounded-lg border border-[#1f222a]">
-                <h3 className="text-white font-bold text-xs uppercase tracking-wider">
+              <div className="bg-hub-inner p-4 rounded-lg border border-hub-border">
+                <h3 className="text-hub-strong font-bold text-xs uppercase tracking-wider">
                   SEMEAD USP
                 </h3>
-                <p className="text-xs text-slate-500 mt-1">Submissões: Junho</p>
+                <p className="text-xs text-hub-faint mt-1">Submissões: Junho</p>
               </div>
             </div>
           </div>

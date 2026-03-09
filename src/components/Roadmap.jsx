@@ -43,51 +43,51 @@ export const Roadmap = ({
         <LayoutGrid className="w-4 h-4" /> Processos de Elite
       </h2>
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-10">
-        <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-6 shadow-xl">
-          <h3 className="text-white font-bold flex items-center gap-3 mb-5 text-sm">
-            <GraduationCap className="w-5 h-5 text-slate-400" /> Doutorado Sanduíche
+        <div className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl">
+          <h3 className="text-hub-strong font-bold flex items-center gap-3 mb-5 text-sm">
+            <GraduationCap className="w-5 h-5 text-hub-muted" /> Doutorado Sanduíche
           </h3>
           <div className="space-y-4 text-xs leading-relaxed">
             <p>
-              <span className="text-slate-500 font-bold">O que é:</span>{' '}
-              <span className="text-slate-300">
+              <span className="text-hub-faint font-bold">O que é:</span>{' '}
+              <span className="text-hub-content">
                 Realizar parte da sua tese (6 a 12 meses) no exterior com bolsa paga (CAPES/PDSE).
               </span>
             </p>
             <p>
-              <span className="text-slate-500 font-bold">Requisitos:</span>{' '}
-              <span className="text-slate-300">
+              <span className="text-hub-faint font-bold">Requisitos:</span>{' '}
+              <span className="text-hub-content">
                 Fluência comprovada (TOEFL), projeto de pesquisa sólido e convite formal de um professor estrangeiro.
               </span>
             </p>
             <p>
-              <span className="text-slate-500 font-bold">Passo a Passo:</span>{' '}
-              <span className="text-slate-300">
+              <span className="text-hub-faint font-bold">Passo a Passo:</span>{' '}
+              <span className="text-hub-content">
                 Entrar num Doutorado nota 6 ou 7 → Publicar artigos → Networking com prof. gringo → Pedir Bolsa.
               </span>
             </p>
           </div>
         </div>
-        <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-6 shadow-xl">
-          <h3 className="text-white font-bold flex items-center gap-3 mb-5 text-sm">
-            <Search className="w-5 h-5 text-slate-400" /> Exame ANPAD
+        <div className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl">
+          <h3 className="text-hub-strong font-bold flex items-center gap-3 mb-5 text-sm">
+            <Search className="w-5 h-5 text-hub-muted" /> Exame ANPAD
           </h3>
           <div className="space-y-4 text-xs leading-relaxed">
             <p>
-              <span className="text-slate-500 font-bold">O que é:</span>{' '}
-              <span className="text-slate-300">
+              <span className="text-hub-faint font-bold">O que é:</span>{' '}
+              <span className="text-hub-content">
                 O teste padrão de entrada para os melhores mestrados do Brasil.
               </span>
             </p>
             <p>
-              <span className="text-slate-500 font-bold">A Prova:</span>{' '}
-              <span className="text-slate-300">
+              <span className="text-hub-faint font-bold">A Prova:</span>{' '}
+              <span className="text-hub-content">
                 Foca em Raciocínio Lógico-Quantitativo, Português e Inglês. A nota vale por 2 anos.
               </span>
             </p>
             <p>
-              <span className="text-slate-500 font-bold">Passo a Passo:</span>{' '}
-              <span className="text-slate-300">
+              <span className="text-hub-faint font-bold">Passo a Passo:</span>{' '}
+              <span className="text-hub-content">
                 Baixar provas anteriores → Focar em Lógica e Estatística → Treinar tempo de prova → Alcançar Percentil 90+.
               </span>
             </p>
@@ -99,36 +99,36 @@ export const Roadmap = ({
         <TrendingUp className="w-4 h-4" /> Rotina Deep Work (Produtividade Real)
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-6 shadow-xl">
-          <p className="text-[10px] text-slate-500 font-bold mb-3 uppercase tracking-widest">
+        <div className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl">
+          <p className="text-[10px] text-hub-faint font-bold mb-3 uppercase tracking-widest">
             Manhã (08h - 15h)
           </p>
-          <h3 className="text-white font-black text-sm mb-2 tracking-wide">
+          <h3 className="text-hub-strong font-black text-sm mb-2 tracking-wide">
             Trabalho Aprendiz
           </h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-hub-muted">
             Aproveite para observar problemas de gestão reais. Isso gera ótimas teses.
           </p>
         </div>
-        <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-6 shadow-xl">
-          <p className="text-[10px] text-slate-500 font-bold mb-3 uppercase tracking-widest">
+        <div className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl">
+          <p className="text-[10px] text-hub-faint font-bold mb-3 uppercase tracking-widest">
             Tarde (16h - 18h)
           </p>
-          <h3 className="text-white font-black text-sm mb-2 tracking-wide">
+          <h3 className="text-hub-strong font-black text-sm mb-2 tracking-wide">
             Produção Acadêmica
           </h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-hub-muted">
             Não é só ler a aula da Cruzeiro. É ler 1 artigo científico, anotar no Notion e atualizar o Lattes.
           </p>
         </div>
-        <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-6 shadow-xl">
-          <p className="text-[10px] text-slate-500 font-bold mb-3 uppercase tracking-widest">
+        <div className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl">
+          <p className="text-[10px] text-hub-faint font-bold mb-3 uppercase tracking-widest">
             Noite (18h - 19h)
           </p>
-          <h3 className="text-white font-black text-sm mb-2 tracking-wide">
+          <h3 className="text-hub-strong font-black text-sm mb-2 tracking-wide">
             Inglês Instrumental
           </h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-hub-muted">
             Argos para base gramatical + Escuta de podcasts acadêmicos (HBR IdeaCast).
           </p>
         </div>
@@ -151,11 +151,11 @@ export const Roadmap = ({
           ];
           const colorMap = {
             active: { ring: 'border-yellow-500', dot: 'bg-yellow-500', text: 'text-yellow-500', pulse: true },
-            future: { ring: 'border-slate-700',  dot: 'bg-[#1f222a]',  text: 'text-slate-500',  pulse: false },
+            future: { ring: 'border-slate-700',  dot: 'bg-[#1f222a]',  text: 'text-hub-faint',  pulse: false },
             dream:  { ring: 'border-yellow-400', dot: 'bg-yellow-400', text: 'text-yellow-400', pulse: false },
           };
           return (
-            <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-6 md:p-8 shadow-xl relative overflow-hidden">
+            <div className="bg-hub-surface border border-hub-border rounded-xl p-6 md:p-8 shadow-xl relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-b from-yellow-500/5 via-transparent to-transparent pointer-events-none" />
               <div className="relative">
                 {milestones.map((m, i) => {
@@ -177,9 +177,9 @@ export const Roadmap = ({
                           {m.status === 'active' && <span className="text-[8px] font-black bg-yellow-500/15 text-yellow-500 px-1.5 py-0.5 rounded-full">AGORA</span>}
                           {m.status === 'dream'  && <span className="text-[8px] font-black bg-yellow-400/10 text-yellow-400 px-1.5 py-0.5 rounded-full">META FINAL</span>}
                         </div>
-                        <h3 className={`font-black text-sm mb-0.5 ${m.status === 'dream' ? 'text-yellow-400 text-base' : m.status === 'active' ? 'text-white' : 'text-slate-400'}`}>{m.title}</h3>
-                        <p className="text-[10px] text-slate-600 font-bold uppercase tracking-wider mb-1">{m.sub}</p>
-                        <p className="text-[11px] text-slate-500 leading-relaxed">{m.desc}</p>
+                        <h3 className={`font-black text-sm mb-0.5 ${m.status === 'dream' ? 'text-yellow-400 text-base' : m.status === 'active' ? 'text-hub-strong' : 'text-hub-muted'}`}>{m.title}</h3>
+                        <p className="text-[10px] text-hub-faint font-bold uppercase tracking-wider mb-1">{m.sub}</p>
+                        <p className="text-[11px] text-hub-faint leading-relaxed">{m.desc}</p>
                       </div>
                     </div>
                   );
@@ -204,33 +204,33 @@ export const Roadmap = ({
           <Medal className="w-4 h-4" /> Performance Acadêmica
         </h2>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-8 shadow-xl flex flex-col items-center justify-center text-center">
-            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-4">
+          <div className="bg-hub-surface border border-hub-border rounded-xl p-8 shadow-xl flex flex-col items-center justify-center text-center">
+            <p className="text-[10px] text-hub-faint font-bold uppercase tracking-widest mb-4">
               Média Ponderada
             </p>
-            <p className="text-5xl font-black text-white mb-4">{media}</p>
+            <p className="text-5xl font-black text-hub-strong mb-4">{media}</p>
           </div>
-          <div className="lg:col-span-2 bg-[#12141a] border border-[#1f222a] rounded-xl p-8 shadow-xl flex flex-col justify-center">
-            <p className="text-xs text-slate-400 mb-6 uppercase tracking-wider">Novo Registro de Disciplina</p>
+          <div className="lg:col-span-2 bg-hub-surface border border-hub-border rounded-xl p-8 shadow-xl flex flex-col justify-center">
+            <p className="text-xs text-hub-muted mb-6 uppercase tracking-wider">Novo Registro de Disciplina</p>
             <div className="flex flex-col md:flex-row gap-4 mb-6">
               <input
                 type="text"
                 placeholder="Disciplina (Cruzeiro do Sul)"
                 value={newCr.disciplina}
                 onChange={(e) => setNewCr({ ...newCr, disciplina: e.target.value })}
-                className="flex-1 bg-[#0a0b0e] border border-[#1f222a] rounded-lg px-4 py-3 text-sm text-white focus:border-yellow-500 focus:outline-none transition-colors"
+                className="flex-1 bg-hub-base border border-hub-border rounded-lg px-4 py-3 text-sm text-hub-strong focus:border-yellow-500 focus:outline-none transition-colors"
               />
               <input
                 type="number"
                 placeholder="Nota"
                 value={newCr.nota}
                 onChange={(e) => setNewCr({ ...newCr, nota: e.target.value })}
-                className="w-full md:w-32 bg-[#0a0b0e] border border-[#1f222a] rounded-lg px-4 py-3 text-sm text-white focus:border-yellow-500 focus:outline-none transition-colors"
+                className="w-full md:w-32 bg-hub-base border border-hub-border rounded-lg px-4 py-3 text-sm text-hub-strong focus:border-yellow-500 focus:outline-none transition-colors"
               />
               <select
                 value={newCr.creditos}
                 onChange={(e) => setNewCr({ ...newCr, creditos: e.target.value })}
-                className="w-full md:w-40 bg-[#0a0b0e] border border-[#1f222a] rounded-lg px-4 py-3 text-sm text-slate-300 focus:border-yellow-500 focus:outline-none transition-colors"
+                className="w-full md:w-40 bg-hub-base border border-hub-border rounded-lg px-4 py-3 text-sm text-hub-content focus:border-yellow-500 focus:outline-none transition-colors"
               >
                 <option value="2">2 Créditos</option>
                 <option value="4">4 Créditos</option>
@@ -245,9 +245,9 @@ export const Roadmap = ({
             </button>
           </div>
         </div>
-        <div className="overflow-x-auto bg-[#12141a] border border-[#1f222a] rounded-xl shadow-xl">
-          <table className="w-full text-left text-sm text-slate-300">
-            <thead className="text-[10px] uppercase text-slate-500 border-b border-[#1f222a]">
+        <div className="overflow-x-auto bg-hub-surface border border-hub-border rounded-xl shadow-xl">
+          <table className="w-full text-left text-sm text-hub-content">
+            <thead className="text-[10px] uppercase text-hub-faint border-b border-hub-border">
               <tr>
                 <th className="py-4 px-6 font-semibold w-1/2">Disciplina</th>
                 <th className="py-4 px-6 font-semibold text-center">Créditos</th>
@@ -258,20 +258,20 @@ export const Roadmap = ({
             <tbody className="divide-y divide-[#1f222a]">
               {crData.length === 0 ? (
                 <tr>
-                  <td colSpan="4" className="py-12 text-center text-slate-600 text-xs italic uppercase tracking-widest">
+                  <td colSpan="4" className="py-12 text-center text-hub-faint text-xs italic uppercase tracking-widest">
                     Nenhuma disciplina registrada.
                   </td>
                 </tr>
               ) : (
                 crData.map((item) => (
-                  <tr key={item.id} className="hover:bg-[#16181e] transition-colors">
-                    <td className="py-4 px-6 font-medium text-white">{item.disciplina}</td>
-                    <td className="py-4 px-6 text-center text-slate-400">{item.creditos}</td>
-                    <td className="py-4 px-6 text-center font-bold text-white">{item.nota}</td>
+                  <tr key={item.id} className="hover:bg-hub-hover transition-colors">
+                    <td className="py-4 px-6 font-medium text-hub-strong">{item.disciplina}</td>
+                    <td className="py-4 px-6 text-center text-hub-muted">{item.creditos}</td>
+                    <td className="py-4 px-6 text-center font-bold text-hub-strong">{item.nota}</td>
                     <td className="py-4 px-6 text-right">
                       <button
                         onClick={() => handleDeleteCr(item.id)}
-                        className="text-slate-600 hover:text-rose-500 transition-colors p-1"
+                        className="text-hub-faint hover:text-rose-500 transition-colors p-1"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -291,31 +291,31 @@ export const Roadmap = ({
       <h2 className="text-yellow-500 font-bold text-xs uppercase tracking-wider mb-8 flex items-center gap-2">
         <CalendarDays className="w-4 h-4" /> A Jornada do Graduando de Elite
       </h2>
-      <div className="relative border-l border-[#1f222a] ml-4 space-y-16 pb-8">
+      <div className="relative border-l border-hub-border ml-4 space-y-16 pb-8">
         <div className="relative pl-10">
-          <div className="absolute -left-2.5 top-1 w-5 h-5 bg-[#0a0b0e] border-4 border-yellow-500 rounded-full"></div>
-          <h3 className="text-2xl font-black italic text-white mb-6 tracking-wide">
-            Semestre 1 & 2 <span className="text-slate-400 font-medium text-lg not-italic">(Fundação e Escaneamento)</span>
+          <div className="absolute -left-2.5 top-1 w-5 h-5 bg-hub-base border-4 border-yellow-500 rounded-full"></div>
+          <h3 className="text-2xl font-black italic text-hub-strong mb-6 tracking-wide">
+            Semestre 1 & 2 <span className="text-hub-muted font-medium text-lg not-italic">(Fundação e Escaneamento)</span>
           </h3>
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-6 shadow-xl">
-              <Medal className="w-5 h-5 text-slate-500 mb-4" />
-              <h4 className="text-white font-bold mb-2">Manter CR &gt; 9.0</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
+            <div className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl">
+              <Medal className="w-5 h-5 text-hub-faint mb-4" />
+              <h4 className="text-hub-strong font-bold mb-2">Manter CR &gt; 9.0</h4>
+              <p className="text-xs text-hub-muted leading-relaxed">
                 Prioridade Zero. No EAD, a nota é o único critério objetivo inicial para bolsas FAPESP/CAPES. Estude para gabaritar.
               </p>
             </div>
-            <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-6 shadow-xl">
-              <BookOpen className="w-5 h-5 text-slate-500 mb-4" />
-              <h4 className="text-white font-bold mb-2">Curadoria de Fontes</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
+            <div className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl">
+              <BookOpen className="w-5 h-5 text-hub-faint mb-4" />
+              <h4 className="text-hub-strong font-bold mb-2">Curadoria de Fontes</h4>
+              <p className="text-xs text-hub-muted leading-relaxed">
                 Vá além do Google. Use Spell.org.br (específico de ADM) e Scielo. Busque por "State of the Art" no seu tema de interesse.
               </p>
             </div>
-            <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-6 shadow-xl">
-              <div className="text-slate-500 mb-4 font-bold text-lg leading-none">文A</div>
-              <h4 className="text-white font-bold mb-2">Inglês: O Método 1-1-1</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
+            <div className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl">
+              <div className="text-hub-faint mb-4 font-bold text-lg leading-none">文A</div>
+              <h4 className="text-hub-strong font-bold mb-2">Inglês: O Método 1-1-1</h4>
+              <p className="text-xs text-hub-muted leading-relaxed">
                 1 Artigo internacional/semana, 1 Vídeo da HBR/TED por dia, 1 Abstract escrito/mês. Valide a gramática no Argos.
               </p>
             </div>
@@ -323,29 +323,29 @@ export const Roadmap = ({
         </div>
 
         <div className="relative pl-10">
-          <div className="absolute -left-2.5 top-1 w-5 h-5 bg-[#0a0b0e] border-4 border-yellow-500 rounded-full"></div>
-          <h3 className="text-2xl font-black italic text-white mb-6 tracking-wide">
-            Semestre 3 & 4 <span className="text-slate-400 font-medium text-lg not-italic">(Ataque e Networking)</span>
+          <div className="absolute -left-2.5 top-1 w-5 h-5 bg-hub-base border-4 border-yellow-500 rounded-full"></div>
+          <h3 className="text-2xl font-black italic text-hub-strong mb-6 tracking-wide">
+            Semestre 3 & 4 <span className="text-hub-muted font-medium text-lg not-italic">(Ataque e Networking)</span>
           </h3>
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-6 shadow-xl">
-              <Search className="w-5 h-5 text-slate-500 mb-4" />
-              <h4 className="text-white font-bold mb-2">Iniciação Científica (PIC)</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
+            <div className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl">
+              <Search className="w-5 h-5 text-hub-faint mb-4" />
+              <h4 className="text-hub-strong font-bold mb-2">Iniciação Científica (PIC)</h4>
+              <p className="text-xs text-hub-muted leading-relaxed">
                 Mês 06: Abordar a coordenação da Cruzeiro do Sul. Objetivo: Ter um orientador Ph.D. para aprender o método científico.
               </p>
             </div>
-            <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-6 shadow-xl">
-              <Users className="w-5 h-5 text-slate-500 mb-4" />
-              <h4 className="text-white font-bold mb-2">Mapeamento de Eventos</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
+            <div className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl">
+              <Users className="w-5 h-5 text-hub-faint mb-4" />
+              <h4 className="text-hub-strong font-bold mb-2">Mapeamento de Eventos</h4>
+              <p className="text-xs text-hub-muted leading-relaxed">
                 Acesse semead.com.br (USP) e anpad.org.br. Leia os anais dos eventos para entender o que está sendo pesquisado hoje.
               </p>
             </div>
-            <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-6 shadow-xl">
-              <FileText className="w-5 h-5 text-slate-500 mb-4" />
-              <h4 className="text-white font-bold mb-2">Escrita Científica</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
+            <div className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl">
+              <FileText className="w-5 h-5 text-hub-faint mb-4" />
+              <h4 className="text-hub-strong font-bold mb-2">Escrita Científica</h4>
+              <p className="text-xs text-hub-muted leading-relaxed">
                 Não faça apenas resumos. Aprenda a estruturar um "Paper": Introdução, Referencial, Metodologia e Resultados Esperados.
               </p>
             </div>
@@ -360,13 +360,13 @@ export const Roadmap = ({
       <div className="mb-4 animate-in fade-in">
         <button
           onClick={() => setExpandedYear(expandedYear === id ? null : id)}
-          className="w-full bg-[#12141a] border border-[#1f222a] rounded-xl p-6 flex justify-between items-center hover:border-slate-700 transition-colors shadow-lg"
+          className="w-full bg-hub-surface border border-hub-border rounded-xl p-6 flex justify-between items-center hover:border-slate-700 transition-colors shadow-lg"
         >
           <div className="text-left">
-            <h3 className="text-xl font-black text-white flex items-center gap-4">
+            <h3 className="text-xl font-black text-hub-strong flex items-center gap-4">
               <span className="text-yellow-500 text-2xl">{number}</span> {title}
             </h3>
-            <p className="text-xs text-slate-400 mt-2">{subtitle}</p>
+            <p className="text-xs text-hub-muted mt-2">{subtitle}</p>
           </div>
           {expandedYear === id ? (
             <ChevronUp className="w-5 h-5 text-yellow-500" />
@@ -383,14 +383,14 @@ export const Roadmap = ({
               {items.map((item, idx) => (
                 <div
                   key={idx}
-                  className={`bg-[#12141a] border border-[#1f222a] rounded-xl p-5 shadow-sm flex gap-3 ${
+                  className={`bg-hub-surface border border-hub-border rounded-xl p-5 shadow-sm flex gap-3 ${
                     item.fullWidth ? 'md:col-span-2' : ''
                   }`}
                 >
                   <CheckCircle2 className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
                   <div>
-                    <h5 className="text-sm font-bold text-white mb-1">{item.title}</h5>
-                    <p className="text-xs text-slate-400">{item.desc}</p>
+                    <h5 className="text-sm font-bold text-hub-strong mb-1">{item.title}</h5>
+                    <p className="text-xs text-hub-muted">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -453,8 +453,8 @@ export const Roadmap = ({
         <BookOpen className="w-4 h-4" /> Hub de Inteligência Acadêmica
       </h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-8 shadow-xl">
-          <h3 className="text-white font-bold text-sm mb-6 flex items-center gap-3">
+        <div className="bg-hub-surface border border-hub-border rounded-xl p-8 shadow-xl">
+          <h3 className="text-hub-strong font-bold text-sm mb-6 flex items-center gap-3">
             <TrendingUp className="w-5 h-5 text-yellow-500" /> Bases de Busca de Artigos
           </h3>
           <div className="space-y-4">
@@ -469,20 +469,20 @@ export const Roadmap = ({
                 href={base.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between p-4 rounded-xl border border-[#1f222a] bg-[#0a0b0e] hover:border-yellow-500/50 hover:bg-yellow-500/5 transition-all group"
+                className="flex items-center justify-between p-4 rounded-xl border border-hub-border bg-hub-base hover:border-yellow-500/50 hover:bg-yellow-500/5 transition-all group"
               >
                 <div>
-                  <h4 className="font-bold text-white text-sm mb-1 group-hover:text-yellow-500 transition-colors">{base.name}</h4>
-                  <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">{base.desc}</p>
+                  <h4 className="font-bold text-hub-strong text-sm mb-1 group-hover:text-yellow-500 transition-colors">{base.name}</h4>
+                  <p className="text-[9px] text-hub-faint font-bold uppercase tracking-widest">{base.desc}</p>
                 </div>
-                <ExternalLink className="w-4 h-4 text-slate-600 group-hover:text-yellow-500 transition-colors flex-shrink-0" />
+                <ExternalLink className="w-4 h-4 text-hub-faint group-hover:text-yellow-500 transition-colors flex-shrink-0" />
               </a>
             ))}
           </div>
         </div>
 
-        <div className="bg-[#12141a] border border-[#1f222a] rounded-xl p-8 shadow-xl">
-          <h3 className="text-white font-bold text-sm mb-6 flex items-center gap-3">
+        <div className="bg-hub-surface border border-hub-border rounded-xl p-8 shadow-xl">
+          <h3 className="text-hub-strong font-bold text-sm mb-6 flex items-center gap-3">
             <User className="w-5 h-5 text-yellow-500" /> Calendário de Eventos
           </h3>
           <div className="space-y-4">
@@ -490,37 +490,37 @@ export const Roadmap = ({
               href="https://www.anpad.org.br/"
               target="_blank"
               rel="noopener noreferrer"
-              className="block p-4 rounded-xl border border-[#1f222a] bg-[#0a0b0e] hover:border-yellow-500/40 transition-all group"
+              className="block p-4 rounded-xl border border-hub-border bg-hub-base hover:border-yellow-500/40 transition-all group"
             >
               <div className="flex items-center justify-between mb-1">
-                <h4 className="font-bold text-white text-sm group-hover:text-yellow-500 transition-colors">ANPAD - ENANPAD</h4>
-                <ExternalLink className="w-3.5 h-3.5 text-slate-600 group-hover:text-yellow-500 transition-colors" />
+                <h4 className="font-bold text-hub-strong text-sm group-hover:text-yellow-500 transition-colors">ANPAD - ENANPAD</h4>
+                <ExternalLink className="w-3.5 h-3.5 text-hub-faint group-hover:text-yellow-500 transition-colors" />
               </div>
-              <p className="text-xs text-slate-400">O principal evento científico de ADM do país. Geralmente em Setembro.</p>
+              <p className="text-xs text-hub-muted">O principal evento científico de ADM do país. Geralmente em Setembro.</p>
             </a>
             <a
               href="https://semead.com.br/"
               target="_blank"
               rel="noopener noreferrer"
-              className="block p-4 rounded-xl border border-yellow-500/50 bg-[#0a0b0e] shadow-[0_0_15px_rgba(234,179,8,0.1)] hover:border-yellow-500 transition-all group"
+              className="block p-4 rounded-xl border border-yellow-500/50 bg-hub-base shadow-[0_0_15px_rgba(234,179,8,0.1)] hover:border-yellow-500 transition-all group"
             >
               <div className="flex items-center justify-between mb-1">
                 <h4 className="font-bold text-yellow-500 text-sm">SEMEAD USP</h4>
                 <ExternalLink className="w-3.5 h-3.5 text-yellow-600 group-hover:text-yellow-400 transition-colors" />
               </div>
-              <p className="text-xs text-slate-400">Outubro/Novembro. Ideal para submeter trabalhos de iniciação científica.</p>
+              <p className="text-xs text-hub-muted">Outubro/Novembro. Ideal para submeter trabalhos de iniciação científica.</p>
             </a>
             <a
               href="https://www.sympla.com.br/"
               target="_blank"
               rel="noopener noreferrer"
-              className="block p-4 rounded-xl border border-[#1f222a] bg-[#0a0b0e] hover:border-yellow-500/40 transition-all group"
+              className="block p-4 rounded-xl border border-hub-border bg-hub-base hover:border-yellow-500/40 transition-all group"
             >
               <div className="flex items-center justify-between mb-1">
-                <h4 className="font-bold text-white text-sm uppercase tracking-wide group-hover:text-yellow-500 transition-colors">Eventos Locais (SYMPLA)</h4>
-                <ExternalLink className="w-3.5 h-3.5 text-slate-600 group-hover:text-yellow-500 transition-colors" />
+                <h4 className="font-bold text-hub-strong text-sm uppercase tracking-wide group-hover:text-yellow-500 transition-colors">Eventos Locais (SYMPLA)</h4>
+                <ExternalLink className="w-3.5 h-3.5 text-hub-faint group-hover:text-yellow-500 transition-colors" />
               </div>
-              <p className="text-xs text-slate-400">Busque por "Congresso Nacional de Administração".</p>
+              <p className="text-xs text-hub-muted">Busque por "Congresso Nacional de Administração".</p>
             </a>
           </div>
         </div>
@@ -535,7 +535,7 @@ export const Roadmap = ({
           <h1 className="text-3xl font-black italic tracking-wider text-yellow-500 uppercase">
             PH.D. ROADMAP
           </h1>
-          <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">
+          <p className="text-[10px] text-hub-faint font-bold uppercase tracking-widest mt-1">
             Administração | Trajetória
           </p>
         </div>
@@ -547,7 +547,7 @@ export const Roadmap = ({
               className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-semibold transition-all ${
                 activeRoadmapTab === tab.name
                   ? 'border border-yellow-500/50 text-yellow-500 bg-yellow-500/5 shadow-md'
-                  : 'border border-transparent text-slate-400 hover:text-white hover:bg-[#16181e]'
+                  : 'border border-transparent text-hub-muted hover:text-hub-strong hover:bg-hub-hover'
               }`}
             >
               <tab.icon className="w-5 h-5" />

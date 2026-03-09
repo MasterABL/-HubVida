@@ -412,6 +412,20 @@ export default function App() {
   const [expandedSubject, setExpandedSubject] = useState(null);
   const [syncStatus, setSyncStatus] = useState(null); // null | 'saving' | 'saved' | 'error'
   const [session, setSession] = useState(null);
+  
+  // -- TEMA CLARO/ESCURO --
+  const [theme, setTheme] = useState(() => localStorage.getItem('hubvida_theme') || 'dark');
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('hubvida_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -637,18 +651,18 @@ export default function App() {
 
   // Use the merged components logic in return
   return (
-    <div className="min-h-screen bg-[#0a0b0e] flex flex-col md:flex-row font-sans selection:bg-yellow-500/30 text-slate-300">
+    <div className="min-h-screen bg-hub-base flex flex-col md:flex-row font-sans selection:bg-yellow-500/30 text-hub-content">
       {/* Mobile Header Toggle */}
-      <div className="md:hidden bg-[#12141a] p-4 flex justify-between items-center border-b border-[#1f222a] sticky top-0 z-40">
+      <div className="md:hidden bg-hub-surface p-4 flex justify-between items-center border-b border-hub-border sticky top-0 z-40">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-yellow-400 rounded-md flex items-center justify-center font-black text-slate-900 text-lg">
             H
           </div>
-          <span className="font-black tracking-widest text-white text-lg">
+          <span className="font-black tracking-widest text-hub-strong text-lg">
             HUBVIDA
           </span>
           {syncStatus === 'saving' && (
-            <span className="flex items-center gap-1 text-[10px] text-slate-500 font-bold">
+            <span className="flex items-center gap-1 text-[10px] text-hub-faint font-bold">
               <Loader2 className="w-3 h-3 animate-spin" /> Salvando...
             </span>
           )}
@@ -663,12 +677,21 @@ export default function App() {
             </span>
           )}
         </div>
-        <button 
-          className="text-white p-2" 
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={toggleTheme}
+            className="text-hub-faint p-2 hover:text-yellow-500 transition-colors"
+            title="Alternar Tema"
+          >
+            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          </button>
+          <button 
+            className="text-hub-strong p-2" 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
 
@@ -681,19 +704,19 @@ export default function App() {
       )}
 
       {/* Sidebar */}
-      <aside className={`w-64 bg-[#12141a] flex flex-col border-r border-[#1f222a] fixed md:static h-full z-50 transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+      <aside className={`w-64 bg-hub-surface flex flex-col border-r border-hub-border fixed md:static h-full z-50 transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
         <div className="p-6 hidden md:flex flex-col gap-1">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-yellow-400 rounded-md flex items-center justify-center font-black text-slate-900 text-lg">
               H
             </div>
-            <span className="font-black tracking-widest text-white text-lg">
+            <span className="font-black tracking-widest text-hub-strong text-lg">
               HUBVIDA
             </span>
           </div>
           {/* Badge de Sync */}
           {syncStatus === 'saving' && (
-            <span className="flex items-center gap-1 text-[10px] text-slate-500 font-bold mt-1">
+            <span className="flex items-center gap-1 text-[10px] text-hub-faint font-bold mt-1">
               <Loader2 className="w-3 h-3 animate-spin" /> Salvando na nuvem...
             </span>
           )}
@@ -732,12 +755,12 @@ export default function App() {
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
                 activeTab === item.name
                   ? 'bg-yellow-500/10 text-yellow-500 shadow-sm'
-                  : 'text-slate-400 hover:bg-[#1a1d24] hover:text-white'
+                  : 'text-hub-muted hover:bg-hub-hover hover:text-hub-strong'
               }`}
             >
               <item.icon
                 className={`w-5 h-5 ${
-                  activeTab === item.name ? 'text-yellow-500' : 'text-slate-400'
+                  activeTab === item.name ? 'text-yellow-500' : 'text-hub-muted'
                 }`}
               />
               {item.name}
@@ -746,40 +769,49 @@ export default function App() {
         </nav>
 
         {/* Profile / Status Card */}
-        <div className="p-4 border-t border-[#1f222a]">
-          <div className="bg-[#1a1d24] rounded-xl p-3 space-y-3">
+        <div className="p-4 border-t border-hub-border">
+          <div className="bg-hub-hover rounded-xl p-3 space-y-3">
             {/* Linha principal: avatar + nome */}
             <div className="flex items-center gap-3">
               <div className="relative flex-shrink-0">
-                <div className="w-10 h-10 bg-[#0a0b0e] text-yellow-500 font-black text-sm rounded-full flex items-center justify-center border-2 border-yellow-500/40">
+                <div className="w-10 h-10 bg-hub-base text-yellow-500 font-black text-sm rounded-full flex items-center justify-center border-2 border-yellow-500/40">
                   AB
                 </div>
                 {/* Bolinha de status online */}
                 <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-[#1a1d24] rounded-full" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-black text-white leading-none">Abimael</p>
-                <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5 truncate">
+                <p className="text-sm font-black text-hub-strong leading-none">Abimael</p>
+                <p className="text-[9px] font-bold text-hub-faint uppercase tracking-widest mt-0.5 truncate">
                   Cruzeiro do Sul · ADM
                 </p>
               </div>
-              <button
-                onClick={handleLogout}
-                className="w-8 h-8 rounded-lg bg-[#0a0b0e] flex items-center justify-center text-slate-600 hover:text-rose-500 hover:bg-rose-500/10 transition-all"
-                title="Sair e Bloquear"
-              >
-                <Lock className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={toggleTheme}
+                  className="w-8 h-8 rounded-lg bg-hub-base flex items-center justify-center text-hub-faint hover:text-yellow-500 transition-all"
+                  title="Alternar Tema"
+                >
+                  {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="w-8 h-8 rounded-lg bg-hub-base flex items-center justify-center text-hub-faint hover:text-rose-500 hover:bg-rose-500/10 transition-all"
+                  title="Sair e Bloquear"
+                >
+                  <Lock className="w-4 h-4" />
+                </button>
+              </div>
             </div>
 
             {/* Linha de data */}
-            <div className="bg-[#0f1115] rounded-lg px-3 py-2 flex items-center justify-between">
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+            <div className="bg-hub-inner rounded-lg px-3 py-2 flex items-center justify-between">
+              <span className="text-[10px] font-bold text-hub-faint uppercase tracking-widest">
                 {new Date().toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short' })}
               </span>
               {/* Status do sync */}
               {syncStatus === 'saving' && (
-                <span className="flex items-center gap-1 text-[9px] text-slate-500 font-bold">
+                <span className="flex items-center gap-1 text-[9px] text-hub-faint font-bold">
                   <Loader2 className="w-2.5 h-2.5 animate-spin" /> Salvando
                 </span>
               )}
@@ -913,7 +945,7 @@ export default function App() {
               setExpandedYear={setExpandedYear}
             />
           ) : (
-            <div className="text-center text-slate-500 mt-20">
+            <div className="text-center text-hub-faint mt-20">
               Módulo em desenvolvimento... Selecione um módulo válido no menu lateral.
             </div>
           )}
