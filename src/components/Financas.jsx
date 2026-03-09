@@ -115,7 +115,7 @@ export const Financas = ({
                     ? 'text-emerald-500 bg-emerald-500/10 group-hover:bg-emerald-500/20'
                     : transaction.status === 'paid'
                     ? 'text-yellow-500 bg-yellow-500/10 group-hover:bg-yellow-500/20'
-                    : 'text-hub-faint bg-[#1f222a] group-hover:bg-slate-800'
+                    : 'text-hub-faint bg-hub-hover group-hover:bg-hub-inner'
                 }`}
               >
                 {transaction.type === 'income' ? (
@@ -181,26 +181,26 @@ export const Financas = ({
               placeholder="Nome (Ex: Netflix)"
               value={newTransaction.title}
               onChange={(e) => setNewTransaction({ ...newTransaction, title: e.target.value })}
-              className="col-span-2 md:col-span-1 bg-[#1f222a] border border-slate-700 rounded-lg px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500 transition-colors"
+              className="col-span-2 md:col-span-1 bg-hub-hover border border-hub-border rounded-lg px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500 transition-colors"
             />
             <input
               type="number"
               placeholder="Valor (R$)"
               value={newTransaction.amount}
               onChange={(e) => setNewTransaction({ ...newTransaction, amount: e.target.value })}
-              className="bg-[#1f222a] border border-slate-700 rounded-lg px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500 transition-colors"
+              className="bg-hub-hover border border-hub-border rounded-lg px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500 transition-colors"
             />
             <input
               type="text"
               placeholder="Data (ex: 15/05)"
               value={newTransaction.date}
               onChange={(e) => setNewTransaction({ ...newTransaction, date: e.target.value })}
-              className="bg-[#1f222a] border border-slate-700 rounded-lg px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500 transition-colors"
+              className="bg-hub-hover border border-hub-border rounded-lg px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500 transition-colors"
             />
             <select
               value={newTransaction.type}
               onChange={(e) => setNewTransaction({ ...newTransaction, type: e.target.value })}
-              className="bg-[#1f222a] border border-slate-700 rounded-lg px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500 transition-colors"
+              className="bg-hub-hover border border-hub-border rounded-lg px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500 transition-colors"
             >
               <option value="expense">Saída</option>
               <option value="income">Entrada</option>
@@ -208,7 +208,7 @@ export const Financas = ({
             <select
               value={newTransaction.category}
               onChange={(e) => setNewTransaction({ ...newTransaction, category: e.target.value })}
-              className="bg-[#1f222a] border border-slate-700 rounded-lg px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500 transition-colors"
+              className="bg-hub-hover border border-hub-border rounded-lg px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500 transition-colors"
             >
               <option value="FIXOS">Fixos</option>
               <option value="CARTÕES">Cartões</option>

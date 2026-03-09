@@ -113,7 +113,7 @@ export function Treino({ workoutProfile, setWorkoutProfile, workouts, setWorkout
                   className="w-16 bg-hub-base border border-yellow-500/50 rounded-lg px-2 py-1 text-hub-strong font-bold text-center focus:outline-none"
                 />
               </div>
-              <div className="h-8 w-px bg-[#1f222a]"></div>
+              <div className="h-8 w-px border-l border-hub-border"></div>
               <div>
                 <p className="text-[10px] text-hub-faint font-bold uppercase tracking-widest mb-1">Altura (m)</p>
                 <input 
@@ -136,7 +136,7 @@ export function Treino({ workoutProfile, setWorkoutProfile, workouts, setWorkout
                 <p className="text-[10px] text-hub-faint font-bold uppercase tracking-widest">Peso Atual</p>
                 <p className="text-xl font-black text-hub-strong">{workoutProfile.peso} kg</p>
               </div>
-              <div className="h-8 w-px bg-[#1f222a]"></div>
+              <div className="h-8 w-px border-l border-hub-border"></div>
               <div className="text-center group-hover:text-yellow-500 transition-colors">
                 <p className="text-[10px] text-hub-faint font-bold uppercase tracking-widest">Altura</p>
                 <p className="text-xl font-black text-hub-strong">{workoutProfile.altura} m</p>
@@ -187,7 +187,7 @@ export function Treino({ workoutProfile, setWorkoutProfile, workouts, setWorkout
                         type="text" 
                         value={ex.name} 
                         onChange={(e) => handleEditExerciseName(day.id, exIndex, e.target.value)}
-                        className="bg-transparent border-none text-[11px] font-bold text-slate-200 uppercase tracking-wide w-full focus:outline-none focus:text-yellow-500 transition-colors truncate"
+                        className="bg-transparent border-none text-[11px] font-bold text-hub-strong uppercase tracking-wide w-full focus:outline-none focus:text-yellow-500 transition-colors truncate"
                       />
                     </div>
                     <button 
@@ -200,7 +200,7 @@ export function Treino({ workoutProfile, setWorkoutProfile, workouts, setWorkout
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex gap-2">
-                      <span className="text-[9px] font-black uppercase tracking-widest bg-[#1f222a] text-hub-content px-2 py-1 rounded-md" title="Séries x Reps">
+                      <span className="text-[9px] font-black uppercase tracking-widest bg-hub-hover text-hub-strong px-2 py-1 rounded-md" title="Séries x Reps">
                         {ex.sets}x {ex.reps}
                       </span>
                       <span className="text-[9px] font-bold flex items-center gap-1 text-hub-faint uppercase tracking-widest" title="Descanso">
@@ -213,7 +213,7 @@ export function Treino({ workoutProfile, setWorkoutProfile, workouts, setWorkout
                         placeholder="kg"
                         value={ex.weight || ''}
                         onChange={(e) => handleUpdateWeight(day.id, exIndex, e.target.value)}
-                        className="w-14 bg-[#1f222a] border border-[#2a2d36] rounded text-right text-xs font-black text-hub-strong px-2 py-1 focus:outline-none focus:border-yellow-500 focus:bg-hub-base transition-all placeholder:text-hub-faint"
+                        className="w-14 bg-hub-hover border border-hub-border rounded text-right text-xs font-black text-hub-strong px-2 py-1 focus:outline-none focus:border-yellow-500 focus:bg-hub-base transition-all placeholder:text-hub-faint"
                       />
                     </div>
                   </div>
@@ -276,7 +276,7 @@ export function Treino({ workoutProfile, setWorkoutProfile, workouts, setWorkout
                   {/* Pseudo-checkbox visual */}
                   <div className="w-2 h-2 rounded-sm bg-emerald-500 opacity-0 group-hover:opacity-50 transition-opacity"></div>
                 </div>
-                <span className="text-[11px] text-hub-muted font-medium group-hover:text-slate-200 transition-colors">{item}</span>
+                <span className="text-[11px] text-hub-muted font-medium group-hover:text-hub-strong transition-colors">{item}</span>
               </li>
             ))}
           </ul>

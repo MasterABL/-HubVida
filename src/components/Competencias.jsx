@@ -87,7 +87,7 @@ export const Competencias = ({
                   type="number"
                   value={englishLevel}
                   onChange={(e) => setEnglishLevel(Math.min(100, Math.max(0, e.target.value)))}
-                  className="bg-[#1f222a] border border-slate-700 text-hub-strong w-14 text-center rounded py-1 text-xs"
+                  className="bg-hub-hover border border-hub-border text-hub-strong w-14 text-center rounded py-1 text-xs focus:outline-none focus:border-yellow-500"
                 />
                 <span className="text-yellow-500">%</span>
               </div>
@@ -180,7 +180,7 @@ export const Competencias = ({
                 <th className="pb-3 font-semibold text-right">Ação</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#1f222a]">
+            <tbody className="divide-y border-t border-hub-border divide-hub-border">
               {hardSkills.map((skill) => (
                 <tr
                   key={skill.id}
@@ -232,12 +232,10 @@ export const Competencias = ({
                         value={skill.level}
                         onChange={(e) =>
                           handleUpdateHardSkill(
-                            skill.id,
-                            'level',
                             Math.min(100, Math.max(0, e.target.value))
                           )
                         }
-                        className="bg-[#1f222a] border border-slate-700 rounded py-1 px-2 w-16 text-center focus:outline-none focus:border-yellow-500"
+                        className="bg-hub-hover border border-hub-border rounded py-1 px-2 w-16 text-center text-hub-strong focus:outline-none focus:border-yellow-500"
                       />
                       <span className="text-hub-faint text-xs">%</span>
                     </div>
