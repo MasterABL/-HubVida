@@ -15,13 +15,13 @@ const iconMap = {
 
 // Mapeamento de cores no tema escuro
 const colorMap = {
-  purple: { bg: 'bg-purple-500/10', border: 'border-purple-500/30', text: 'text-purple-300', icon: 'text-purple-400' },
-  yellow: { bg: 'bg-yellow-500/10', border: 'border-yellow-500/30', text: 'text-yellow-300', icon: 'text-yellow-400' },
-  blue:   { bg: 'bg-indigo-500/10', border: 'border-indigo-500/30', text: 'text-indigo-300', icon: 'text-indigo-400' },
-  green:  { bg: 'bg-emerald-500/10', border: 'border-emerald-500/30', text: 'text-emerald-300', icon: 'text-emerald-400' },
-  red:    { bg: 'bg-rose-500/10', border: 'border-rose-500/30', text: 'text-rose-300', icon: 'text-rose-400' },
-  gray:   { bg: 'bg-slate-700/30', border: 'border-slate-600/40', text: 'text-hub-content', icon: 'text-hub-muted' },
-  teal:   { bg: 'bg-teal-500/10', border: 'border-teal-500/30', text: 'text-teal-300', icon: 'text-teal-400' },
+  purple: { bg: 'bg-purple-500/10', border: 'border-purple-500/30', text: 'text-purple-700 dark:text-purple-300', icon: 'text-purple-500 dark:text-purple-400' },
+  yellow: { bg: 'bg-yellow-500/10', border: 'border-yellow-500/30', text: 'text-yellow-700 dark:text-yellow-300', icon: 'text-yellow-600 dark:text-yellow-400' },
+  blue:   { bg: 'bg-indigo-500/10', border: 'border-indigo-500/30', text: 'text-indigo-700 dark:text-indigo-300', icon: 'text-indigo-600 dark:text-indigo-400' },
+  green:  { bg: 'bg-emerald-500/10', border: 'border-emerald-500/30', text: 'text-emerald-700 dark:text-emerald-300', icon: 'text-emerald-600 dark:text-emerald-400' },
+  red:    { bg: 'bg-rose-500/10', border: 'border-rose-500/30', text: 'text-rose-700 dark:text-rose-300', icon: 'text-rose-600 dark:text-rose-400' },
+  gray:   { bg: 'bg-hub-inner', border: 'border-hub-border', text: 'text-hub-strong', icon: 'text-hub-faint' },
+  teal:   { bg: 'bg-teal-500/10', border: 'border-teal-500/30', text: 'text-teal-700 dark:text-teal-300', icon: 'text-teal-600 dark:text-teal-400' },
 };
 
 export const Rotina = ({
@@ -64,7 +64,7 @@ export const Rotina = ({
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       {/* Header */}
-      <div className="bg-gradient-to-r from-[#12141a] to-[#1a1d24] border border-hub-border rounded-xl p-6 md:p-8 shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="bg-hub-surface border border-hub-border rounded-xl p-6 md:p-8 shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-2xl font-black italic tracking-wider text-hub-strong uppercase">
             Rotina Diária
@@ -76,7 +76,7 @@ export const Rotina = ({
         {/* Progress */}
         <div className="flex flex-col items-end gap-1 w-full md:w-48">
           <span className="text-[10px] text-hub-faint font-bold uppercase tracking-widest">{progress}% do dia</span>
-          <div className="w-full h-2 bg-[#1f222a] rounded-full overflow-hidden">
+          <div className="w-full h-2 bg-hub-inner rounded-full overflow-hidden">
             <div
               className="h-full bg-yellow-500 rounded-full transition-all duration-700"
               style={{ width: `${progress}%` }}
@@ -146,7 +146,7 @@ export const Rotina = ({
                   <div
                     className={`flex-1 flex justify-between items-center p-3.5 rounded-xl font-semibold text-sm transition-all shadow-sm border ${
                       item.checked
-                        ? 'bg-[#0f1015] border-hub-border opacity-50'
+                        ? 'bg-hub-base border-hub-border opacity-50'
                         : `${colors.bg} ${colors.border}`
                     }`}
                   >
@@ -194,7 +194,7 @@ export const Rotina = ({
             <div className="flex justify-between gap-1 mb-4">
               {dias.map((d, i) => {
                 const status = gymAttendance[i];
-                let colorClass = 'bg-[#0f1015] text-hub-faint border border-hub-border hover:bg-slate-800'; // pending
+                let colorClass = 'bg-hub-inner text-hub-faint border border-hub-border hover:bg-hub-hover'; // pending
                 
                 if (status === 'done') {
                   colorClass = 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
@@ -216,7 +216,7 @@ export const Rotina = ({
             </div>
             
             <div className="flex flex-wrap gap-x-4 gap-y-2 text-[9px] font-bold text-hub-faint uppercase tracking-widest pt-3 border-t border-hub-border/50">
-               <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-[#1f222a]"></div> Pendente/Descanso</span>
+               <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-hub-inner"></div> Pendente/Descanso</span>
                <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-emerald-500/70"></div> Fui</span>
                <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-rose-500/70"></div> Faltei</span>
             </div>
