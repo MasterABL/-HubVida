@@ -1,0 +1,112 @@
+﻿
+> hubvida@0.0.0 build
+> vite build
+
+[36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32mÔ£ô[39m 23 modules transformed.
+node.exe : 
+[31mÔ£ù[39m Build 
+failed in 693ms
+No linha:1 caractere:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo 
+...
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: ([31mÔ£ù[39m   
+  Build failed in 6    
+93ms:String) [], R    
+emoteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+[31merror during 
+build:
+[31m[vite:esbuild] 
+Transform failed with 
+1 error:
+C:/Users/Abimael Balbin
+o/OneDrive/Documentos 
+- Gerais/HubVida/src/co
+mponents/VisaoGeral.jsx
+:16:2: ERROR: The 
+symbol "RefreshCw" has 
+already been 
+declared[31m
+file: 
+[36mC:/Users/Abimael B
+albino/OneDrive/Documen
+tos - Gerais/HubVida/sr
+c/components/VisaoGeral
+.jsx:16:2[31m
+[33m
+[33mThe symbol 
+"RefreshCw" has 
+already been 
+declared[33m
+14 |    Trash2,
+15 |    RefreshCw,
+16 |    RefreshCw,
+   |    ^
+17 |  } from 
+'lucide-react';
+18 |  import {
+[31m
+    at 
+failureErrorWithLog 
+(C:\Users\Abimael Balbi
+no\OneDrive\Documentos 
+- Gerais\HubVida\node_m
+odules\esbuild\lib\main
+.js:1467:15)
+    at 
+C:\Users\Abimael Balbin
+o\OneDrive\Documentos 
+- Gerais\HubVida\node_m
+odules\esbuild\lib\main
+.js:736:50
+    at responseCallback
+s.<computed> 
+(C:\Users\Abimael Balbi
+no\OneDrive\Documentos 
+- Gerais\HubVida\node_m
+odules\esbuild\lib\main
+.js:603:9)
+    at 
+handleIncomingPacket 
+(C:\Users\Abimael Balbi
+no\OneDrive\Documentos 
+- Gerais\HubVida\node_m
+odules\esbuild\lib\main
+.js:658:12)
+    at 
+Socket.readFromStdout 
+(C:\Users\Abimael Balbi
+no\OneDrive\Documentos 
+- Gerais\HubVida\node_m
+odules\esbuild\lib\main
+.js:581:7)
+    at Socket.emit 
+(node:events:508:28)
+    at addChunk (node:i
+nternal/streams/readabl
+e:563:12)
+    at readableAddChunk
+PushByteMode (node:inte
+rnal/streams/readable:5
+14:3)
+    at Readable.push (n
+ode:internal/streams/re
+adable:394:5)
+    at 
+Pipe.onStreamRead (node
+:internal/stream_base_c
+ommons:189:23)[39m

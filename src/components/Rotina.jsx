@@ -38,7 +38,7 @@ export const Rotina = ({
   gymAttendance,
   setGymAttendance,
 }) => {
-  const routine = routinesData[activeRoutine];
+  const routine = routinesData?.[activeRoutine] || { timeline: [] };
   const dias = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
   const diasAtivos = [0, 2, 4, 5]; // Ter, Qui, Sex, Dom
 
@@ -110,8 +110,8 @@ export const Rotina = ({
             key={day}
             onClick={() => setActiveRoutine(day)}
             className={`flex-1 min-w-[80px] py-2.5 px-3 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${activeRoutine === day
-                ? 'bg-yellow-500 text-slate-900 shadow'
-                : 'text-hub-faint hover:text-hub-strong hover:bg-hub-hover'
+              ? 'bg-yellow-500 text-slate-900 shadow'
+              : 'text-hub-faint hover:text-hub-strong hover:bg-hub-hover'
               }`}
           >
             {day}
@@ -162,8 +162,8 @@ export const Rotina = ({
                   </span>
                   <div
                     className={`flex-1 flex justify-between items-center p-3.5 rounded-xl font-semibold text-sm transition-all shadow-sm border ${item.checked
-                        ? 'bg-hub-base border-hub-border opacity-50'
-                        : `${colors.bg} ${colors.border}`
+                      ? 'bg-hub-base border-hub-border opacity-50'
+                      : `${colors.bg} ${colors.border}`
                       }`}
                   >
                     <div className="flex items-center gap-3">

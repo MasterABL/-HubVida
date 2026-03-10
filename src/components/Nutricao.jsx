@@ -21,7 +21,6 @@ export const Nutricao = ({ isLoaded = true, dailyTracker = { water: false, creat
     }));
   };
 
-  const progressPercent = (completedCount / 3) * 100;
 
   if (!isLoaded) {
     return (
@@ -40,6 +39,9 @@ export const Nutricao = ({ isLoaded = true, dailyTracker = { water: false, creat
       </div>
     );
   }
+
+  const completedCount = Object.values(dailyTracker).filter(Boolean).length;
+  const progressPercent = (completedCount / 3) * 100;
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500 pb-10">
