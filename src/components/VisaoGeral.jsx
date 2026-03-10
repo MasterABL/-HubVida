@@ -64,6 +64,11 @@ export const VisaoGeral = ({
   gymAttendance,
   sleepData,
   workoutProfile,
+  haircareStatus,
+  haircareMessage,
+  isWashDay,
+  isHaircareDoneToday,
+  toggleHaircareDone,
 }) => {
   // Estado de cotações
   const [cotacoes, setCotacoes] = useState({ USD: null, EUR: null, GBP: null });
@@ -389,6 +394,48 @@ export const VisaoGeral = ({
           <p className="text-[10px] text-hub-muted font-bold uppercase tracking-widest">
             Disciplinas Aprovadas
           </p>
+        </div>
+
+        {/* Widget 7: Status Capilar (Haircare) */}
+        <div
+          onClick={() => setActiveTab('Haircare')}
+          className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl cursor-pointer group hover:border-fuchsia-500/50 transition-all flex flex-col justify-between h-72 md:col-span-2 lg:col-span-3"
+        >
+          <div className="w-full flex justify-between items-center mb-4">
+            <h2 className="text-fuchsia-500 font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+              <Zap className="w-4 h-4" /> Status Capilar Hoje
+            </h2>
+            <ExternalLink className="w-4 h-4 text-hub-faint group-hover:text-fuchsia-500 transition-colors" />
+          </div>
+
+          <div className="flex-1 flex flex-col md:flex-row items-center gap-6 justify-between bg-hub-inner p-6 rounded-xl border border-hub-border">
+            <div className="flex-1 text-center md:text-left">
+              <p className="text-sm font-bold text-hub-muted uppercase tracking-widest mb-2">Cronograma do Dia</p>
+              <h3 className={`text-3xl font-black mb-3 ${isWashDay ? 'text-fuchsia-500' : 'text-sky-500'}`}>
+                {haircareStatus}
+              </h3>
+              <p className="text-sm font-medium text-hub-content leading-relaxed">
+                {haircareMessage}
+              </p>
+            </div>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleHaircareDone();
+              }}
+              className={`shrink-0 w-32 h-32 rounded-full border-4 flex flex-col items-center justify-center transition-all ${isHaircareDoneToday
+                  ? 'bg-fuchsia-500/10 border-fuchsia-500 text-fuchsia-500 scale-105'
+                  : 'bg-hub-base border-hub-border text-hub-faint hover:border-fuchsia-500/50 hover:text-fuchsia-400'
+                }`}
+            >
+              <CheckSquare className={`w-8 h-8 mb-2 ${isHaircareDoneToday ? 'hidden' : 'block'}`} />
+              <CheckSquare className={`w-8 h-8 mb-2 ${isHaircareDoneToday ? 'block' : 'hidden'}`} />
+              <span className="font-bold text-sm tracking-wide">
+                {isHaircareDoneToday ? 'CONCLUÍDO' : 'MARCAR'}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
 

@@ -26,6 +26,7 @@ import {
   ChevronRight,
   Utensils,
   Lightbulb,
+  Scissors,
 } from 'lucide-react';
 
 import { VisaoGeral } from './components/VisaoGeral';
@@ -43,6 +44,7 @@ import { Auth } from './components/Auth';
 import { SplashScreen } from './components/SplashScreen';
 import { ScrollReveal } from './components/ScrollReveal';
 import { supabase } from './supabase';
+import { Haircare } from './components/Haircare';
 
 import { InstallPWA } from './components/InstallPWA';
 import { Changelog } from './components/Changelog';
@@ -445,6 +447,43 @@ export default function App() {
     creatine: false,
     meals: false,
   });
+
+  // -- HAIRCARE --
+  const [haircareDateDone, setHaircareDateDone] = useSupabaseStorage('hubvida_haircare_done_date', '');
+
+  // LÓGICA DO CRONOGRAMA CAPILAR
+  const today = new Date();
+  const dayOfWeek = today.getDay(); // 0 = Domingo, 1 = Segunda, ..., 6 = Sábado
+
+  let haircareStatus = 'Day After';
+  let haircareMessage = 'Modo Day After: Borrifador + Óleo para frizz.';
+  let isWashDay = false;
+
+  if (dayOfWeek === 2) { // Terça
+    haircareStatus = 'Nutrição';
+    haircareMessage = 'Hoje é dia de Lavagem: Nutrição. Lembre-se do Pré-Poo!';
+    isWashDay = true;
+  } else if (dayOfWeek === 4) { // Quinta
+    haircareStatus = 'Hidratação';
+    haircareMessage = 'Hoje é dia de Lavagem: Hidratação. Lembre-se do Pré-Poo!';
+    isWashDay = true;
+  } else if (dayOfWeek === 0) { // Domingo
+    haircareStatus = 'Reconstrução + Acidificação';
+    haircareMessage = 'Hoje é dia de Lavagem pesada: Reconstrução + Acidificação.';
+    isWashDay = true;
+  }
+
+  // Verifica se a data atual "esfriou" o reset (Meia-noite limpou)
+  const haircareTodayStr = today.toISOString().split('T')[0];
+  const isHaircareDoneToday = haircareDateDone === haircareTodayStr;
+
+  const toggleHaircareDone = () => {
+    if (isHaircareDoneToday) {
+      setHaircareDateDone('');
+    } else {
+      setHaircareDateDone(haircareTodayStr);
+    }
+  };
 
   // Estados Locais (UI Control)
   const [newSkill, setNewSkill] = useState({ category: 'Gestão (ADM)', name: '', level: 50, cert: '' });
@@ -852,6 +891,7 @@ export default function App() {
                 { name: 'Nutrição & Base', icon: Utensils },
                 { name: 'Controle de Sono', icon: Moon },
                 { name: 'Academia (Treino)', icon: Dumbbell },
+                { name: 'Haircare', icon: Scissors },
                 { name: 'Brain Dump', icon: Lightbulb },
                 { name: 'Produção Acadêmica', icon: FileText },
                 { name: 'Competências', icon: Brain },
@@ -1045,6 +1085,18 @@ export default function App() {
                       setWorkoutProfile={setWorkoutProfile}
                       workouts={workouts}
                       setWorkouts={setWorkouts}
+                    />
+                  </ScrollReveal>
+                </div>
+
+                <div id="Haircare" className="scroll-mt-24 module-section">
+                  <ScrollReveal delay={50}>
+                    <Haircare
+                      haircareStatus={haircareStatus}
+                      haircareMessage={haircareMessage}
+                      isWashDay={isWashDay}
+                      isHaircareDoneToday={isHaircareDoneToday}
+                      toggleHaircareDone={toggleHaircareDone}
                     />
                   </ScrollReveal>
                 </div>

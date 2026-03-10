@@ -11,6 +11,7 @@ const SHORTCUTS = [
     { key: 'Alt + 7', label: 'Competências', id: 'Competências' },
     { key: 'Alt + 8', label: 'Faculdade (ADM)', id: 'Faculdade (ADM)' },
     { key: 'Alt + 9', label: 'Visão Geral', id: 'Visão Geral' },
+    { key: 'Alt + 0', label: 'Haircare', id: 'Haircare' },
 ];
 
 export function KeyboardShortcuts({ isMobileMenuOpen, setIsMobileMenuOpen }) {
@@ -34,10 +35,10 @@ export function KeyboardShortcuts({ isMobileMenuOpen, setIsMobileMenuOpen }) {
                 if (isMobileMenuOpen) setIsMobileMenuOpen(false);
             }
 
-            // Atalhos Alt + 1 a 9
+            // Atalhos Alt + 0 a 9
             if (e.altKey && !e.ctrlKey && !e.shiftKey) {
                 const num = parseInt(e.key);
-                if (num >= 1 && num <= 9) {
+                if (num >= 0 && num <= 9) {
                     e.preventDefault();
                     const shortcut = SHORTCUTS.find(s => s.key === `Alt + ${num}`);
                     if (shortcut) {
