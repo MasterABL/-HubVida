@@ -772,7 +772,10 @@ export default function App() {
                 className="text-hub-faint p-2 hover:text-yellow-500 transition-colors"
                 title="Alternar Tema"
               >
-                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                <div className="relative w-5 h-5">
+                  <Sun className={`absolute inset-0 w-5 h-5 transition-all duration-[350ms] ease-in-out ${theme === 'dark' ? 'rotate-[360deg] scale-100 opacity-100' : 'rotate-0 scale-50 opacity-0'}`} />
+                  <Moon className={`absolute inset-0 w-5 h-5 transition-all duration-[350ms] ease-in-out ${theme === 'light' ? 'rotate-0 scale-100 opacity-100' : '-rotate-[360deg] scale-50 opacity-0'}`} />
+                </div>
               </button>
               <button
                 className="text-hub-strong p-2"
@@ -879,14 +882,11 @@ export default function App() {
                   <div className="flex items-center gap-1">
                     <button
                       onClick={toggleTheme}
-                      className="group w-8 h-8 rounded-lg bg-hub-base flex items-center justify-center text-hub-faint hover:text-yellow-500 transition-all duration-300"
+                      className="group relative w-8 h-8 rounded-lg bg-hub-base flex items-center justify-center text-hub-faint hover:text-yellow-500 transition-all duration-300"
                       title="Alternar Tema"
                     >
-                      {theme === 'dark' ? (
-                        <Sun className="w-4 h-4 transition-transform duration-500 group-hover:rotate-45" />
-                      ) : (
-                        <Moon className="w-4 h-4 transition-transform duration-500 group-hover:-rotate-12" />
-                      )}
+                      <Sun className={`absolute w-4 h-4 transition-all duration-[350ms] ease-in-out ${theme === 'dark' ? 'rotate-[360deg] scale-100 opacity-100' : 'rotate-[-90deg] scale-50 opacity-0'}`} />
+                      <Moon className={`absolute w-4 h-4 transition-all duration-[350ms] ease-in-out ${theme === 'light' ? 'rotate-0 scale-100 opacity-100' : 'rotate-[90deg] scale-50 opacity-0'}`} />
                     </button>
                     <button
                       onClick={handleLogout}

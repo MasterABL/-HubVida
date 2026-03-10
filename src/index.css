@@ -15,12 +15,16 @@
 }
 
 :root {
-  /* LIGHT MODE - Um branco suave (como #f8fafc) não ofusca a visão */
-  --hub-base: #f8fafc;
+  /* LIGHT MODE - Soft premium background */
+  --hub-base-gradient: linear-gradient(135deg, #f0f4ff 0%, #faf5ff 100%);
   --hub-surface: #ffffff;
+  --hub-backdrop: none;
+  --hub-surface-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+
   --hub-inner: #f1f5f9;
   --hub-hover: #e2e8f0;
-  --hub-border: #cbd5e1;
+  --hub-border: rgba(0, 0, 0, 0.08);
+  /* Suave para o claro */
   --hub-border-hover: #94a3b8;
 
   --hub-content: #334155;
@@ -30,13 +34,17 @@
 }
 
 .dark {
-  /* DARK MODE - O padrão antigo */
-  --hub-base: #0a0b0e;
-  --hub-surface: #12141a;
-  --hub-inner: #0f1115;
-  --hub-hover: #1a1d24;
-  --hub-border: #1f222a;
-  --hub-border-hover: #2d333b;
+  /* DARK MODE - Premium deep gradient & glass morphism */
+  --hub-base-gradient: linear-gradient(135deg, #0f0f1a 0%, #1a0f2e 100%);
+  --hub-surface: rgba(255, 255, 255, 0.05);
+  /* 5% opacity background for glass */
+  --hub-backdrop: blur(10px);
+  --hub-surface-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+
+  --hub-inner: rgba(255, 255, 255, 0.02);
+  --hub-hover: rgba(255, 255, 255, 0.08);
+  --hub-border: rgba(255, 255, 255, 0.08);
+  --hub-border-hover: rgba(255, 255, 255, 0.15);
 
   --hub-content: #cbd5e1;
   --hub-muted: #94a3b8;
@@ -57,6 +65,34 @@
 html,
 body {
   scroll-behavior: smooth;
+  min-height: 100vh;
+}
+
+body {
+  background: var(--hub-base-gradient);
+  background-attachment: fixed;
+}
+
+/* Sutil Noise Texture */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  /* Apenas 3% */
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Aplicação de sombra e blur no card principal */
+.bg-hub-surface {
+  backdrop-filter: var(--hub-backdrop);
+  -webkit-backdrop-filter: var(--hub-backdrop);
+  box-shadow: var(--hub-surface-shadow);
 }
 
 /* =========================================================
@@ -64,10 +100,7 @@ body {
    ========================================================= */
 
 /* 1. Módulo Principal (Container) */
-.scroll-reveal-wrapper {
-  /* Não aplica transition global no wrapper para não afetar os headers.
-     O reveal só deve acontecer no conteúdo interno permitido. */
-}
+/* O reveal só deve acontecer no conteúdo interno permitido, então o wrapper fica clean. */
 
 /* Mantendo o wrapper base invisível sem transição (caso queira revelar conteúdo q não é header) 
    Mas NÃO aplicamos translateY global */
@@ -153,8 +186,8 @@ body,
 .text-hub-strong,
 .text-hub-muted,
 .text-hub-faint {
-  transition-property: background-color, border-color, color;
-  transition-duration: 300ms;
+  transition-property: background, background-color, border-color, color, backdrop-filter, box-shadow;
+  transition-duration: 350ms;
   transition-timing-function: ease;
 }
 
