@@ -44,6 +44,11 @@ import { SplashScreen } from './components/SplashScreen';
 import { ScrollReveal } from './components/ScrollReveal';
 import { supabase } from './supabase';
 
+import { InstallPWA } from './components/InstallPWA';
+import { Changelog } from './components/Changelog';
+import { Onboarding } from './components/Onboarding';
+import { KeyboardShortcuts } from './components/KeyboardShortcuts';
+
 // --- CONFIGURAÇÕES INICIAIS E DADOS MOCKADOS ---
 const INITIAL_HARD_SKILLS = [
   { id: 1, category: 'Gestão (ADM)', name: 'Gestão Ágil', level: 100, cert: 'Scrum.org' },
@@ -455,7 +460,7 @@ export default function App() {
   const [expandedSubject, setExpandedSubject] = useState(null);
   const [syncStatus, setSyncStatus] = useState(null); // null | 'saving' | 'saved' | 'error'
   const [session, setSession] = useState(null);
-
+  const [showTour, setShowTour] = useState(false);
   // -- TEMA CLARO/ESCURO --
   const [theme, setTheme] = useState(() => localStorage.getItem('hubvida_theme') || 'dark');
 
@@ -512,10 +517,23 @@ export default function App() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+
+      if (session) {
+        // Verifica onboarding
+        const hasSeenTour = localStorage.getItem('@hubvida/hasSeenTour');
+        if (!hasSeenTour) {
+          setShowTour(true);
+        }
+      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const handleCloseTour = () => {
+    setShowTour(false);
+    localStorage.setItem('@hubvida/hasSeenTour', 'true');
+  };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -741,6 +759,8 @@ export default function App() {
         <Auth />
       ) : (
         <div className="min-h-screen bg-hub-base flex flex-col md:flex-row font-sans selection:bg-yellow-500/30 text-hub-content">
+          <InstallPWA />
+          {session && <Onboarding isVisible={showTour} onClose={handleCloseTour} />}
           {/* Mobile Header Toggle */}
           <div className="md:hidden bg-hub-surface p-4 flex justify-between items-center border-b border-hub-border sticky top-0 z-40">
             <div className="flex items-center gap-3">
@@ -859,6 +879,9 @@ export default function App() {
                   {item.name}
                 </button>
               ))}
+              <div className="pt-2">
+                <Changelog />
+              </div>
             </nav>
 
             {/* Profile / Status Card */}
@@ -888,6 +911,10 @@ export default function App() {
                       <Sun className={`absolute w-4 h-4 transition-all duration-[350ms] ease-in-out ${theme === 'dark' ? 'rotate-[360deg] scale-100 opacity-100' : 'rotate-[-90deg] scale-50 opacity-0'}`} />
                       <Moon className={`absolute w-4 h-4 transition-all duration-[350ms] ease-in-out ${theme === 'light' ? 'rotate-0 scale-100 opacity-100' : 'rotate-[90deg] scale-50 opacity-0'}`} />
                     </button>
+                    <KeyboardShortcuts
+                      isMobileMenuOpen={isMobileMenuOpen}
+                      setIsMobileMenuOpen={setIsMobileMenuOpen}
+                    />
                     <button
                       onClick={handleLogout}
                       className="w-8 h-8 rounded-lg bg-hub-base flex items-center justify-center text-hub-faint hover:text-rose-500 hover:bg-rose-500/10 transition-all"
