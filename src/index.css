@@ -7,7 +7,7 @@
   --color-hub-hover: var(--hub-hover);
   --color-hub-border: var(--hub-border);
   --color-hub-border-hover: var(--hub-border-hover);
-  
+
   --color-hub-content: var(--hub-content);
   --color-hub-muted: var(--hub-muted);
   --color-hub-faint: var(--hub-faint);
@@ -22,7 +22,7 @@
   --hub-hover: #e2e8f0;
   --hub-border: #cbd5e1;
   --hub-border-hover: #94a3b8;
-  
+
   --hub-content: #334155;
   --hub-muted: #475569;
   --hub-faint: #64748b;
@@ -37,7 +37,7 @@
   --hub-hover: #1a1d24;
   --hub-border: #1f222a;
   --hub-border-hover: #2d333b;
-  
+
   --hub-content: #cbd5e1;
   --hub-muted: #94a3b8;
   --hub-faint: #64748b;
@@ -46,14 +46,90 @@
 
 /* Ocultar barra de rolagem mas manter funcionalidade touch/mouse */
 .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-}
-.scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  display: none;
 }
 
-html, body {
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+html,
+body {
   scroll-behavior: smooth;
 }
 
+/* =========================================================
+   SCROLL REVEAL (Refined & Premium)
+   ========================================================= */
+
+/* 1. Módulo Principal (Container) */
+.scroll-reveal-wrapper {
+  /* Duração 450ms, Easing cubic-bezier premium (feeling nativo ios/android) */
+  transition: opacity 450ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 450ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal-wrapper.is-hidden {
+  opacity: 0;
+}
+
+/* Sentido do scroll afeta o ponto de origem da animação (cima ou baixo) */
+.scroll-reveal-wrapper.is-hidden.scrolling-down {
+  transform: translateY(20px);
+}
+
+.scroll-reveal-wrapper.is-hidden.scrolling-up {
+  transform: translateY(-20px);
+}
+
+.scroll-reveal-wrapper.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 2. Staggering nos Itens Internos (Ex: cards dentro de um .grid) */
+.scroll-reveal-wrapper .grid>* {
+  /* Mesma duração e easing para garantir fluidez perfeita */
+  transition: opacity 450ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 450ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal-wrapper.is-hidden .grid>* {
+  opacity: 0;
+}
+
+.scroll-reveal-wrapper.is-hidden.scrolling-down .grid>* {
+  transform: translateY(20px);
+}
+
+.scroll-reveal-wrapper.is-hidden.scrolling-up .grid>* {
+  transform: translateY(-20px);
+}
+
+.scroll-reveal-wrapper.is-visible .grid>* {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 3. Delay Incremental (80ms incrementos, max 5 elementos) */
+.scroll-reveal-wrapper.is-visible .grid>*:nth-child(1) {
+  transition-delay: 0ms;
+}
+
+.scroll-reveal-wrapper.is-visible .grid>*:nth-child(2) {
+  transition-delay: 80ms;
+}
+
+.scroll-reveal-wrapper.is-visible .grid>*:nth-child(3) {
+  transition-delay: 160ms;
+}
+
+.scroll-reveal-wrapper.is-visible .grid>*:nth-child(4) {
+  transition-delay: 240ms;
+}
+
+/* Do 5º em diante todos recebem 320ms para não atrasar e não ficar lento */
+.scroll-reveal-wrapper.is-visible .grid>*:nth-child(n+5) {
+  transition-delay: 320ms;
+}
