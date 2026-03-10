@@ -95,6 +95,13 @@ body::before {
   box-shadow: var(--hub-surface-shadow);
 }
 
+/* Correção para o fundo de <option> nativos no Chrome/Edge em Dark Mode */
+.dark option {
+  background-color: #0f1115;
+  /* Sólido, mesmo com glass morphism nas divs */
+  color: #cbd5e1;
+}
+
 /* =========================================================
    SCROLL REVEAL (Refined & Premium)
    ========================================================= */
