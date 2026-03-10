@@ -40,6 +40,7 @@ import { Sono } from './components/Sono';
 import { Nutricao } from './components/Nutricao';
 import { BrainDump } from './components/BrainDump';
 import { Auth } from './components/Auth';
+import { SplashScreen } from './components/SplashScreen';
 import { supabase } from './supabase';
 
 // --- CONFIGURAÇÕES INICIAIS E DADOS MOCKADOS ---
@@ -451,7 +452,11 @@ export default function App() {
 
   const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
 
+  const [isAppReady, setIsAppReady] = useState(false);
+
   useEffect(() => {
+    const minDelay = new Promise(resolve => setTimeout(resolve, 800));
+
     const initSession = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
@@ -461,7 +466,10 @@ export default function App() {
         console.warn('Sessão expirada ou token inválido limpo:', err);
       }
     };
-    initSession();
+    
+    Promise.all([initSession(), minDelay]).then(() => {
+      setIsAppReady(true);
+    });
 
     const {
       data: { subscription },
@@ -693,13 +701,15 @@ export default function App() {
     };
   }, [faculdadeData]);
 
-  if (!session) {
-    return <Auth />;
-  }
-
   // Use the merged components logic in return
   return (
-    <div className="min-h-screen bg-hub-base flex flex-col md:flex-row font-sans selection:bg-yellow-500/30 text-hub-content">
+    <>
+      <SplashScreen isReady={isAppReady} />
+      
+      {!session ? (
+        <Auth />
+      ) : (
+        <div className="min-h-screen bg-hub-base flex flex-col md:flex-row font-sans selection:bg-yellow-500/30 text-hub-content">
       {/* Mobile Header Toggle */}
       <div className="md:hidden bg-hub-surface p-4 flex justify-between items-center border-b border-hub-border sticky top-0 z-40">
         <div className="flex items-center gap-3">
@@ -1008,5 +1018,7 @@ export default function App() {
         </div>
       </main>
     </div>
+      )}
+    </>
   );
 }
