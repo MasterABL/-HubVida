@@ -410,6 +410,11 @@ export default function App() {
   // -- BRAIN DUMP --
   const [brainDumpNotes, setBrainDumpNotes] = useSupabaseStorage('hubvida_braindump_notes', []);
 
+  // -- ACADEMIA TRACKER (Rotina Diária) --
+  const [gymAttendance, setGymAttendance] = useSupabaseStorage('hubvida_gym_tracker_v2', {
+    0: 'pending', 1: 'pending', 2: 'pending', 3: 'pending', 4: 'pending', 5: 'pending', 6: 'pending'
+  });
+
   // -- NUTRIÇÃO --
   const [nutritionTracker, setNutritionTracker] = useSupabaseStorage('hubvida_nutrition_tracker', {
     water: false,
@@ -965,6 +970,8 @@ export default function App() {
               handleAddRoutineTask={handleAddRoutineTask}
               handleToggleRoutineTask={handleToggleRoutineTask}
               handleRemoveRoutineTask={handleRemoveRoutineTask}
+              gymAttendance={gymAttendance}
+              setGymAttendance={setGymAttendance}
             />
           ) : activeTab === 'Controle de Sono' ? (
             <Sono 
