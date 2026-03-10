@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
 import { Lock, Mail, KeyRound, ArrowRight, Loader2, ShieldCheck, Zap } from 'lucide-react';
 
@@ -9,6 +9,16 @@ export const Auth = () => {
   const [password, setPassword] = useState('');
   const [errorPrompt, setErrorPrompt] = useState(null);
   const [successPrompt, setSuccessPrompt] = useState(null);
+
+  useEffect(() => {
+    if (errorPrompt || successPrompt) {
+      const timer = setTimeout(() => {
+        setErrorPrompt(null);
+        setSuccessPrompt(null);
+      }, 3500);
+      return () => clearTimeout(timer);
+    }
+  }, [errorPrompt, successPrompt]);
 
   const handleAuth = async (e) => {
     e.preventDefault();
@@ -125,19 +135,6 @@ export const Auth = () => {
                )}
             </button>
           </form>
-
-          <div className="mt-8 pt-6 border-t border-hub-border text-center">
-            <button
-               onClick={() => {
-                 setIsLogin(!isLogin);
-                 setErrorPrompt(null);
-                 setSuccessPrompt(null);
-               }}
-               className="text-xs text-hub-faint hover:text-yellow-500 font-bold uppercase tracking-wider transition-colors"
-            >
-               {isLogin ? 'Ou criar uma nova conta mestra' : 'Já possui acesso? Voltar ao Login'}
-            </button>
-          </div>
 
         </div>
       </div>

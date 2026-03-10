@@ -33,6 +33,8 @@ export const Rotina = ({
   handleAddRoutineTask,
   handleToggleRoutineTask,
   handleRemoveRoutineTask,
+  gymAttendance,
+  setGymAttendance,
 }) => {
   const routine = routinesData[activeRoutine];
   const dias = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
@@ -42,16 +44,6 @@ export const Rotina = ({
   const progress = routine.timeline.length > 0
     ? Math.round((checkedCount / routine.timeline.length) * 100)
     : 0;
-
-  // Gerenciamento do Tracker de Academia Semanal usando Local Storage Simples
-  const [gymAttendance, setGymAttendance] = useState(() => {
-    const saved = localStorage.getItem('hubvida_gym_tracker');
-    return saved ? JSON.parse(saved) : { 0: 'pending', 1: 'pending', 2: 'pending', 3: 'pending', 4: 'pending', 5: 'pending', 6: 'pending' };
-  });
-
-  useEffect(() => {
-    localStorage.setItem('hubvida_gym_tracker', JSON.stringify(gymAttendance));
-  }, [gymAttendance]);
 
   const toggleGymAttendance = (dayIndex) => {
     setGymAttendance(prev => {

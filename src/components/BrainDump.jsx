@@ -10,7 +10,7 @@ import {
   CloudRain
 } from 'lucide-react';
 
-export const BrainDump = () => {
+export const BrainDump = ({ notes = [], setNotes }) => {
   const [noteText, setNoteText] = useState('');
   const [selectedMoods, setSelectedMoods] = useState([]);
   const [isAddingMood, setIsAddingMood] = useState(false);
@@ -21,22 +21,6 @@ export const BrainDump = () => {
     { id: 'happy', icon: Smile, label: 'No Controle', color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/30' },
     { id: 'neutral', icon: CloudRain, label: 'Exausto', color: 'text-blue-500', bg: 'bg-blue-500/10', border: 'border-blue-500/30' },
     { id: 'stressed', icon: Frown, label: 'Estresse Alto', color: 'text-rose-500', bg: 'bg-rose-500/10', border: 'border-rose-500/30' },
-  ]);
-
-  // Estado local para armazenar as notas simuladamente
-  const [notes, setNotes] = useState([
-    {
-      id: 1,
-      text: 'Ideia para o Capítulo 3 da Tese: Usar o modelo comportamental de Kahneman.',
-      moods: ['focus'],
-      date: 'Hoje, 09:30',
-    },
-    {
-      id: 2,
-      text: 'Lembrar de comprar Whey no mercado "Boa".',
-      moods: ['neutral'],
-      date: 'Ontem, 18:45',
-    }
   ]);
 
   const toggleMood = (id) => {

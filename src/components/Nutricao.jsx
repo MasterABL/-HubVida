@@ -11,13 +11,7 @@ import {
   BatteryCharging
 } from 'lucide-react';
 
-export const Nutricao = () => {
-  // Estado para os botões de engajamento diário
-  const [dailyTracker, setDailyTracker] = useState({
-    water: false,
-    creatine: false,
-    meals: false,
-  });
+export const Nutricao = ({ dailyTracker = { water: false, creatine: false, meals: false }, setDailyTracker }) => {
 
   const toggleTracker = (item) => {
     setDailyTracker(prev => ({

@@ -34,7 +34,13 @@ const getDaysUntil = (dateStr) => {
   if (!target) return null;
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+  
+  let diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+  if (diff < 0) {
+    target.setFullYear(target.getFullYear() + 1);
+    diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+  }
+  
   return diff;
 };
 
@@ -301,7 +307,14 @@ export const VisaoGeral = ({
                   />
                   <button onClick={handleAddProva} className="bg-yellow-500 text-slate-900 rounded px-2 py-1 text-xs font-bold hover:bg-yellow-400">+</button>
                 </div>
-                {(provas || []).map(p => {
+                {[...(provas || [])].sort((a,b) => {
+                  const dA = parseDate(a.data);
+                  const dB = parseDate(b.data);
+                  if (!dA && !dB) return 0;
+                  if (!dA) return 1;
+                  if (!dB) return -1;
+                  return dA - dB;
+                }).map(p => {
                   const dias = getDaysUntil(p.data);
                   return (
                     <div key={p.id} className="flex items-center justify-between bg-hub-base rounded px-2 py-1.5 border border-hub-border">

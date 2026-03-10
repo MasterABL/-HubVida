@@ -10,11 +10,15 @@ export function Treino({ workoutProfile, setWorkoutProfile, workouts, setWorkout
   const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
-    if (showToast) {
-      const timer = setTimeout(() => setShowToast(false), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [showToast]);
+    const handler = (e) => {
+      if (e.detail === 'saved') {
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+      }
+    };
+    window.addEventListener('hubvida_sync', handler);
+    return () => window.removeEventListener('hubvida_sync', handler);
+  }, []);
 
   const handleEditProfile = () => {
     setTempProfile({ peso: workoutProfile.peso, altura: workoutProfile.altura });
@@ -42,7 +46,6 @@ export function Treino({ workoutProfile, setWorkoutProfile, workouts, setWorkout
     });
     setWorkouts(updatedWorkouts);
     setWorkouts(updatedWorkouts);
-    setShowToast(true);
   };
 
   const handleAddExercise = (dayId) => {

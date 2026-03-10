@@ -327,8 +327,13 @@ const useSupabaseStorage = (key, initialValue) => {
   }, [key]);
 
   // 2. Salvar na nuvem com debounce e emitir eventos de status
+  const isFirstMount = React.useRef(true);
   useEffect(() => {
     if (!isLoaded) return;
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
 
     // Avisa a UI que está salvando
     window.dispatchEvent(new CustomEvent('hubvida_sync', { detail: 'saving' }));
@@ -360,8 +365,12 @@ const useSupabaseStorage = (key, initialValue) => {
 
 // --- COMPONENTE PRINCIPAL APP ---
 export default function App() {
-  const [activeTab, setActiveTab] = useState('Visão Geral');
+  const [activeTab, setActiveTab] = useState(() => localStorage.getItem('hubvida_activeTab') || 'Visão Geral');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem('hubvida_activeTab', activeTab);
+  }, [activeTab]);
 
   // Estados Persistentes - Global
   const [hardSkills, setHardSkills] = useSupabaseStorage('hubvida_hardSkills', INITIAL_HARD_SKILLS);
@@ -398,6 +407,16 @@ export default function App() {
     leitura: [],
   });
 
+  // -- BRAIN DUMP --
+  const [brainDumpNotes, setBrainDumpNotes] = useSupabaseStorage('hubvida_braindump_notes', []);
+
+  // -- NUTRIÇÃO --
+  const [nutritionTracker, setNutritionTracker] = useSupabaseStorage('hubvida_nutrition_tracker', {
+    water: false,
+    creatine: false,
+    meals: false,
+  });
+
   // Estados Locais (UI Control)
   const [newSkill, setNewSkill] = useState({ category: 'Gestão (ADM)', name: '', level: 50, cert: '' });
   const [activeMonth, setActiveMonth] = useState(CURRENT_MONTH);
@@ -428,9 +447,16 @@ export default function App() {
   const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
+    const initSession = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) throw error;
+        setSession(session);
+      } catch (err) {
+        console.warn('Sessão expirada ou token inválido limpo:', err);
+      }
+    };
+    initSession();
 
     const {
       data: { subscription },
@@ -463,6 +489,23 @@ export default function App() {
       setFaculdadeData(INITIAL_FACULDADE);
     }
   }, []);
+
+  // -- RESET DA ROTINA (LÓGICA TEMPORAL) --
+  const [lastRoutineDate, setLastRoutineDate] = useSupabaseStorage('hubvida_last_routine_date', '');
+  const todayStr = new Date().toISOString().split('T')[0];
+
+  useEffect(() => {
+    if (lastRoutineDate && lastRoutineDate !== todayStr && Object.keys(routinesData).length > 0) {
+      let newData = { ...routinesData };
+      Object.keys(newData).forEach(day => {
+        newData[day].timeline = newData[day].timeline.map(t => ({ ...t, checked: false }));
+      });
+      setRoutinesData(newData);
+      setLastRoutineDate(todayStr);
+    } else if (lastRoutineDate === '') {
+      setLastRoutineDate(todayStr);
+    }
+  }, [lastRoutineDate, routinesData]);
 
   const calculateCategoryAvg = (category) => {
     const skills = hardSkills.filter((s) => s.category === category);
@@ -929,9 +972,15 @@ export default function App() {
                sleepData={sleepData} setSleepData={setSleepData}
             />
           ) : activeTab === 'Nutrição & Base' ? (
-            <Nutricao />
+            <Nutricao 
+              dailyTracker={nutritionTracker}
+              setDailyTracker={setNutritionTracker}
+            />
           ) : activeTab === 'Brain Dump' ? (
-            <BrainDump />
+            <BrainDump 
+              notes={brainDumpNotes}
+              setNotes={setBrainDumpNotes}
+            />
           ) : activeTab === 'Ph.D. Roadmap' ? (
             <Roadmap
               crData={crData}

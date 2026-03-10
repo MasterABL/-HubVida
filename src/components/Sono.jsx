@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Moon, Sun, Clock, Activity, Coffee, Thermometer, Battery, CheckCircle, Monitor, Trash2 } from 'lucide-react';
+import { Moon, Sun, Clock, Activity, Coffee, Thermometer, Battery, CheckCircle, PhoneOff, Trash2 } from 'lucide-react';
 
 export function Sono({ sleepGoal, setSleepGoal, sleepData, setSleepData }) {
   const [isEditingGoal, setIsEditingGoal] = useState(false);
@@ -237,7 +237,7 @@ export function Sono({ sleepGoal, setSleepGoal, sleepData, setSleepData }) {
 
                <div className="bg-hub-base p-4 rounded-xl border border-hub-border group hover:border-indigo-500/30 transition-colors">
                  <h3 className="text-hub-strong font-bold uppercase text-[11px] tracking-widest mb-2 flex items-center gap-2">
-                   <Monitor className="w-3.5 h-3.5 text-indigo-400" /> Fotobiologia
+                   <PhoneOff className="w-3.5 h-3.5 text-indigo-400" /> Fotobiologia
                  </h3>
                  <p className="text-[11px] text-hub-muted leading-relaxed">
                    A luz azul (telas) bloqueia a liberação de <span className="text-indigo-400 font-bold">Melatonina</span> pela glândula pineal. Interromper contato ao menos 1h antes evita a fase REM atrasada.
