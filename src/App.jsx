@@ -294,6 +294,9 @@ const useSupabaseStorage = (key, initialValue) => {
   const [storedValue, setStoredValue] = useState(initialValue);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  // Usado para garantir que só disparamos save se o valor REALMENTE mudou (evita phantom saves do StrictMode)
+  const lastSavedValue = React.useRef(JSON.stringify(initialValue));
+
   // 1. Buscar do Supabase ao abrir o site
   useEffect(() => {
     let isMounted = true;
@@ -312,6 +315,8 @@ const useSupabaseStorage = (key, initialValue) => {
 
         if (isMounted) {
           if (data && data.valor !== null) {
+            // Atualiza nossa referência limpa com o que veio da nuvem
+            lastSavedValue.current = JSON.stringify(data.valor);
             setStoredValue(data.valor);
           } else {
             await supabase.from('app_state').upsert({ chave: key, valor: initialValue });
@@ -330,12 +335,24 @@ const useSupabaseStorage = (key, initialValue) => {
 
   // 2. Salvar na nuvem com debounce e emitir eventos de status
   const isFirstMount = React.useRef(true);
+
   useEffect(() => {
     if (!isLoaded) return;
+
+    // Ignora disparo bruto inicial
     if (isFirstMount.current) {
       isFirstMount.current = false;
       return;
     }
+
+    // StrictMode pode causar múltiplos fetches e trocar a ref do storedValue, recriando arrays/objetos vazios ou idênticos.
+    // Essa checagem final garante que o spinner só aparece se os dados de fato sofreram uma mudança manual do usuário
+    const currentStringVal = JSON.stringify(storedValue);
+    if (currentStringVal === lastSavedValue.current) {
+      return;
+    }
+
+    lastSavedValue.current = currentStringVal;
 
     // Avisa a UI que está salvando
     window.dispatchEvent(new CustomEvent('hubvida_sync', { detail: 'saving' }));
@@ -389,7 +406,7 @@ export default function App() {
   );
   const [crData, setCrData] = useSupabaseStorage('hubvida_crData', []);
   const [provas, setProvas] = useSupabaseStorage('hubvida_provas', []);
-  
+
   // -- ESTADOS DA ACADEMIA (TREINO) --
   const [workoutProfile, setWorkoutProfile] = useSupabaseStorage('hubvida_workout_profile', INITIAL_WORKOUT_PROFILE);
   const [workouts, setWorkouts] = useSupabaseStorage('hubvida_workouts', INITIAL_WORKOUTS);
@@ -404,7 +421,7 @@ export default function App() {
     longestStreak: 0,
   });
   const [habits, setHabits] = useSupabaseStorage('hubvida_habits', {
-    ingles:  [], // array de strings ISO "2026-03-08"
+    ingles: [], // array de strings ISO "2026-03-08"
     ginasio: [],
     leitura: [],
   });
@@ -438,7 +455,7 @@ export default function App() {
   const [expandedSubject, setExpandedSubject] = useState(null);
   const [syncStatus, setSyncStatus] = useState(null); // null | 'saving' | 'saved' | 'error'
   const [session, setSession] = useState(null);
-  
+
   // -- TEMA CLARO/ESCURO --
   const [theme, setTheme] = useState(() => localStorage.getItem('hubvida_theme') || 'dark');
 
@@ -486,7 +503,7 @@ export default function App() {
         console.warn('Sessão expirada ou token inválido limpo:', err);
       }
     };
-    
+
     Promise.all([initSession(), minDelay]).then(() => {
       setIsAppReady(true);
     });
@@ -516,12 +533,6 @@ export default function App() {
     return () => window.removeEventListener('hubvida_sync', handler);
   }, []);
 
-  // Auto-Correção do LocalStorage
-  useEffect(() => {
-    if (faculdadeData && faculdadeData[0] && faculdadeData[0].name === 'Teoria Geral da Administração') {
-      setFaculdadeData(INITIAL_FACULDADE);
-    }
-  }, []);
 
   // -- RESET DA ROTINA (LÓGICA TEMPORAL) --
   const [lastRoutineDate, setLastRoutineDate] = useSupabaseStorage('hubvida_last_routine_date', '');
@@ -583,7 +594,7 @@ export default function App() {
     setNewProd({ title: '', type: 'Artigo', status: 'Ideia' });
   };
   const handleDeleteProduction = (id) => setProductions(productions.filter((p) => p.id !== id));
-  
+
   const handleAddIdea = () => {
     if (!newIdea) return;
     setIdeas([...ideas, { id: Date.now(), text: newIdea }]);
@@ -646,7 +657,7 @@ export default function App() {
 
   const handleToggleFinanceStatus = (id) =>
     setFinances(finances.map((f) => f.id === id ? { ...f, status: f.status === 'paid' ? 'pending' : 'paid' } : f));
-  
+
   const handleDeleteFinance = (id) => setFinances(finances.filter((f) => f.id !== id));
 
   const handleAddRoutineTask = () => {
@@ -725,366 +736,364 @@ export default function App() {
   return (
     <>
       <SplashScreen isReady={isAppReady} />
-      
+
       {!session ? (
         <Auth />
       ) : (
         <div className="min-h-screen bg-hub-base flex flex-col md:flex-row font-sans selection:bg-yellow-500/30 text-hub-content">
-      {/* Mobile Header Toggle */}
-      <div className="md:hidden bg-hub-surface p-4 flex justify-between items-center border-b border-hub-border sticky top-0 z-40">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-yellow-400 rounded-md flex items-center justify-center font-black text-slate-900 text-lg">
-            H
-          </div>
-          <span className="font-black tracking-widest text-hub-strong text-lg">
-            HUBVIDA
-          </span>
-          {syncStatus === 'saving' && (
-            <span className="flex items-center gap-1 text-[10px] text-hub-faint font-bold">
-              <Loader2 className="w-3 h-3 animate-spin" /> Salvando...
-            </span>
-          )}
-          {syncStatus === 'saved' && (
-            <span className="flex items-center gap-1 text-[10px] text-emerald-500 font-bold">
-              <CheckCircle2 className="w-3 h-3" /> Salvo
-            </span>
-          )}
-          {syncStatus === 'error' && (
-            <span className="flex items-center gap-1 text-[10px] text-rose-500 font-bold">
-              <Cloud className="w-3 h-3" /> Erro
-            </span>
-          )}
-        </div>
-        <div className="flex items-center gap-2">
-          <button 
-            onClick={toggleTheme}
-            className="text-hub-faint p-2 hover:text-yellow-500 transition-colors"
-            title="Alternar Tema"
-          >
-            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-          </button>
-          <button 
-            className="text-hub-strong p-2" 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
-      </div>
-
-
-      {/* Overlay for mobile clicking */}
-      {isMobileMenuOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-40 md:hidden" 
-          onClick={() => setIsMobileMenuOpen(false)} 
-        />
-      )}
-
-      {/* Sidebar */}
-      <aside className={`w-64 bg-hub-surface flex flex-col border-r border-hub-border fixed md:sticky md:top-0 h-screen z-50 transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
-        <div className="p-6 hidden md:flex flex-col gap-1">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-yellow-400 rounded-md flex items-center justify-center font-black text-slate-900 text-lg">
-              H
-            </div>
-            <span className="font-black tracking-widest text-hub-strong text-lg">
-              HUBVIDA
-            </span>
-          </div>
-          {/* Badge de Sync */}
-          {syncStatus === 'saving' && (
-            <span className="flex items-center gap-1 text-[10px] text-hub-faint font-bold mt-1">
-              <Loader2 className="w-3 h-3 animate-spin" /> Salvando na nuvem...
-            </span>
-          )}
-          {syncStatus === 'saved' && (
-            <span className="flex items-center gap-1 text-[10px] text-emerald-500 font-bold mt-1">
-              <CheckCircle2 className="w-3 h-3" /> Salvo na nuvem ✓
-            </span>
-          )}
-          {syncStatus === 'error' && (
-            <span className="flex items-center gap-1 text-[10px] text-rose-500 font-bold mt-1">
-              <Cloud className="w-3 h-3" /> Falha ao sincronizar
-            </span>
-          )}
-        </div>
-
-        <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-          {[
-            { name: 'Visão Geral', icon: Home },
-            { name: 'Ph.D. Roadmap', icon: GraduationCap },
-            { name: 'Rotina Diária', icon: Calendar },
-            { name: 'Nutrição & Base', icon: Utensils },
-            { name: 'Controle de Sono', icon: Moon },
-            { name: 'Academia (Treino)', icon: Dumbbell },
-            { name: 'Brain Dump', icon: Lightbulb },
-            { name: 'Produção Acadêmica', icon: FileText },
-            { name: 'Competências', icon: Brain },
-            { name: 'Faculdade (ADM)', icon: Library },
-            { name: 'Finanças', icon: Wallet },
-          ].map((item) => (
-            <button
-              key={item.name}
-              onClick={() => {
-                const element = document.getElementById(item.name);
-                if (element) {
-                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-                setIsMobileMenuOpen(false); // Fecha o menu no mobile após clicar
-              }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
-                activeTab === item.name
-                  ? 'bg-yellow-500/10 text-yellow-500 shadow-sm'
-                  : 'text-hub-muted hover:bg-hub-hover hover:text-hub-strong'
-              }`}
-            >
-              <item.icon
-                className={`w-5 h-5 ${
-                  activeTab === item.name ? 'text-yellow-500' : 'text-hub-muted'
-                }`}
-              />
-              {item.name}
-            </button>
-          ))}
-        </nav>
-
-        {/* Profile / Status Card */}
-        <div className="p-4 border-t border-hub-border">
-          <div className="bg-hub-hover rounded-xl p-3 space-y-3">
-            {/* Linha principal: avatar + nome */}
+          {/* Mobile Header Toggle */}
+          <div className="md:hidden bg-hub-surface p-4 flex justify-between items-center border-b border-hub-border sticky top-0 z-40">
             <div className="flex items-center gap-3">
-              <div className="relative flex-shrink-0">
-                <div className="w-10 h-10 bg-hub-base text-yellow-500 font-black text-sm rounded-full flex items-center justify-center border-2 border-yellow-500/40">
-                  AB
-                </div>
-                {/* Bolinha de status online */}
-                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-[#1a1d24] rounded-full" />
+              <div className="w-8 h-8 bg-yellow-400 rounded-md flex items-center justify-center font-black text-slate-900 text-lg">
+                H
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-black text-hub-strong leading-none">Abimael</p>
-                <p className="text-[9px] font-bold text-hub-faint uppercase tracking-widest mt-0.5 truncate">
-                  Cruzeiro do Sul · ADM
-                </p>
-              </div>
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={toggleTheme}
-                  className="w-8 h-8 rounded-lg bg-hub-base flex items-center justify-center text-hub-faint hover:text-yellow-500 transition-all"
-                  title="Alternar Tema"
-                >
-                  {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="w-8 h-8 rounded-lg bg-hub-base flex items-center justify-center text-hub-faint hover:text-rose-500 hover:bg-rose-500/10 transition-all"
-                  title="Sair e Bloquear"
-                >
-                  <Lock className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* Linha de data */}
-            <div className="bg-hub-inner rounded-lg px-3 py-2 flex items-center justify-between">
-              <span className="text-[10px] font-bold text-hub-faint uppercase tracking-widest">
-                {new Date().toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short' })}
+              <span className="font-black tracking-widest text-hub-strong text-lg">
+                HUBVIDA
               </span>
-              {/* Status do sync */}
               {syncStatus === 'saving' && (
-                <span className="flex items-center gap-1 text-[9px] text-hub-faint font-bold">
-                  <Loader2 className="w-2.5 h-2.5 animate-spin" /> Salvando
+                <span className="flex items-center gap-1 text-[10px] text-hub-faint font-bold">
+                  <Loader2 className="w-3 h-3 animate-spin" /> Salvando...
                 </span>
               )}
               {syncStatus === 'saved' && (
-                <span className="flex items-center gap-1 text-[9px] text-emerald-500 font-bold">
-                  <CheckCircle2 className="w-2.5 h-2.5" /> Salvo ✓
+                <span className="flex items-center gap-1 text-[10px] text-emerald-500 font-bold">
+                  <CheckCircle2 className="w-3 h-3" /> Salvo
                 </span>
               )}
               {syncStatus === 'error' && (
-                <span className="flex items-center gap-1 text-[9px] text-rose-500 font-bold">
-                  <Cloud className="w-2.5 h-2.5" /> Erro
-                </span>
-              )}
-              {!syncStatus && (
-                <span className="flex items-center gap-1 text-[9px] text-slate-700 font-bold">
-                  <Cloud className="w-2.5 h-2.5" /> Nuvem
+                <span className="flex items-center gap-1 text-[10px] text-rose-500 font-bold">
+                  <Cloud className="w-3 h-3" /> Erro
                 </span>
               )}
             </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={toggleTheme}
+                className="text-hub-faint p-2 hover:text-yellow-500 transition-colors"
+                title="Alternar Tema"
+              >
+                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </button>
+              <button
+                className="text-hub-strong p-2"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              >
+                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </div>
           </div>
+
+
+          {/* Overlay for mobile clicking */}
+          {isMobileMenuOpen && (
+            <div
+              className="fixed inset-0 bg-black/50 z-40 md:hidden"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+          )}
+
+          {/* Sidebar */}
+          <aside className={`w-64 bg-hub-surface flex flex-col border-r border-hub-border fixed md:sticky md:top-0 h-screen z-50 transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+            <div className="p-6 hidden md:flex flex-col gap-1">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-yellow-400 rounded-md flex items-center justify-center font-black text-slate-900 text-lg">
+                  H
+                </div>
+                <span className="font-black tracking-widest text-hub-strong text-lg">
+                  HUBVIDA
+                </span>
+              </div>
+              {/* Badge de Sync */}
+              {syncStatus === 'saving' && (
+                <span className="flex items-center gap-1 text-[10px] text-hub-faint font-bold mt-1">
+                  <Loader2 className="w-3 h-3 animate-spin" /> Salvando na nuvem...
+                </span>
+              )}
+              {syncStatus === 'saved' && (
+                <span className="flex items-center gap-1 text-[10px] text-emerald-500 font-bold mt-1">
+                  <CheckCircle2 className="w-3 h-3" /> Salvo na nuvem ✓
+                </span>
+              )}
+              {syncStatus === 'error' && (
+                <span className="flex items-center gap-1 text-[10px] text-rose-500 font-bold mt-1">
+                  <Cloud className="w-3 h-3" /> Falha ao sincronizar
+                </span>
+              )}
+            </div>
+
+            <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+              {[
+                { name: 'Visão Geral', icon: Home },
+                { name: 'Ph.D. Roadmap', icon: GraduationCap },
+                { name: 'Rotina Diária', icon: Calendar },
+                { name: 'Nutrição & Base', icon: Utensils },
+                { name: 'Controle de Sono', icon: Moon },
+                { name: 'Academia (Treino)', icon: Dumbbell },
+                { name: 'Brain Dump', icon: Lightbulb },
+                { name: 'Produção Acadêmica', icon: FileText },
+                { name: 'Competências', icon: Brain },
+                { name: 'Faculdade (ADM)', icon: Library },
+                { name: 'Finanças', icon: Wallet },
+              ].map((item) => (
+                <button
+                  key={item.name}
+                  onClick={() => {
+                    const element = document.getElementById(item.name);
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                    setIsMobileMenuOpen(false); // Fecha o menu no mobile após clicar
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${activeTab === item.name
+                    ? 'bg-yellow-500/10 text-yellow-500 shadow-sm'
+                    : 'text-hub-muted hover:bg-hub-hover hover:text-hub-strong'
+                    }`}
+                >
+                  <item.icon
+                    className={`w-5 h-5 ${activeTab === item.name ? 'text-yellow-500' : 'text-hub-muted'
+                      }`}
+                  />
+                  {item.name}
+                </button>
+              ))}
+            </nav>
+
+            {/* Profile / Status Card */}
+            <div className="p-4 border-t border-hub-border">
+              <div className="bg-hub-hover rounded-xl p-3 space-y-3">
+                {/* Linha principal: avatar + nome */}
+                <div className="flex items-center gap-3">
+                  <div className="relative flex-shrink-0">
+                    <div className="w-10 h-10 bg-hub-base text-yellow-500 font-black text-sm rounded-full flex items-center justify-center border-2 border-yellow-500/40">
+                      AB
+                    </div>
+                    {/* Bolinha de status online */}
+                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-[#1a1d24] rounded-full" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-black text-hub-strong leading-none">Abimael</p>
+                    <p className="text-[9px] font-bold text-hub-faint uppercase tracking-widest mt-0.5 truncate">
+                      Cruzeiro do Sul · ADM
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={toggleTheme}
+                      className="w-8 h-8 rounded-lg bg-hub-base flex items-center justify-center text-hub-faint hover:text-yellow-500 transition-all"
+                      title="Alternar Tema"
+                    >
+                      {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                    </button>
+                    <button
+                      onClick={handleLogout}
+                      className="w-8 h-8 rounded-lg bg-hub-base flex items-center justify-center text-hub-faint hover:text-rose-500 hover:bg-rose-500/10 transition-all"
+                      title="Sair e Bloquear"
+                    >
+                      <Lock className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Linha de data */}
+                <div className="bg-hub-inner rounded-lg px-3 py-2 flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-hub-faint uppercase tracking-widest">
+                    {new Date().toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short' })}
+                  </span>
+                  {/* Status do sync */}
+                  {syncStatus === 'saving' && (
+                    <span className="flex items-center gap-1 text-[9px] text-hub-faint font-bold">
+                      <Loader2 className="w-2.5 h-2.5 animate-spin" /> Salvando
+                    </span>
+                  )}
+                  {syncStatus === 'saved' && (
+                    <span className="flex items-center gap-1 text-[9px] text-emerald-500 font-bold">
+                      <CheckCircle2 className="w-2.5 h-2.5" /> Salvo ✓
+                    </span>
+                  )}
+                  {syncStatus === 'error' && (
+                    <span className="flex items-center gap-1 text-[9px] text-rose-500 font-bold">
+                      <Cloud className="w-2.5 h-2.5" /> Erro
+                    </span>
+                  )}
+                  {!syncStatus && (
+                    <span className="flex items-center gap-1 text-[9px] text-slate-700 font-bold">
+                      <Cloud className="w-2.5 h-2.5" /> Nuvem
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <main className="flex-1 p-4 md:p-8 lg:p-12 flex flex-col">
+            <div className="max-w-6xl mx-auto">
+
+              {/* ALL COMPONENTS RENDERED SEQUENTIALLY FOR SCROLL REVEAL */}
+              <div className="space-y-32 pb-32">
+
+                <div id="Visão Geral" className="scroll-mt-24 module-section">
+                  <ScrollReveal delay={50}>
+                    <VisaoGeral
+                      setActiveTab={setActiveTab}
+                      englishLevel={englishLevel}
+                      financeSummary={financeSummary}
+                      activeMonth={activeMonth}
+                      routinesData={routinesData}
+                      activeRoutine={activeRoutine}
+                      visaoGeralMetrics={visaoGeralMetrics}
+                      radarData={radarData}
+                      avisosPortal={avisosPortal}
+                      setAvisosPortal={setAvisosPortal}
+                      provas={provas}
+                      setProvas={setProvas}
+                    />
+                  </ScrollReveal>
+                </div>
+
+                <div id="Ph.D. Roadmap" className="scroll-mt-24 module-section">
+                  <ScrollReveal delay={50}>
+                    <Roadmap
+                      crData={crData}
+                      newCr={newCr}
+                      setNewCr={setNewCr}
+                      handleAddCr={handleAddCr}
+                      handleDeleteCr={handleDeleteCr}
+                      activeRoadmapTab={activeRoadmapTab}
+                      setActiveRoadmapTab={setActiveRoadmapTab}
+                      expandedYear={expandedYear}
+                      setExpandedYear={setExpandedYear}
+                    />
+                  </ScrollReveal>
+                </div>
+
+                <div id="Rotina Diária" className="scroll-mt-24 module-section">
+                  <ScrollReveal delay={50}>
+                    <Rotina
+                      routinesData={routinesData}
+                      activeRoutine={activeRoutine}
+                      setActiveRoutine={setActiveRoutine}
+                      newRoutineTask={newRoutineTask}
+                      setNewRoutineTask={setNewRoutineTask}
+                      handleAddRoutineTask={handleAddRoutineTask}
+                      handleToggleRoutineTask={handleToggleRoutineTask}
+                      handleRemoveRoutineTask={handleRemoveRoutineTask}
+                      gymAttendance={gymAttendance}
+                      setGymAttendance={setGymAttendance}
+                    />
+                  </ScrollReveal>
+                </div>
+
+                <div id="Nutrição & Base" className="scroll-mt-24 module-section">
+                  <ScrollReveal delay={50}>
+                    <Nutricao
+                      dailyTracker={nutritionTracker}
+                      setDailyTracker={setNutritionTracker}
+                    />
+                  </ScrollReveal>
+                </div>
+
+                <div id="Controle de Sono" className="scroll-mt-24 module-section">
+                  <ScrollReveal delay={50}>
+                    <Sono
+                      sleepGoal={sleepGoal} setSleepGoal={setSleepGoal}
+                      sleepData={sleepData} setSleepData={setSleepData}
+                    />
+                  </ScrollReveal>
+                </div>
+
+                <div id="Academia (Treino)" className="scroll-mt-24 module-section">
+                  <ScrollReveal delay={50}>
+                    <Treino
+                      workoutProfile={workoutProfile}
+                      setWorkoutProfile={setWorkoutProfile}
+                      workouts={workouts}
+                      setWorkouts={setWorkouts}
+                    />
+                  </ScrollReveal>
+                </div>
+
+                <div id="Brain Dump" className="scroll-mt-24 module-section">
+                  <ScrollReveal delay={50}>
+                    <BrainDump
+                      notes={brainDumpNotes}
+                      setNotes={setBrainDumpNotes}
+                    />
+                  </ScrollReveal>
+                </div>
+
+                <div id="Produção Acadêmica" className="scroll-mt-24 module-section">
+                  <ScrollReveal delay={50}>
+                    <Producao
+                      newProd={newProd}
+                      setNewProd={setNewProd}
+                      productions={productions}
+                      handleAddProduction={handleAddProduction}
+                      handleDeleteProduction={handleDeleteProduction}
+                      newIdea={newIdea}
+                      setNewIdea={setNewIdea}
+                      handleAddIdea={handleAddIdea}
+                      ideas={ideas}
+                      setIdeas={setIdeas}
+                    />
+                  </ScrollReveal>
+                </div>
+
+                <div id="Competências" className="scroll-mt-24 module-section">
+                  <ScrollReveal delay={50}>
+                    <Competencias
+                      radarData={radarData}
+                      englishLevel={englishLevel}
+                      setEnglishLevel={setEnglishLevel}
+                      hardSkills={hardSkills}
+                      handleUpdateHardSkill={handleUpdateHardSkill}
+                      handleRemoveHardSkill={handleRemoveHardSkill}
+                      newSkill={newSkill}
+                      setNewSkill={setNewSkill}
+                      handleAddHardSkill={handleAddHardSkill}
+                      softSkills={softSkills}
+                      calculateSoftSkillProgress={calculateSoftSkillProgress}
+                      handleToggleSoftSkill={handleToggleSoftSkill}
+                      englishStreak={englishStreak}
+                      setEnglishStreak={setEnglishStreak}
+                      habits={habits}
+                      setHabits={setHabits}
+                    />
+                  </ScrollReveal>
+                </div>
+
+                <div id="Faculdade (ADM)" className="scroll-mt-24 module-section">
+                  <ScrollReveal delay={50}>
+                    <Faculdade
+                      faculdadeData={faculdadeData}
+                      expandedSubject={expandedSubject}
+                      setExpandedSubject={setExpandedSubject}
+                      handleUpdateFaculdade={handleUpdateFaculdade}
+                      calculateFinalGrade={calculateFinalGrade}
+                    />
+                  </ScrollReveal>
+                </div>
+
+                <div id="Finanças" className="scroll-mt-24 module-section">
+                  <ScrollReveal delay={50}>
+                    <Financas
+                      financeSummary={financeSummary}
+                      activeMonth={activeMonth}
+                      setActiveMonth={setActiveMonth}
+                      currentMonthFinances={currentMonthFinances}
+                      handleToggleFinanceStatus={handleToggleFinanceStatus}
+                      handleDeleteFinance={handleDeleteFinance}
+                      newTransaction={newTransaction}
+                      setNewTransaction={setNewTransaction}
+                      handleAddTransaction={handleAddTransaction}
+                      MONTHS={MONTHS}
+                    />
+                  </ScrollReveal>
+                </div>
+
+              </div>
+            </div>
+          </main>
         </div>
-      </aside>
-
-      <main className="flex-1 p-4 md:p-8 lg:p-12 flex flex-col">
-        <div className="max-w-6xl mx-auto">
-          
-          {/* ALL COMPONENTS RENDERED SEQUENTIALLY FOR SCROLL REVEAL */}
-          <div className="space-y-32 pb-32">
-            
-            <div id="Visão Geral" className="scroll-mt-24 module-section">
-              <ScrollReveal delay={50}>
-                <VisaoGeral
-                  setActiveTab={setActiveTab}
-                  englishLevel={englishLevel}
-                  financeSummary={financeSummary}
-                  activeMonth={activeMonth}
-                  routinesData={routinesData}
-                  activeRoutine={activeRoutine}
-                  visaoGeralMetrics={visaoGeralMetrics}
-                  radarData={radarData}
-                  avisosPortal={avisosPortal}
-                  setAvisosPortal={setAvisosPortal}
-                  provas={provas}
-                  setProvas={setProvas}
-                />
-              </ScrollReveal>
-            </div>
-
-            <div id="Ph.D. Roadmap" className="scroll-mt-24 module-section">
-              <ScrollReveal delay={50}>
-                <Roadmap
-                  crData={crData}
-                  newCr={newCr}
-                  setNewCr={setNewCr}
-                  handleAddCr={handleAddCr}
-                  handleDeleteCr={handleDeleteCr}
-                  activeRoadmapTab={activeRoadmapTab}
-                  setActiveRoadmapTab={setActiveRoadmapTab}
-                  expandedYear={expandedYear}
-                  setExpandedYear={setExpandedYear}
-                />
-              </ScrollReveal>
-            </div>
-
-            <div id="Rotina Diária" className="scroll-mt-24 module-section">
-              <ScrollReveal delay={50}>
-                <Rotina
-                  routinesData={routinesData}
-                  activeRoutine={activeRoutine}
-                  setActiveRoutine={setActiveRoutine}
-                  newRoutineTask={newRoutineTask}
-                  setNewRoutineTask={setNewRoutineTask}
-                  handleAddRoutineTask={handleAddRoutineTask}
-                  handleToggleRoutineTask={handleToggleRoutineTask}
-                  handleRemoveRoutineTask={handleRemoveRoutineTask}
-                  gymAttendance={gymAttendance}
-                  setGymAttendance={setGymAttendance}
-                />
-              </ScrollReveal>
-            </div>
-
-            <div id="Nutrição & Base" className="scroll-mt-24 module-section">
-              <ScrollReveal delay={50}>
-                <Nutricao 
-                  dailyTracker={nutritionTracker}
-                  setDailyTracker={setNutritionTracker}
-                />
-              </ScrollReveal>
-            </div>
-
-            <div id="Controle de Sono" className="scroll-mt-24 module-section">
-              <ScrollReveal delay={50}>
-                <Sono 
-                   sleepGoal={sleepGoal} setSleepGoal={setSleepGoal}
-                   sleepData={sleepData} setSleepData={setSleepData}
-                />
-              </ScrollReveal>
-            </div>
-
-            <div id="Academia (Treino)" className="scroll-mt-24 module-section">
-              <ScrollReveal delay={50}>
-                <Treino 
-                  workoutProfile={workoutProfile}
-                  setWorkoutProfile={setWorkoutProfile}
-                  workouts={workouts}
-                  setWorkouts={setWorkouts}
-                />
-              </ScrollReveal>
-            </div>
-
-            <div id="Brain Dump" className="scroll-mt-24 module-section">
-              <ScrollReveal delay={50}>
-                <BrainDump 
-                  notes={brainDumpNotes}
-                  setNotes={setBrainDumpNotes}
-                />
-              </ScrollReveal>
-            </div>
-
-            <div id="Produção Acadêmica" className="scroll-mt-24 module-section">
-              <ScrollReveal delay={50}>
-                <Producao
-                  newProd={newProd}
-                  setNewProd={setNewProd}
-                  productions={productions}
-                  handleAddProduction={handleAddProduction}
-                  handleDeleteProduction={handleDeleteProduction}
-                  newIdea={newIdea}
-                  setNewIdea={setNewIdea}
-                  handleAddIdea={handleAddIdea}
-                  ideas={ideas}
-                  setIdeas={setIdeas}
-                />
-              </ScrollReveal>
-            </div>
-
-            <div id="Competências" className="scroll-mt-24 module-section">
-              <ScrollReveal delay={50}>
-                <Competencias
-                  radarData={radarData}
-                  englishLevel={englishLevel}
-                  setEnglishLevel={setEnglishLevel}
-                  hardSkills={hardSkills}
-                  handleUpdateHardSkill={handleUpdateHardSkill}
-                  handleRemoveHardSkill={handleRemoveHardSkill}
-                  newSkill={newSkill}
-                  setNewSkill={setNewSkill}
-                  handleAddHardSkill={handleAddHardSkill}
-                  softSkills={softSkills}
-                  calculateSoftSkillProgress={calculateSoftSkillProgress}
-                  handleToggleSoftSkill={handleToggleSoftSkill}
-                  englishStreak={englishStreak}
-                  setEnglishStreak={setEnglishStreak}
-                  habits={habits}
-                  setHabits={setHabits}
-                />
-              </ScrollReveal>
-            </div>
-
-            <div id="Faculdade (ADM)" className="scroll-mt-24 module-section">
-              <ScrollReveal delay={50}>
-                <Faculdade
-                  faculdadeData={faculdadeData}
-                  expandedSubject={expandedSubject}
-                  setExpandedSubject={setExpandedSubject}
-                  handleUpdateFaculdade={handleUpdateFaculdade}
-                  calculateFinalGrade={calculateFinalGrade}
-                />
-              </ScrollReveal>
-            </div>
-
-            <div id="Finanças" className="scroll-mt-24 module-section">
-              <ScrollReveal delay={50}>
-                <Financas
-                  financeSummary={financeSummary}
-                  activeMonth={activeMonth}
-                  setActiveMonth={setActiveMonth}
-                  currentMonthFinances={currentMonthFinances}
-                  handleToggleFinanceStatus={handleToggleFinanceStatus}
-                  handleDeleteFinance={handleDeleteFinance}
-                  newTransaction={newTransaction}
-                  setNewTransaction={setNewTransaction}
-                  handleAddTransaction={handleAddTransaction}
-                  MONTHS={MONTHS}
-                />
-              </ScrollReveal>
-            </div>
-
-          </div>
-        </div>
-      </main>
-    </div>
       )}
     </>
   );
