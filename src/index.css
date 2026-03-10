@@ -136,3 +136,44 @@ body {
 .scroll-reveal-wrapper.is-visible .grid>*:nth-child(n+5) {
   transition-delay: 320ms;
 }
+
+/* =========================================================
+   UI IMPROVEMENTS (Skeletons & Transitions)
+   ========================================================= */
+
+/* Smooth Theme Transitions */
+body,
+.bg-hub-base,
+.bg-hub-surface,
+.bg-hub-inner,
+.bg-hub-hover,
+.border-hub-border,
+.border-hub-border-hover,
+.text-hub-content,
+.text-hub-strong,
+.text-hub-muted,
+.text-hub-faint {
+  transition-property: background-color, border-color, color;
+  transition-duration: 300ms;
+  transition-timing-function: ease;
+}
+
+/* Skeleton Shimmer Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg,
+      var(--hub-surface) 0%,
+      var(--hub-hover) 50%,
+      var(--hub-surface) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite ease-in-out;
+}

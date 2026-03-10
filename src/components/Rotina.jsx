@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   Sun, Bus, BookOpen, FileText, Coffee, Moon, GraduationCap, Home, MapPin
 } from 'lucide-react';
+import { Skeleton } from './Skeleton';
 
 const iconMap = {
   Sun, Bus, Briefcase, BookOpen, FileText, Coffee, Target, Moon, Dumbbell, GraduationCap, Home, MapPin
@@ -17,14 +18,15 @@ const iconMap = {
 const colorMap = {
   purple: { bg: 'bg-purple-500/10', border: 'border-purple-500/30', text: 'text-purple-700 dark:text-purple-300', icon: 'text-purple-500 dark:text-purple-400' },
   yellow: { bg: 'bg-yellow-500/10', border: 'border-yellow-500/30', text: 'text-yellow-700 dark:text-yellow-300', icon: 'text-yellow-600 dark:text-yellow-400' },
-  blue:   { bg: 'bg-indigo-500/10', border: 'border-indigo-500/30', text: 'text-indigo-700 dark:text-indigo-300', icon: 'text-indigo-600 dark:text-indigo-400' },
-  green:  { bg: 'bg-emerald-500/10', border: 'border-emerald-500/30', text: 'text-emerald-700 dark:text-emerald-300', icon: 'text-emerald-600 dark:text-emerald-400' },
-  red:    { bg: 'bg-rose-500/10', border: 'border-rose-500/30', text: 'text-rose-700 dark:text-rose-300', icon: 'text-rose-600 dark:text-rose-400' },
-  gray:   { bg: 'bg-hub-inner', border: 'border-hub-border', text: 'text-hub-strong', icon: 'text-hub-faint' },
-  teal:   { bg: 'bg-teal-500/10', border: 'border-teal-500/30', text: 'text-teal-700 dark:text-teal-300', icon: 'text-teal-600 dark:text-teal-400' },
+  blue: { bg: 'bg-indigo-500/10', border: 'border-indigo-500/30', text: 'text-indigo-700 dark:text-indigo-300', icon: 'text-indigo-600 dark:text-indigo-400' },
+  green: { bg: 'bg-emerald-500/10', border: 'border-emerald-500/30', text: 'text-emerald-700 dark:text-emerald-300', icon: 'text-emerald-600 dark:text-emerald-400' },
+  red: { bg: 'bg-rose-500/10', border: 'border-rose-500/30', text: 'text-rose-700 dark:text-rose-300', icon: 'text-rose-600 dark:text-rose-400' },
+  gray: { bg: 'bg-hub-inner', border: 'border-hub-border', text: 'text-hub-strong', icon: 'text-hub-faint' },
+  teal: { bg: 'bg-teal-500/10', border: 'border-teal-500/30', text: 'text-teal-700 dark:text-teal-300', icon: 'text-teal-600 dark:text-teal-400' },
 };
 
 export const Rotina = ({
+  isLoaded = true,
   routinesData,
   activeRoutine,
   setActiveRoutine,
@@ -52,6 +54,30 @@ export const Rotina = ({
       return { ...prev, [dayIndex]: nextMap[current] };
     });
   };
+
+  if (!isLoaded) {
+    return (
+      <div className="space-y-6 animate-in fade-in duration-500">
+        <Skeleton className="w-full h-32 md:h-24 rounded-xl" />
+        <Skeleton className="w-full h-12 rounded-xl" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-4">
+            <Skeleton className="w-full h-12 rounded-xl" />
+            <div className="space-y-2">
+              <Skeleton className="w-full h-14 rounded-xl" />
+              <Skeleton className="w-full h-14 rounded-xl" />
+              <Skeleton className="w-full h-14 rounded-xl" />
+              <Skeleton className="w-full h-14 rounded-xl" />
+            </div>
+          </div>
+          <div className="space-y-4">
+            <Skeleton className="w-full h-32 rounded-xl" />
+            <Skeleton className="w-full h-32 rounded-xl" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -83,11 +109,10 @@ export const Rotina = ({
           <button
             key={day}
             onClick={() => setActiveRoutine(day)}
-            className={`flex-1 min-w-[80px] py-2.5 px-3 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${
-              activeRoutine === day
+            className={`flex-1 min-w-[80px] py-2.5 px-3 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${activeRoutine === day
                 ? 'bg-yellow-500 text-slate-900 shadow'
                 : 'text-hub-faint hover:text-hub-strong hover:bg-hub-hover'
-            }`}
+              }`}
           >
             {day}
           </button>
@@ -136,11 +161,10 @@ export const Rotina = ({
                     {item.time}
                   </span>
                   <div
-                    className={`flex-1 flex justify-between items-center p-3.5 rounded-xl font-semibold text-sm transition-all shadow-sm border ${
-                      item.checked
+                    className={`flex-1 flex justify-between items-center p-3.5 rounded-xl font-semibold text-sm transition-all shadow-sm border ${item.checked
                         ? 'bg-hub-base border-hub-border opacity-50'
                         : `${colors.bg} ${colors.border}`
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       {IconComponent && (
@@ -187,7 +211,7 @@ export const Rotina = ({
               {dias.map((d, i) => {
                 const status = gymAttendance[i];
                 let colorClass = 'bg-hub-inner text-hub-faint border border-hub-border hover:bg-hub-hover'; // pending
-                
+
                 if (status === 'done') {
                   colorClass = 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
                 } else if (status === 'missed') {
@@ -206,11 +230,11 @@ export const Rotina = ({
                 );
               })}
             </div>
-            
+
             <div className="flex flex-wrap gap-x-4 gap-y-2 text-[9px] font-bold text-hub-faint uppercase tracking-widest pt-3 border-t border-hub-border/50">
-               <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-hub-inner"></div> Pendente/Descanso</span>
-               <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-emerald-500/70"></div> Fui</span>
-               <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-rose-500/70"></div> Faltei</span>
+              <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-hub-inner"></div> Pendente/Descanso</span>
+              <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-emerald-500/70"></div> Fui</span>
+              <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-rose-500/70"></div> Faltei</span>
             </div>
           </div>
         </div>

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Target, Clock, Timer, CheckCircle, BookOpen, Dumbbell, Flame, Info } from 'lucide-react';
+import { Skeleton } from './Skeleton';
 
-export function Treino({ workoutProfile, setWorkoutProfile, workouts, setWorkouts }) {
+export function Treino({ isLoaded = true, workoutProfile, setWorkoutProfile, workouts, setWorkouts }) {
   // Estado local temporário para a edição do perfil (Peso/Altura)
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [tempProfile, setTempProfile] = useState({ peso: '', altura: '' });
-  
+
   // Toast Notification
   const [showToast, setShowToast] = useState(false);
 
@@ -82,9 +83,27 @@ export function Treino({ workoutProfile, setWorkoutProfile, workouts, setWorkout
     setWorkouts(updatedWorkouts);
   };
 
+  if (!isLoaded) {
+    return (
+      <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <Skeleton className="w-64 h-12" />
+          <Skeleton className="w-full md:w-64 h-24 rounded-2xl" />
+        </header>
+        <Skeleton className="w-full h-24 rounded-xl" />
+        <section className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+          <Skeleton className="w-full h-96 rounded-2xl" />
+          <Skeleton className="w-full h-96 rounded-2xl" />
+          <Skeleton className="w-full h-96 rounded-2xl" />
+          <Skeleton className="w-full h-96 rounded-2xl" />
+        </section>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      
+
       {/* Toast Notification (Salvo com sucesso) */}
       <div className={`fixed bottom-4 right-4 transform transition-all duration-300 z-50 ${showToast ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
         <div className="bg-emerald-500/90 backdrop-blur-sm text-white px-4 py-3 rounded-xl shadow-lg shadow-emerald-500/20 border border-emerald-400/50 flex items-center gap-3">
@@ -103,14 +122,14 @@ export function Treino({ workoutProfile, setWorkoutProfile, workouts, setWorkout
             <Target className="w-4 h-4 text-rose-500" /> Foco Atual: {workoutProfile.foco}
           </p>
         </div>
-        
+
         {/* Perfil Editável */}
         <div className="bg-hub-surface border border-hub-border p-4 rounded-2xl flex items-center gap-6 shadow-xl w-full md:w-auto">
           {isEditingProfile ? (
             <div className="flex items-center gap-4">
               <div>
                 <p className="text-[10px] text-hub-faint font-bold uppercase tracking-widest mb-1">Peso (kg)</p>
-                <input 
+                <input
                   type="number" step="0.1"
                   value={tempProfile.peso} onChange={e => setTempProfile({ ...tempProfile, peso: e.target.value })}
                   className="w-16 bg-hub-base border border-yellow-500/50 rounded-lg px-2 py-1 text-hub-strong font-bold text-center focus:outline-none"
@@ -119,13 +138,13 @@ export function Treino({ workoutProfile, setWorkoutProfile, workouts, setWorkout
               <div className="h-8 w-px border-l border-hub-border"></div>
               <div>
                 <p className="text-[10px] text-hub-faint font-bold uppercase tracking-widest mb-1">Altura (m)</p>
-                <input 
+                <input
                   type="number" step="0.01"
                   value={tempProfile.altura} onChange={e => setTempProfile({ ...tempProfile, altura: e.target.value })}
                   className="w-16 bg-hub-base border border-yellow-500/50 rounded-lg px-2 py-1 text-hub-strong font-bold text-center focus:outline-none"
                 />
               </div>
-              <button 
+              <button
                 onClick={handleSaveProfile}
                 className="ml-2 bg-yellow-500 text-slate-900 rounded-lg p-2 hover:bg-yellow-400 transition-colors"
                 title="Salvar"
@@ -164,7 +183,7 @@ export function Treino({ workoutProfile, setWorkoutProfile, workouts, setWorkout
       <section className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
         {workouts.map((day) => (
           <div key={day.id} className="bg-hub-surface border border-hub-border rounded-2xl flex flex-col h-full overflow-hidden shadow-xl group">
-            
+
             {/* Header do Card */}
             <div className={`p-5 bg-gradient-to-br ${day.color} relative overflow-hidden`}>
               <div className="absolute -right-4 -top-4 opacity-20 transform group-hover:scale-110 transition-transform duration-500">
@@ -186,14 +205,14 @@ export function Treino({ workoutProfile, setWorkoutProfile, workouts, setWorkout
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1 flex items-center">
                       <span className="text-[11px] font-bold text-yellow-500 mr-2">{exIndex + 1}.</span>
-                      <input 
-                        type="text" 
-                        value={ex.name} 
+                      <input
+                        type="text"
+                        value={ex.name}
                         onChange={(e) => handleEditExerciseName(day.id, exIndex, e.target.value)}
                         className="bg-transparent border-none text-[11px] font-bold text-hub-strong uppercase tracking-wide w-full focus:outline-none focus:text-yellow-500 transition-colors truncate"
                       />
                     </div>
-                    <button 
+                    <button
                       onClick={() => handleRemoveExercise(day.id, exIndex)}
                       className="text-hub-faint hover:text-rose-500 opacity-0 group-hover/ex:opacity-100 transition-opacity ml-2"
                       title="Remover Exercício"
@@ -211,8 +230,8 @@ export function Treino({ workoutProfile, setWorkoutProfile, workouts, setWorkout
                       </span>
                     </div>
                     <div>
-                      <input 
-                        type="number" 
+                      <input
+                        type="number"
                         placeholder="kg"
                         value={ex.weight || ''}
                         onChange={(e) => handleUpdateWeight(day.id, exIndex, e.target.value)}
@@ -222,7 +241,7 @@ export function Treino({ workoutProfile, setWorkoutProfile, workouts, setWorkout
                   </div>
                 </div>
               ))}
-              <button 
+              <button
                 onClick={() => handleAddExercise(day.id)}
                 className="w-full mt-2 py-2 border border-dashed border-hub-border rounded-xl text-[10px] font-bold text-hub-faint uppercase tracking-widest hover:border-yellow-500/50 hover:text-yellow-500 transition-all flex items-center justify-center gap-2"
               >

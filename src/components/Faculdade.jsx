@@ -8,14 +8,33 @@ import {
   Activity,
   NotebookText,
 } from 'lucide-react';
+import { Skeleton } from './Skeleton';
 
 export const Faculdade = ({
+  isLoaded = true,
   faculdadeData,
   expandedSubject,
   setExpandedSubject,
   handleUpdateFaculdade,
   calculateFinalGrade,
 }) => {
+  if (!isLoaded) {
+    return (
+      <div className="space-y-6 animate-in fade-in duration-500">
+        <div className="flex justify-between items-end mb-8">
+          <Skeleton className="w-64 h-10" />
+          <Skeleton className="w-32 h-16 rounded-xl" />
+        </div>
+        <div className="space-y-4">
+          <Skeleton className="w-full h-16 rounded-xl" />
+          <Skeleton className="w-full h-16 rounded-xl" />
+          <Skeleton className="w-full h-16 rounded-xl" />
+          <Skeleton className="w-full h-16 rounded-xl" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex justify-between items-end mb-8">
@@ -50,15 +69,13 @@ export const Faculdade = ({
               {/* Row Header (Clickable) */}
               <div
                 onClick={() => setExpandedSubject(isExpanded ? null : disc.id)}
-                className={`p-5 flex items-center justify-between cursor-pointer hover:bg-hub-hover transition-colors ${
-                  isExpanded ? 'border-b border-hub-border bg-hub-hover' : ''
-                }`}
+                className={`p-5 flex items-center justify-between cursor-pointer hover:bg-hub-hover transition-colors ${isExpanded ? 'border-b border-hub-border bg-hub-hover' : ''
+                  }`}
               >
                 <div className="flex items-center gap-4">
                   <Library
-                    className={`w-5 h-5 ${
-                      isExpanded ? 'text-yellow-500' : 'text-hub-faint'
-                    }`}
+                    className={`w-5 h-5 ${isExpanded ? 'text-yellow-500' : 'text-hub-faint'
+                      }`}
                   />
                   <h3 className="font-bold text-hub-strong text-sm md:text-base">
                     {disc.name}
@@ -69,11 +86,10 @@ export const Faculdade = ({
                   {/* Badge Média Dinâmica no Header */}
                   {finalGrade !== null && (
                     <div
-                      className={`px-3 py-1 rounded text-xs font-bold ${
-                        isApproved
+                      className={`px-3 py-1 rounded text-xs font-bold ${isApproved
                           ? 'bg-emerald-500/10 text-emerald-500'
                           : 'bg-rose-500/10 text-rose-500'
-                      }`}
+                        }`}
                     >
                       NF: {finalGrade}
                     </div>
@@ -115,22 +131,20 @@ export const Faculdade = ({
                             }
                           />
                           <div
-                            className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
-                              disc.checks[asKey]
+                            className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${disc.checks[asKey]
                                 ? 'bg-emerald-500/20 border-emerald-500 text-emerald-500'
                                 : 'border-slate-600 group-hover:border-slate-400'
-                            }`}
+                              }`}
                           >
                             {disc.checks[asKey] && (
                               <CheckCircle2 className="w-3 h-3" />
                             )}
                           </div>
                           <span
-                            className={`text-xs font-bold ${
-                              disc.checks[asKey]
+                            className={`text-xs font-bold ${disc.checks[asKey]
                                 ? 'text-emerald-500'
                                 : 'text-hub-muted group-hover:text-hub-content'
-                            }`}
+                              }`}
                           >
                             AS-{idx + 1}
                           </span>
@@ -193,13 +207,12 @@ export const Faculdade = ({
                         Nota Final:
                       </span>
                       <span
-                        className={`text-2xl font-black ${
-                          finalGrade === null
+                        className={`text-2xl font-black ${finalGrade === null
                             ? 'text-hub-faint'
                             : isApproved
-                            ? 'text-emerald-500'
-                            : 'text-rose-500'
-                        }`}
+                              ? 'text-emerald-500'
+                              : 'text-rose-500'
+                          }`}
                       >
                         {finalGrade !== null ? finalGrade : '-.-'}
                       </span>

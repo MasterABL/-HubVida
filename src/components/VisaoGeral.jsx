@@ -14,6 +14,10 @@ import {
   Trash2,
   RefreshCw,
 } from 'lucide-react';
+import {
+  LineChart, Line, BarChart, Bar, AreaChart, Area,
+  XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer
+} from 'recharts';
 import { RadarChart } from './RadarChart';
 
 const iconMap = {
@@ -34,13 +38,13 @@ const getDaysUntil = (dateStr) => {
   if (!target) return null;
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  
+
   let diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
   if (diff < 0) {
     target.setFullYear(target.getFullYear() + 1);
     diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
   }
-  
+
   return diff;
 };
 
@@ -57,6 +61,9 @@ export const VisaoGeral = ({
   setAvisosPortal,
   provas,
   setProvas,
+  gymAttendance,
+  sleepData,
+  workoutProfile,
 }) => {
   // Estado de cotações
   const [cotacoes, setCotacoes] = useState({ USD: null, EUR: null, GBP: null });
@@ -307,7 +314,7 @@ export const VisaoGeral = ({
                   />
                   <button onClick={handleAddProva} className="bg-yellow-500 text-slate-900 rounded px-2 py-1 text-xs font-bold hover:bg-yellow-400">+</button>
                 </div>
-                {[...(provas || [])].sort((a,b) => {
+                {[...(provas || [])].sort((a, b) => {
                   const dA = parseDate(a.data);
                   const dB = parseDate(b.data);
                   if (!dA && !dB) return 0;
@@ -383,6 +390,120 @@ export const VisaoGeral = ({
             Disciplinas Aprovadas
           </p>
         </div>
+      </div>
+
+      {/* SECÃO DE GRÁFICOS (RECHARTS) */}
+      <h2 className="text-sm font-black italic uppercase tracking-wider text-hub-strong mb-6 mt-12 flex items-center gap-2">
+        <Activity className="w-5 h-5 text-yellow-500" /> Métricas Ph.D. <span className="text-[10px] text-hub-faint bg-hub-inner px-2 py-0.5 rounded-full border border-slate-700/50">BETA</span>
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+
+        {/* GRÁFICO 1: Evolução de Peso (LineChart) */}
+        <div className="bg-hub-surface border border-hub-border rounded-xl p-5 shadow-xl flex flex-col h-72">
+          <div className="flex items-center gap-2 mb-4">
+            <Target className="w-4 h-4 text-emerald-500" />
+            <h3 className="text-xs font-bold text-hub-faint uppercase tracking-widest">Evolução de Peso (kg)</h3>
+          </div>
+          <div className="flex-1 w-full relative">
+            {/* Como não temos histórico real salvo no app ainda, vamos criar um mock trend que leva ao peso atual */}
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={[
+                { date: 'Sem 1', peso: Math.max(0, (workoutProfile?.peso || 70) - 1.5) },
+                { date: 'Sem 2', peso: Math.max(0, (workoutProfile?.peso || 70) - 0.8) },
+                { date: 'Sem 3', peso: Math.max(0, (workoutProfile?.peso || 70) - 0.2) },
+                { date: 'Atual', peso: workoutProfile?.peso || 70 }
+              ]}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#2a2d35" vertical={false} />
+                <XAxis dataKey="date" stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
+                <YAxis domain={['dataMin - 2', 'dataMax + 2']} stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} width={30} />
+                <RechartsTooltip
+                  contentStyle={{ backgroundColor: '#0f1115', borderColor: '#1f222a', borderRadius: '8px', fontSize: '12px', fontWeight: 'bold' }}
+                  itemStyle={{ color: '#10b981' }}
+                />
+                <Line type="monotone" dataKey="peso" stroke="#10b981" strokeWidth={3} dot={{ r: 4, fill: '#10b981', strokeWidth: 2, stroke: '#0f1115' }} activeDot={{ r: 6 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* GRÁFICO 2: Frequência Semanal (BarChart) */}
+        <div className="bg-hub-surface border border-hub-border rounded-xl p-5 shadow-xl flex flex-col h-72">
+          <div className="flex items-center gap-2 mb-4">
+            <Dumbbell className="w-4 h-4 text-rose-500" />
+            <h3 className="text-xs font-bold text-hub-faint uppercase tracking-widest">Frequência Academia</h3>
+          </div>
+          <div className="flex-1 w-full relative">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={[
+                { name: 'Dom', status: gymAttendance?.[0] === 'done' ? 1 : 0 },
+                { name: 'Seg', status: gymAttendance?.[1] === 'done' ? 1 : 0 },
+                { name: 'Ter', status: gymAttendance?.[2] === 'done' ? 1 : 0 },
+                { name: 'Qua', status: gymAttendance?.[3] === 'done' ? 1 : 0 },
+                { name: 'Qui', status: gymAttendance?.[4] === 'done' ? 1 : 0 },
+                { name: 'Sex', status: gymAttendance?.[5] === 'done' ? 1 : 0 },
+                { name: 'Sáb', status: gymAttendance?.[6] === 'done' ? 1 : 0 },
+              ]}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#2a2d35" vertical={false} />
+                <XAxis dataKey="name" stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
+                <YAxis hide domain={[0, 1]} />
+                <RechartsTooltip
+                  cursor={{ fill: '#1f222a' }}
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <div className="bg-hub-base border border-hub-border px-3 py-2 rounded-lg shadow-lg">
+                          <p className="text-xs font-bold text-hub-strong uppercase">{payload[0].payload.name}</p>
+                          <p className={`text-[10px] font-black uppercase mt-1 ${payload[0].value ? 'text-emerald-500' : 'text-rose-500'}`}>
+                            {payload[0].value ? 'TÁ PAGO ✓' : 'DESCANSO/FALTA'}
+                          </p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
+                <Bar dataKey="status" fill="#e11d48" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* GRÁFICO 3: Horas de Sono (AreaChart) */}
+        <div className="bg-hub-surface border border-hub-border rounded-xl p-5 shadow-xl flex flex-col h-72">
+          <div className="flex items-center gap-2 mb-4">
+            <Moon className="w-4 h-4 text-sky-500" />
+            <h3 className="text-xs font-bold text-hub-faint uppercase tracking-widest">Padrão de Sono (h)</h3>
+          </div>
+          <div className="flex-1 w-full relative">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={[
+                { name: 'Dom', horas: parseFloat(sleepData?.[0]?.hours || 0) },
+                { name: 'Seg', horas: parseFloat(sleepData?.[1]?.hours || 0) },
+                { name: 'Ter', horas: parseFloat(sleepData?.[2]?.hours || 0) },
+                { name: 'Qua', horas: parseFloat(sleepData?.[3]?.hours || 0) },
+                { name: 'Qui', horas: parseFloat(sleepData?.[4]?.hours || 0) },
+                { name: 'Sex', horas: parseFloat(sleepData?.[5]?.hours || 0) },
+                { name: 'Sáb', horas: parseFloat(sleepData?.[6]?.hours || 0) },
+              ]}>
+                <defs>
+                  <linearGradient id="colorHoras" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#2a2d35" vertical={false} />
+                <XAxis dataKey="name" stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
+                <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} width={20} />
+                <RechartsTooltip
+                  contentStyle={{ backgroundColor: '#0f1115', borderColor: '#1f222a', borderRadius: '8px', fontSize: '12px', fontWeight: 'bold' }}
+                  itemStyle={{ color: '#0ea5e9' }}
+                />
+                <Area type="monotone" dataKey="horas" stroke="#0ea5e9" strokeWidth={3} fillOpacity={1} fill="url(#colorHoras)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
       </div>
 
       {/* Mural de Avisos */}

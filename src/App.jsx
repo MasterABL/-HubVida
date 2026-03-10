@@ -379,7 +379,7 @@ const useSupabaseStorage = (key, initialValue) => {
     return () => clearTimeout(debounceId);
   }, [key, storedValue, isLoaded]);
 
-  return [storedValue, setStoredValue];
+  return [storedValue, setStoredValue, isLoaded];
 };
 
 // --- COMPONENTE PRINCIPAL APP ---
@@ -395,11 +395,11 @@ export default function App() {
   const [hardSkills, setHardSkills] = useSupabaseStorage('hubvida_hardSkills', INITIAL_HARD_SKILLS);
   const [englishLevel, setEnglishLevel] = useSupabaseStorage('hubvida_englishLevel', 100);
   const [softSkills, setSoftSkills] = useSupabaseStorage('hubvida_softSkills', SOFT_SKILLS_DATA);
-  const [finances, setFinances] = useSupabaseStorage('hubvida_finances', INITIAL_FINANCES);
+  const [finances, setFinances, isFinancasLoaded] = useSupabaseStorage('hubvida_finances', INITIAL_FINANCES);
   const [productions, setProductions] = useSupabaseStorage('hubvida_productions', INITIAL_PRODUCTIONS);
   const [ideas, setIdeas] = useSupabaseStorage('hubvida_ideas', INITIAL_IDEAS);
-  const [routinesData, setRoutinesData] = useSupabaseStorage('hubvida_routines_v2', ROUTINE_DATA);
-  const [faculdadeData, setFaculdadeData] = useSupabaseStorage('hubvida_faculdadeData', INITIAL_FACULDADE);
+  const [routinesData, setRoutinesData, isRotinaLoaded] = useSupabaseStorage('hubvida_routines_v2', ROUTINE_DATA);
+  const [faculdadeData, setFaculdadeData, isFaculdadeLoaded] = useSupabaseStorage('hubvida_faculdadeData', INITIAL_FACULDADE);
   const [avisosPortal, setAvisosPortal] = useSupabaseStorage(
     'hubvida_avisos',
     'Fique atento aos prazos de submissão da AS-I no portal da Cruzeiro do Sul.'
@@ -409,7 +409,7 @@ export default function App() {
 
   // -- ESTADOS DA ACADEMIA (TREINO) --
   const [workoutProfile, setWorkoutProfile] = useSupabaseStorage('hubvida_workout_profile', INITIAL_WORKOUT_PROFILE);
-  const [workouts, setWorkouts] = useSupabaseStorage('hubvida_workouts', INITIAL_WORKOUTS);
+  const [workouts, setWorkouts, isTreinosLoaded] = useSupabaseStorage('hubvida_workouts', INITIAL_WORKOUTS);
 
   // -- ESTADOS DE SONO --
   const [sleepGoal, setSleepGoal] = useSupabaseStorage('hubvida_sleep_goal', 8);
@@ -427,7 +427,7 @@ export default function App() {
   });
 
   // -- BRAIN DUMP --
-  const [brainDumpNotes, setBrainDumpNotes] = useSupabaseStorage('hubvida_braindump_notes', []);
+  const [brainDumpNotes, setBrainDumpNotes, isBrainDumpLoaded] = useSupabaseStorage('hubvida_braindump_notes', []);
 
   // -- ACADEMIA TRACKER (Rotina Diária) --
   const [gymAttendance, setGymAttendance] = useSupabaseStorage('hubvida_gym_tracker_v2', {
@@ -435,7 +435,7 @@ export default function App() {
   });
 
   // -- NUTRIÇÃO --
-  const [nutritionTracker, setNutritionTracker] = useSupabaseStorage('hubvida_nutrition_tracker', {
+  const [nutritionTracker, setNutritionTracker, isNutritionLoaded] = useSupabaseStorage('hubvida_nutrition_tracker', {
     water: false,
     creatine: false,
     meals: false,
@@ -879,10 +879,14 @@ export default function App() {
                   <div className="flex items-center gap-1">
                     <button
                       onClick={toggleTheme}
-                      className="w-8 h-8 rounded-lg bg-hub-base flex items-center justify-center text-hub-faint hover:text-yellow-500 transition-all"
+                      className="group w-8 h-8 rounded-lg bg-hub-base flex items-center justify-center text-hub-faint hover:text-yellow-500 transition-all duration-300"
                       title="Alternar Tema"
                     >
-                      {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                      {theme === 'dark' ? (
+                        <Sun className="w-4 h-4 transition-transform duration-500 group-hover:rotate-45" />
+                      ) : (
+                        <Moon className="w-4 h-4 transition-transform duration-500 group-hover:-rotate-12" />
+                      )}
                     </button>
                     <button
                       onClick={handleLogout}
@@ -946,6 +950,9 @@ export default function App() {
                       setAvisosPortal={setAvisosPortal}
                       provas={provas}
                       setProvas={setProvas}
+                      gymAttendance={gymAttendance}
+                      sleepData={sleepData}
+                      workoutProfile={workoutProfile}
                     />
                   </ScrollReveal>
                 </div>
@@ -969,6 +976,7 @@ export default function App() {
                 <div id="Rotina Diária" className="scroll-mt-24 module-section">
                   <ScrollReveal delay={50}>
                     <Rotina
+                      isLoaded={isRotinaLoaded}
                       routinesData={routinesData}
                       activeRoutine={activeRoutine}
                       setActiveRoutine={setActiveRoutine}
@@ -986,6 +994,7 @@ export default function App() {
                 <div id="Nutrição & Base" className="scroll-mt-24 module-section">
                   <ScrollReveal delay={50}>
                     <Nutricao
+                      isLoaded={isNutritionLoaded}
                       dailyTracker={nutritionTracker}
                       setDailyTracker={setNutritionTracker}
                     />
@@ -1004,6 +1013,7 @@ export default function App() {
                 <div id="Academia (Treino)" className="scroll-mt-24 module-section">
                   <ScrollReveal delay={50}>
                     <Treino
+                      isLoaded={isTreinosLoaded}
                       workoutProfile={workoutProfile}
                       setWorkoutProfile={setWorkoutProfile}
                       workouts={workouts}
@@ -1015,6 +1025,7 @@ export default function App() {
                 <div id="Brain Dump" className="scroll-mt-24 module-section">
                   <ScrollReveal delay={50}>
                     <BrainDump
+                      isLoaded={isBrainDumpLoaded}
                       notes={brainDumpNotes}
                       setNotes={setBrainDumpNotes}
                     />
@@ -1064,6 +1075,7 @@ export default function App() {
                 <div id="Faculdade (ADM)" className="scroll-mt-24 module-section">
                   <ScrollReveal delay={50}>
                     <Faculdade
+                      isLoaded={isFaculdadeLoaded}
                       faculdadeData={faculdadeData}
                       expandedSubject={expandedSubject}
                       setExpandedSubject={setExpandedSubject}
@@ -1076,6 +1088,7 @@ export default function App() {
                 <div id="Finanças" className="scroll-mt-24 module-section">
                   <ScrollReveal delay={50}>
                     <Financas
+                      isLoaded={isFinancasLoaded}
                       financeSummary={financeSummary}
                       activeMonth={activeMonth}
                       setActiveMonth={setActiveMonth}

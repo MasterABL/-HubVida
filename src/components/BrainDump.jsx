@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
-import { 
-  Brain, 
-  Send, 
-  Trash2, 
-  Clock, 
-  Smile, 
-  Frown, 
-  Zap, 
+import {
+  Brain,
+  Send,
+  Trash2,
+  Clock,
+  Smile,
+  Frown,
+  Zap,
   CloudRain
 } from 'lucide-react';
+import { Skeleton } from './Skeleton';
 
-export const BrainDump = ({ notes = [], setNotes }) => {
+export const BrainDump = ({ isLoaded = true, notes = [], setNotes }) => {
   const [noteText, setNoteText] = useState('');
   const [selectedMoods, setSelectedMoods] = useState([]);
   const [isAddingMood, setIsAddingMood] = useState(false);
   const [newMoodName, setNewMoodName] = useState('');
-  
+
   const [moods, setMoods] = useState([
     { id: 'focus', icon: Zap, label: 'Foco Absoluto', color: 'text-amber-500', bg: 'bg-amber-500/10', border: 'border-amber-500/30' },
     { id: 'happy', icon: Smile, label: 'No Controle', color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/30' },
@@ -35,7 +36,7 @@ export const BrainDump = ({ notes = [], setNotes }) => {
     const newId = newMoodName.toLowerCase().replace(/\s+/g, '-');
     if (!moods.find(m => m.id === newId)) {
       setMoods([...moods, {
-        id: newId, 
+        id: newId,
         icon: Brain, // Custom icon padrão
         label: newMoodName,
         color: 'text-indigo-400',
@@ -55,8 +56,8 @@ export const BrainDump = ({ notes = [], setNotes }) => {
       id: Date.now(),
       text: noteText,
       moods: selectedMoods.length > 0 ? selectedMoods : ['neutral'],
-      date: new Date().toLocaleString('pt-BR', { 
-        day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' 
+      date: new Date().toLocaleString('pt-BR', {
+        day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
       }),
     };
 
@@ -69,13 +70,31 @@ export const BrainDump = ({ notes = [], setNotes }) => {
     setNotes(notes.filter(note => note.id !== id));
   };
 
+  if (!isLoaded) {
+    return (
+      <div className="space-y-6 animate-in fade-in duration-500 pb-10 max-w-4xl mx-auto">
+        <div className="text-center mb-8 flex flex-col items-center">
+          <Skeleton className="w-16 h-16 rounded-full mb-4" />
+          <Skeleton className="w-64 h-8 mb-4 max-w-full" />
+          <Skeleton className="w-3/4 h-4 max-w-xl" />
+        </div>
+        <Skeleton className="w-full h-[200px] rounded-2xl mt-8" />
+        <div className="mt-12 space-y-4 px-4 md:px-0">
+          <Skeleton className="w-48 h-4 mb-6" />
+          <Skeleton className="w-full md:w-[calc(50%-2.5rem)] md:ml-[50%] h-32 rounded-xl" />
+          <Skeleton className="w-full md:w-[calc(50%-2.5rem)] h-32 rounded-xl" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500 pb-10 max-w-4xl mx-auto">
-      
+
       {/* HEADER SECTION */}
       <div className="text-center mb-8">
         <div className="inline-flex items-center justify-center p-4 bg-indigo-500/10 rounded-full mb-4 border border-indigo-500/20">
-           <Brain className="w-10 h-10 text-indigo-400" />
+          <Brain className="w-10 h-10 text-indigo-400" />
         </div>
         <h1 className="text-3xl font-black italic tracking-widest text-hub-strong mb-2">
           BRAIN <span className="text-indigo-400">DUMP</span>
@@ -87,67 +106,66 @@ export const BrainDump = ({ notes = [], setNotes }) => {
 
       {/* INPUT EDITOR (CAIXA DE ENTRADA) */}
       <div className="bg-hub-surface border border-hub-border rounded-2xl p-4 md:p-6 shadow-xl relative mt-8">
-         <div className="flex gap-3 mb-4 overflow-x-auto scrollbar-hide pb-2">
-            <span className="text-xs font-bold text-hub-faint uppercase tracking-widest flex items-center mr-2 flex-none">
-               Humores:
-            </span>
-            {moods.map(mood => {
-              const Icon = mood.icon;
-              const isSelected = selectedMoods.includes(mood.id);
-              return (
-                <button
-                  key={mood.id}
-                  onClick={() => toggleMood(mood.id)}
-                  className={`flex-none flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-bold transition-all ${
-                    isSelected 
-                      ? `${mood.bg} ${mood.border} ${mood.color} ring-2 ring-indigo-500/50` 
-                      : 'bg-hub-hover border-slate-700/50 text-hub-muted hover:bg-slate-800 hover:text-hub-strong'
+        <div className="flex gap-3 mb-4 overflow-x-auto scrollbar-hide pb-2">
+          <span className="text-xs font-bold text-hub-faint uppercase tracking-widest flex items-center mr-2 flex-none">
+            Humores:
+          </span>
+          {moods.map(mood => {
+            const Icon = mood.icon;
+            const isSelected = selectedMoods.includes(mood.id);
+            return (
+              <button
+                key={mood.id}
+                onClick={() => toggleMood(mood.id)}
+                className={`flex-none flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-bold transition-all ${isSelected
+                    ? `${mood.bg} ${mood.border} ${mood.color} ring-2 ring-indigo-500/50`
+                    : 'bg-hub-hover border-slate-700/50 text-hub-muted hover:bg-slate-800 hover:text-hub-strong'
                   }`}
-                >
-                  <Icon className="w-3.5 h-3.5" /> {mood.label}
-                </button>
-              );
-            })}
-            
-            {/* Adicionar Novo Humor */}
-            {isAddingMood ? (
-              <div className="flex-none flex items-center gap-2">
-                <input
-                  type="text"
-                  autoFocus
-                  placeholder="Novo..."
-                  value={newMoodName}
-                  onChange={e => setNewMoodName(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && handleCreateMood()}
-                  onBlur={handleCreateMood}
-                  className="bg-hub-inner border border-indigo-500/50 rounded-full px-3 py-1.5 text-xs text-hub-strong focus:outline-none w-24"
-                />
-              </div>
-            ) : (
-              <button 
-                onClick={() => setIsAddingMood(true)}
-                className="flex-none flex items-center gap-1 px-3 py-1.5 rounded-full border border-dashed border-slate-600 text-xs font-bold text-hub-faint hover:text-indigo-400 hover:border-indigo-400 transition-colors"
               >
-                + Criar
+                <Icon className="w-3.5 h-3.5" /> {mood.label}
               </button>
-            )}
-         </div>
+            );
+          })}
 
-         <div className="relative">
-            <textarea
-              value={noteText}
-              onChange={(e) => setNoteText(e.target.value)}
-              placeholder="O que está pesando na mente agora?"
-              className="w-full bg-hub-hover border border-slate-700/50 rounded-xl p-4 text-hub-strong placeholder-slate-500 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 resize-none min-h-[120px] transition-all"
-            />
+          {/* Adicionar Novo Humor */}
+          {isAddingMood ? (
+            <div className="flex-none flex items-center gap-2">
+              <input
+                type="text"
+                autoFocus
+                placeholder="Novo..."
+                value={newMoodName}
+                onChange={e => setNewMoodName(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleCreateMood()}
+                onBlur={handleCreateMood}
+                className="bg-hub-inner border border-indigo-500/50 rounded-full px-3 py-1.5 text-xs text-hub-strong focus:outline-none w-24"
+              />
+            </div>
+          ) : (
             <button
-               onClick={handleAddNote}
-               disabled={!noteText.trim()}
-               className="absolute bottom-3 right-3 bg-indigo-500 hover:bg-indigo-400 disabled:bg-slate-700 disabled:text-hub-faint text-white p-2.5 rounded-lg transition-colors flex items-center gap-2 font-bold text-sm"
+              onClick={() => setIsAddingMood(true)}
+              className="flex-none flex items-center gap-1 px-3 py-1.5 rounded-full border border-dashed border-slate-600 text-xs font-bold text-hub-faint hover:text-indigo-400 hover:border-indigo-400 transition-colors"
             >
-               <Send className="w-4 h-4" /> <span className="hidden sm:inline">Descarregar</span>
+              + Criar
             </button>
-         </div>
+          )}
+        </div>
+
+        <div className="relative">
+          <textarea
+            value={noteText}
+            onChange={(e) => setNoteText(e.target.value)}
+            placeholder="O que está pesando na mente agora?"
+            className="w-full bg-hub-hover border border-slate-700/50 rounded-xl p-4 text-hub-strong placeholder-slate-500 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 resize-none min-h-[120px] transition-all"
+          />
+          <button
+            onClick={handleAddNote}
+            disabled={!noteText.trim()}
+            className="absolute bottom-3 right-3 bg-indigo-500 hover:bg-indigo-400 disabled:bg-slate-700 disabled:text-hub-faint text-white p-2.5 rounded-lg transition-colors flex items-center gap-2 font-bold text-sm"
+          >
+            <Send className="w-4 h-4" /> <span className="hidden sm:inline">Descarregar</span>
+          </button>
+        </div>
       </div>
 
       {/* TIMELINE DE NOTAS (HISTÓRICO) */}
@@ -157,55 +175,55 @@ export const BrainDump = ({ notes = [], setNotes }) => {
         </h2>
 
         <div className="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-800 before:to-transparent">
-          
-          {notes.map((note) => {
-             const primaryMoodId = note.moods?.[0] || note.mood || 'neutral';
-             const primaryMoodData = moods.find(m => m.id === primaryMoodId) || moods[2];
-             const PrimaryIcon = primaryMoodData.icon;
 
-             return (
+          {notes.map((note) => {
+            const primaryMoodId = note.moods?.[0] || note.mood || 'neutral';
+            const primaryMoodData = moods.find(m => m.id === primaryMoodId) || moods[2];
+            const PrimaryIcon = primaryMoodData.icon;
+
+            return (
               <div key={note.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                 {/* Marcador Central (Timeline Node) */}
                 <div className={`flex items-center justify-center w-10 h-10 rounded-full border-4 border-[#0f1115] ${primaryMoodData.bg} ${primaryMoodData.color} shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow absolute left-0 md:left-1/2 -translate-x-1/2`}>
                   <PrimaryIcon className="w-4 h-4" />
                 </div>
-                
+
                 {/* Card da Nota */}
                 <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] ml-12 md:ml-0 p-4 rounded-xl bg-hub-surface border border-hub-border shadow-md group-hover:border-indigo-500/30 transition-all relative">
-                   <div className="flex justify-between items-start mb-2">
-                      <span className="text-[10px] font-bold text-hub-faint uppercase tracking-wider">{note.date}</span>
-                      <button 
-                        onClick={() => handleDelete(note.id)}
-                        className="text-hub-faint hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100 p-1"
-                      >
-                         <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                   </div>
-                   
-                   {/* Renderização Fluida de Múltiplos Humores */}
-                   <div className="flex flex-wrap gap-1.5 mb-3">
-                     {(note.moods || [note.mood || 'neutral']).map(mId => {
-                        const mData = moods.find(m => m.id === mId) || moods[2];
-                        const Icon = mData.icon;
-                        return (
-                          <span key={mId} className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${mData.bg} ${mData.color} ${mData.border} border`}>
-                             <Icon className="w-2.5 h-2.5" /> {mData.label}
-                          </span>
-                        )
-                     })}
-                   </div>
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="text-[10px] font-bold text-hub-faint uppercase tracking-wider">{note.date}</span>
+                    <button
+                      onClick={() => handleDelete(note.id)}
+                      className="text-hub-faint hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100 p-1"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
 
-                   <p className="text-sm text-hub-content leading-relaxed whitespace-pre-wrap">
-                      {note.text}
-                   </p>
+                  {/* Renderização Fluida de Múltiplos Humores */}
+                  <div className="flex flex-wrap gap-1.5 mb-3">
+                    {(note.moods || [note.mood || 'neutral']).map(mId => {
+                      const mData = moods.find(m => m.id === mId) || moods[2];
+                      const Icon = mData.icon;
+                      return (
+                        <span key={mId} className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${mData.bg} ${mData.color} ${mData.border} border`}>
+                          <Icon className="w-2.5 h-2.5" /> {mData.label}
+                        </span>
+                      )
+                    })}
+                  </div>
+
+                  <p className="text-sm text-hub-content leading-relaxed whitespace-pre-wrap">
+                    {note.text}
+                  </p>
                 </div>
               </div>
-             )
+            )
           })}
 
           {notes.length === 0 && (
             <div className="text-center p-8 bg-hub-surface border border-dashed border-slate-700 rounded-xl relative z-10">
-               <p className="text-hub-faint text-sm">A mente está limpa. Nenhuma descarga cognitiva recente.</p>
+              <p className="text-hub-faint text-sm">A mente está limpa. Nenhuma descarga cognitiva recente.</p>
             </div>
           )}
 

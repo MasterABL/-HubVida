@@ -7,8 +7,10 @@ import {
   Trash2,
   Plus,
 } from 'lucide-react';
+import { Skeleton } from './Skeleton';
 
 export const Financas = ({
+  isLoaded = true,
   financeSummary,
   activeMonth,
   setActiveMonth,
@@ -20,6 +22,28 @@ export const Financas = ({
   handleAddTransaction,
   MONTHS,
 }) => {
+  if (!isLoaded) {
+    return (
+      <div className="space-y-6 animate-in fade-in duration-500">
+        <div className="flex justify-between items-end mb-8">
+          <Skeleton className="w-64 h-10" />
+          <Skeleton className="w-32 h-16 rounded-xl" />
+        </div>
+        <Skeleton className="w-full h-12 rounded-xl" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Skeleton className="w-full h-32 rounded-xl" />
+          <Skeleton className="w-full h-32 rounded-xl" />
+          <Skeleton className="w-full h-32 rounded-xl" />
+        </div>
+        <div className="space-y-3 mt-4">
+          <Skeleton className="w-full h-20 rounded-xl" />
+          <Skeleton className="w-full h-20 rounded-xl" />
+          <Skeleton className="w-full h-32 rounded-xl" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex justify-between items-end mb-8">
@@ -44,11 +68,10 @@ export const Financas = ({
           <button
             key={month}
             onClick={() => setActiveMonth(month)}
-            className={`flex-none snap-start px-6 py-3 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${
-              activeMonth === month
+            className={`flex-none snap-start px-6 py-3 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${activeMonth === month
                 ? 'bg-yellow-500 text-slate-900 shadow'
                 : 'text-hub-faint hover:text-hub-strong hover:bg-hub-hover'
-            }`}
+              }`}
           >
             {month}
           </button>
@@ -102,21 +125,19 @@ export const Financas = ({
           <div
             key={transaction.id}
             onClick={() => handleToggleFinanceStatus(transaction.id)}
-            className={`cursor-pointer bg-hub-surface border border-hub-border rounded-xl p-4 flex items-center justify-between group hover:border-slate-700 transition-all shadow-sm select-none ${
-              transaction.status === 'paid'
+            className={`cursor-pointer bg-hub-surface border border-hub-border rounded-xl p-4 flex items-center justify-between group hover:border-slate-700 transition-all shadow-sm select-none ${transaction.status === 'paid'
                 ? 'opacity-60 hover:opacity-100'
                 : ''
-            }`}
+              }`}
           >
             <div className="flex items-center gap-4">
               <div
-                className={`p-2 rounded-full transition-colors ${
-                  transaction.type === 'income'
+                className={`p-2 rounded-full transition-colors ${transaction.type === 'income'
                     ? 'text-emerald-500 bg-emerald-500/10 group-hover:bg-emerald-500/20'
                     : transaction.status === 'paid'
-                    ? 'text-yellow-500 bg-yellow-500/10 group-hover:bg-yellow-500/20'
-                    : 'text-hub-faint bg-hub-hover group-hover:bg-hub-inner'
-                }`}
+                      ? 'text-yellow-500 bg-yellow-500/10 group-hover:bg-yellow-500/20'
+                      : 'text-hub-faint bg-hub-hover group-hover:bg-hub-inner'
+                  }`}
               >
                 {transaction.type === 'income' ? (
                   <TrendingUp className="w-5 h-5" />
@@ -128,14 +149,13 @@ export const Financas = ({
               </div>
               <div>
                 <h3
-                  className={`font-bold text-sm ${
-                    transaction.status === 'paid' &&
-                    transaction.type === 'expense'
+                  className={`font-bold text-sm ${transaction.status === 'paid' &&
+                      transaction.type === 'expense'
                       ? 'text-hub-muted line-through'
                       : transaction.type === 'income'
-                      ? 'text-emerald-500' // Regra: Receita é sempre verde, mesmo paga
-                      : 'text-hub-strong'
-                  }`}
+                        ? 'text-emerald-500' // Regra: Receita é sempre verde, mesmo paga
+                        : 'text-hub-strong'
+                    }`}
                 >
                   {transaction.title}
                 </h3>
@@ -146,11 +166,10 @@ export const Financas = ({
             </div>
             <div className="flex items-center gap-4">
               <div
-                className={`font-bold text-sm ${
-                  transaction.type === 'income'
+                className={`font-bold text-sm ${transaction.type === 'income'
                     ? 'text-emerald-500'
                     : 'text-rose-500'
-                }`}
+                  }`}
               >
                 {transaction.type === 'income' ? '+' : '-'}R${' '}
                 {transaction.amount.toLocaleString('pt-BR', {
