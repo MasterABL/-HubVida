@@ -50,50 +50,6 @@ export const ScrollReveal = ({ children, delay = 0 }) => {
     };
   }, []);
 
-  // Parallax leve no header de cada módulo
-  useEffect(() => {
-    let rafId;
-    const handleScroll = () => {
-      if (!isVisible || !domRef.current) return;
-
-      rafId = requestAnimationFrame(() => {
-        if (!domRef.current) return;
-        const rect = domRef.current.getBoundingClientRect();
-
-        // Aplica o efeito apenas enquanto o container está na viewport
-        if (rect.top < window.innerHeight && rect.bottom > 0) {
-          // Headers: h1, h2, e banners com fundo gradient (assumindo que representam headers visuais)
-          const headers = domRef.current.querySelectorAll('h1, h2, .bg-gradient-to-r');
-          if (!headers || headers.length === 0) return;
-
-          // Efeito: O usuário quer que o título mova 30% mais devagar que o resto.
-          const viewportCenter = window.innerHeight / 2;
-          const elementCenter = rect.top + rect.height / 2;
-          const distance = elementCenter - viewportCenter;
-
-          // Fator de movimento parallax sutil
-          const translateY = distance * 0.15;
-
-          headers.forEach(h => {
-            // Limita a um intervalo seguro para não quebrar o layout
-            const clampedY = Math.max(-50, Math.min(50, translateY));
-            h.style.transform = `translateY(${clampedY}px)`;
-            h.style.transition = 'none'; // Sem transição de CSS durante scroll para evitar lag
-          });
-        }
-      });
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    // Chama uma vez para posição inicial
-    handleScroll();
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (rafId) cancelAnimationFrame(rafId);
-    };
-  }, [isVisible]);
-
   // Aplica as classes CSS criadas no index.css
   const directionClass = scrollDir === 'down' ? 'scrolling-down' : 'scrolling-up';
   const visibilityClass = isVisible ? 'is-visible' : 'is-hidden';
