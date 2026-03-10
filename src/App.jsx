@@ -493,6 +493,11 @@ export default function App() {
   const [newIdea, setNewIdea] = useState('');
   const [activeRoutine, setActiveRoutine] = useState(getInitialRoutine());
   const [newRoutineTask, setNewRoutineTask] = useState({ time: '', title: '' });
+  const [openCategories, setOpenCategories] = useState({
+    'Estudos': true,
+    'Estilo de Vida': true,
+    'Gestão e Pessoal': true
+  });
   const [activeRoadmapTab, setActiveRoadmapTab] = useState('Visão Geral');
   const [expandedYear, setExpandedYear] = useState('Ano 3');
   const [newCr, setNewCr] = useState({ disciplina: '', nota: '', creditos: '4' });
@@ -884,40 +889,89 @@ export default function App() {
             </div>
 
             <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+              {/* Visão Geral (Standalone) */}
+              <button
+                onClick={() => {
+                  const element = document.getElementById('Visão Geral');
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                  setIsMobileMenuOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all mb-4 ${activeTab === 'Visão Geral'
+                  ? 'bg-yellow-500/10 text-yellow-500 shadow-sm'
+                  : 'text-hub-muted hover:bg-hub-hover hover:text-hub-strong'
+                  }`}
+              >
+                <Home className={`w-5 h-5 ${activeTab === 'Visão Geral' ? 'text-yellow-500' : 'text-hub-muted'}`} />
+                Visão Geral
+              </button>
+
               {[
-                { name: 'Visão Geral', icon: Home },
-                { name: 'Ph.D. Roadmap', icon: GraduationCap },
-                { name: 'Rotina Diária', icon: Calendar },
-                { name: 'Nutrição & Base', icon: Utensils },
-                { name: 'Controle de Sono', icon: Moon },
-                { name: 'Academia (Treino)', icon: Dumbbell },
-                { name: 'Haircare', icon: Scissors },
-                { name: 'Brain Dump', icon: Lightbulb },
-                { name: 'Produção Acadêmica', icon: FileText },
-                { name: 'Competências', icon: Brain },
-                { name: 'Faculdade (ADM)', icon: Library },
-                { name: 'Finanças', icon: Wallet },
-              ].map((item) => (
-                <button
-                  key={item.name}
-                  onClick={() => {
-                    const element = document.getElementById(item.name);
-                    if (element) {
-                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                    setIsMobileMenuOpen(false); // Fecha o menu no mobile após clicar
-                  }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${activeTab === item.name
-                    ? 'bg-yellow-500/10 text-yellow-500 shadow-sm'
-                    : 'text-hub-muted hover:bg-hub-hover hover:text-hub-strong'
-                    }`}
-                >
-                  <item.icon
-                    className={`w-5 h-5 ${activeTab === item.name ? 'text-yellow-500' : 'text-hub-muted'
-                      }`}
-                  />
-                  {item.name}
-                </button>
+                {
+                  name: 'Estudos',
+                  icon: GraduationCap,
+                  items: [
+                    { name: 'Faculdade (ADM)', icon: Library },
+                    { name: 'Ph.D. Roadmap', icon: GraduationCap },
+                    { name: 'Produção Acadêmica', icon: FileText },
+                  ]
+                },
+                {
+                  name: 'Estilo de Vida',
+                  icon: Activity,
+                  items: [
+                    { name: 'Rotina Diária', icon: Calendar },
+                    { name: 'Academia (Treino)', icon: Dumbbell },
+                    { name: 'Nutrição & Base', icon: Utensils },
+                    { name: 'Controle de Sono', icon: Moon },
+                    { name: 'Haircare', icon: Scissors },
+                  ]
+                },
+                {
+                  name: 'Gestão e Pessoal',
+                  icon: Briefcase,
+                  items: [
+                    { name: 'Finanças', icon: Wallet },
+                    { name: 'Competências', icon: Brain },
+                    { name: 'Brain Dump', icon: Lightbulb },
+                  ]
+                }
+              ].map(category => (
+                <div key={category.name} className="space-y-1 mb-2">
+                  <button
+                    onClick={() => setOpenCategories(prev => ({ ...prev, [category.name]: !prev[category.name] }))}
+                    className="w-full flex items-center justify-between px-4 py-2 text-xs font-bold text-hub-faint uppercase tracking-widest hover:text-hub-strong transition-colors"
+                  >
+                    <div className="flex items-center gap-2">
+                      <category.icon className="w-4 h-4" />
+                      {category.name}
+                    </div>
+                    <ChevronRight className={`w-4 h-4 transition-transform duration-300 ${openCategories[category.name] ? 'rotate-90' : ''}`} />
+                  </button>
+
+                  <div className={`space-y-1 overflow-hidden transition-all duration-300 ${openCategories[category.name] ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                    {category.items.map(item => (
+                      <button
+                        key={item.name}
+                        onClick={() => {
+                          const element = document.getElementById(item.name);
+                          if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all pl-10 ${activeTab === item.name
+                          ? 'bg-yellow-500/10 text-yellow-500 shadow-sm'
+                          : 'text-hub-muted hover:bg-hub-hover hover:text-hub-strong'
+                          }`}
+                      >
+                        <item.icon className={`w-4 h-4 ${activeTab === item.name ? 'text-yellow-500' : 'text-hub-muted'}`} />
+                        {item.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               ))}
               <div className="pt-2">
                 <Changelog />
@@ -1020,6 +1074,11 @@ export default function App() {
                       gymAttendance={gymAttendance}
                       sleepData={sleepData}
                       workoutProfile={workoutProfile}
+                      haircareStatus={haircareStatus}
+                      haircareMessage={haircareMessage}
+                      isWashDay={isWashDay}
+                      isHaircareDoneToday={isHaircareDoneToday}
+                      toggleHaircareDone={toggleHaircareDone}
                     />
                   </ScrollReveal>
                 </div>
