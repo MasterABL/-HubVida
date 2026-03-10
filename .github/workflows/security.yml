@@ -58,7 +58,7 @@ jobs:
 
       - name: Search for Secrets
         run: |
-          if grep -rnlE "VITE_SUPABASE_KEY|VITE_SUPABASE_URL" --exclude-dir=node_modules src/; then
+          if grep -rnlE "(https://[a-zA-Z0-9-]+\.supabase\.co)|(eyJ[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+)" --exclude-dir=node_modules src/; then
             echo "Critical: Extraneous secrets found inside src/ directory!"
             exit 1
           else
@@ -81,4 +81,7 @@ jobs:
         run: npm ci
 
       - name: Verify Build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
         run: npm run build
