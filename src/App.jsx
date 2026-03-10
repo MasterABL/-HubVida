@@ -937,42 +937,48 @@ export default function App() {
                     { name: 'Brain Dump', icon: Lightbulb },
                   ]
                 }
-              ].map(category => (
-                <div key={category.name} className="space-y-1 mb-2">
-                  <button
-                    onClick={() => setOpenCategories(prev => ({ ...prev, [category.name]: !prev[category.name] }))}
-                    className="w-full flex items-center justify-between px-4 py-2 text-xs font-bold text-hub-faint uppercase tracking-widest hover:text-hub-strong transition-colors"
-                  >
-                    <div className="flex items-center gap-2">
-                      <category.icon className="w-4 h-4" />
-                      {category.name}
-                    </div>
-                    <ChevronRight className={`w-4 h-4 transition-transform duration-300 ${openCategories[category.name] ? 'rotate-90' : ''}`} />
-                  </button>
+              ].map(category => {
+                const CategoryIcon = category.icon;
+                return (
+                  <div key={category.name} className="space-y-1 mb-2">
+                    <button
+                      onClick={() => setOpenCategories(prev => ({ ...prev, [category.name]: !prev[category.name] }))}
+                      className="w-full flex items-center justify-between px-4 py-2 text-xs font-bold text-hub-faint uppercase tracking-widest hover:text-hub-strong transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <CategoryIcon className="w-4 h-4" />
+                        {category.name}
+                      </div>
+                      <ChevronRight className={`w-4 h-4 transition-transform duration-300 ${openCategories[category.name] ? 'rotate-90' : ''}`} />
+                    </button>
 
-                  <div className={`space-y-1 overflow-hidden transition-all duration-300 ${openCategories[category.name] ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                    {category.items.map(item => (
-                      <button
-                        key={item.name}
-                        onClick={() => {
-                          const element = document.getElementById(item.name);
-                          if (element) {
-                            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                          }
-                          setIsMobileMenuOpen(false);
-                        }}
-                        className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all pl-10 ${activeTab === item.name
-                          ? 'bg-yellow-500/10 text-yellow-500 shadow-sm'
-                          : 'text-hub-muted hover:bg-hub-hover hover:text-hub-strong'
-                          }`}
-                      >
-                        <item.icon className={`w-4 h-4 ${activeTab === item.name ? 'text-yellow-500' : 'text-hub-muted'}`} />
-                        {item.name}
-                      </button>
-                    ))}
+                    <div className={`space-y-1 overflow-hidden transition-all duration-300 ${openCategories[category.name] ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                      {category.items.map(item => {
+                        const ItemIcon = item.icon;
+                        return (
+                          <button
+                            key={item.name}
+                            onClick={() => {
+                              const element = document.getElementById(item.name);
+                              if (element) {
+                                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                              }
+                              setIsMobileMenuOpen(false);
+                            }}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all pl-10 ${activeTab === item.name
+                              ? 'bg-yellow-500/10 text-yellow-500 shadow-sm'
+                              : 'text-hub-muted hover:bg-hub-hover hover:text-hub-strong'
+                              }`}
+                          >
+                            <ItemIcon className={`w-4 h-4 ${activeTab === item.name ? 'text-yellow-500' : 'text-hub-muted'}`} />
+                            {item.name}
+                          </button>
+                        )
+                      })}
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
               <div className="pt-2">
                 <Changelog />
               </div>
