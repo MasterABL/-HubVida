@@ -41,6 +41,7 @@ import { Nutricao } from './components/Nutricao';
 import { BrainDump } from './components/BrainDump';
 import { Auth } from './components/Auth';
 import { SplashScreen } from './components/SplashScreen';
+import { ScrollReveal } from './components/ScrollReveal';
 import { supabase } from './supabase';
 
 // --- CONFIGURAÇÕES INICIAIS E DADOS MOCKADOS ---
@@ -454,6 +455,25 @@ export default function App() {
 
   const [isAppReady, setIsAppReady] = useState(false);
 
+  // --- SCROLL SPY (Atualiza Aba Ativa ao rolar a página) ---
+  useEffect(() => {
+    if (!isAppReady) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveTab(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: '-20% 0px -70% 0px' }
+    );
+    const sections = document.querySelectorAll('.module-section');
+    sections.forEach((sec) => observer.observe(sec));
+    return () => observer.disconnect();
+  }, [isAppReady]);
+
+
   useEffect(() => {
     const minDelay = new Promise(resolve => setTimeout(resolve, 800));
 
@@ -762,7 +782,7 @@ export default function App() {
       )}
 
       {/* Sidebar */}
-      <aside className={`w-64 bg-hub-surface flex flex-col border-r border-hub-border fixed md:static h-full z-50 transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+      <aside className={`w-64 bg-hub-surface flex flex-col border-r border-hub-border fixed md:sticky md:top-0 h-screen z-50 transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
         <div className="p-6 hidden md:flex flex-col gap-1">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-yellow-400 rounded-md flex items-center justify-center font-black text-slate-900 text-lg">
@@ -807,7 +827,10 @@ export default function App() {
             <button
               key={item.name}
               onClick={() => {
-                setActiveTab(item.name);
+                const element = document.getElementById(item.name);
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
                 setIsMobileMenuOpen(false); // Fecha o menu no mobile após clicar
               }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
@@ -893,128 +916,172 @@ export default function App() {
         </div>
       </aside>
 
-      <main className="flex-1 p-4 md:p-8 lg:p-12 overflow-y-auto">
+      <main className="flex-1 p-4 md:p-8 lg:p-12 flex flex-col">
         <div className="max-w-6xl mx-auto">
-          {activeTab === 'Visão Geral' ? (
-            <VisaoGeral
-              setActiveTab={setActiveTab}
-              englishLevel={englishLevel}
-              financeSummary={financeSummary}
-              activeMonth={activeMonth}
-              routinesData={routinesData}
-              activeRoutine={activeRoutine}
-              visaoGeralMetrics={visaoGeralMetrics}
-              radarData={radarData}
-              avisosPortal={avisosPortal}
-              setAvisosPortal={setAvisosPortal}
-              provas={provas}
-              setProvas={setProvas}
-            />
-          ) : activeTab === 'Competências' ? (
-            <Competencias
-              radarData={radarData}
-              englishLevel={englishLevel}
-              setEnglishLevel={setEnglishLevel}
-              hardSkills={hardSkills}
-              handleUpdateHardSkill={handleUpdateHardSkill}
-              handleRemoveHardSkill={handleRemoveHardSkill}
-              newSkill={newSkill}
-              setNewSkill={setNewSkill}
-              handleAddHardSkill={handleAddHardSkill}
-              softSkills={softSkills}
-              calculateSoftSkillProgress={calculateSoftSkillProgress}
-              handleToggleSoftSkill={handleToggleSoftSkill}
-              englishStreak={englishStreak}
-              setEnglishStreak={setEnglishStreak}
-              habits={habits}
-              setHabits={setHabits}
-            />
-          ) : activeTab === 'Faculdade (ADM)' ? (
-            <Faculdade
-              faculdadeData={faculdadeData}
-              expandedSubject={expandedSubject}
-              setExpandedSubject={setExpandedSubject}
-              handleUpdateFaculdade={handleUpdateFaculdade}
-              calculateFinalGrade={calculateFinalGrade}
-            />
-          ) : activeTab === 'Finanças' ? (
-            <Financas
-              financeSummary={financeSummary}
-              activeMonth={activeMonth}
-              setActiveMonth={setActiveMonth}
-              currentMonthFinances={currentMonthFinances}
-              handleToggleFinanceStatus={handleToggleFinanceStatus}
-              handleDeleteFinance={handleDeleteFinance}
-              newTransaction={newTransaction}
-              setNewTransaction={setNewTransaction}
-              handleAddTransaction={handleAddTransaction}
-              MONTHS={MONTHS}
-            />
-          ) : activeTab === 'Produção Acadêmica' ? (
-            <Producao
-              newProd={newProd}
-              setNewProd={setNewProd}
-              productions={productions}
-              handleAddProduction={handleAddProduction}
-              handleDeleteProduction={handleDeleteProduction}
-              newIdea={newIdea}
-              setNewIdea={setNewIdea}
-              handleAddIdea={handleAddIdea}
-              ideas={ideas}
-              setIdeas={setIdeas}
-            />
-          ) : activeTab === 'Academia (Treino)' ? (
-            <Treino 
-              workoutProfile={workoutProfile}
-              setWorkoutProfile={setWorkoutProfile}
-              workouts={workouts}
-              setWorkouts={setWorkouts}
-            />
-          ) : activeTab === 'Rotina Diária' ? (
-            <Rotina
-              routinesData={routinesData}
-              activeRoutine={activeRoutine}
-              setActiveRoutine={setActiveRoutine}
-              newRoutineTask={newRoutineTask}
-              setNewRoutineTask={setNewRoutineTask}
-              handleAddRoutineTask={handleAddRoutineTask}
-              handleToggleRoutineTask={handleToggleRoutineTask}
-              handleRemoveRoutineTask={handleRemoveRoutineTask}
-              gymAttendance={gymAttendance}
-              setGymAttendance={setGymAttendance}
-            />
-          ) : activeTab === 'Controle de Sono' ? (
-            <Sono 
-               sleepGoal={sleepGoal} setSleepGoal={setSleepGoal}
-               sleepData={sleepData} setSleepData={setSleepData}
-            />
-          ) : activeTab === 'Nutrição & Base' ? (
-            <Nutricao 
-              dailyTracker={nutritionTracker}
-              setDailyTracker={setNutritionTracker}
-            />
-          ) : activeTab === 'Brain Dump' ? (
-            <BrainDump 
-              notes={brainDumpNotes}
-              setNotes={setBrainDumpNotes}
-            />
-          ) : activeTab === 'Ph.D. Roadmap' ? (
-            <Roadmap
-              crData={crData}
-              newCr={newCr}
-              setNewCr={setNewCr}
-              handleAddCr={handleAddCr}
-              handleDeleteCr={handleDeleteCr}
-              activeRoadmapTab={activeRoadmapTab}
-              setActiveRoadmapTab={setActiveRoadmapTab}
-              expandedYear={expandedYear}
-              setExpandedYear={setExpandedYear}
-            />
-          ) : (
-            <div className="text-center text-hub-faint mt-20">
-              Módulo em desenvolvimento... Selecione um módulo válido no menu lateral.
+          
+          {/* ALL COMPONENTS RENDERED SEQUENTIALLY FOR SCROLL REVEAL */}
+          <div className="space-y-32 pb-32">
+            
+            <div id="Visão Geral" className="scroll-mt-24 module-section">
+              <ScrollReveal delay={50}>
+                <VisaoGeral
+                  setActiveTab={setActiveTab}
+                  englishLevel={englishLevel}
+                  financeSummary={financeSummary}
+                  activeMonth={activeMonth}
+                  routinesData={routinesData}
+                  activeRoutine={activeRoutine}
+                  visaoGeralMetrics={visaoGeralMetrics}
+                  radarData={radarData}
+                  avisosPortal={avisosPortal}
+                  setAvisosPortal={setAvisosPortal}
+                  provas={provas}
+                  setProvas={setProvas}
+                />
+              </ScrollReveal>
             </div>
-          )}
+
+            <div id="Ph.D. Roadmap" className="scroll-mt-24 module-section">
+              <ScrollReveal delay={50}>
+                <Roadmap
+                  crData={crData}
+                  newCr={newCr}
+                  setNewCr={setNewCr}
+                  handleAddCr={handleAddCr}
+                  handleDeleteCr={handleDeleteCr}
+                  activeRoadmapTab={activeRoadmapTab}
+                  setActiveRoadmapTab={setActiveRoadmapTab}
+                  expandedYear={expandedYear}
+                  setExpandedYear={setExpandedYear}
+                />
+              </ScrollReveal>
+            </div>
+
+            <div id="Rotina Diária" className="scroll-mt-24 module-section">
+              <ScrollReveal delay={50}>
+                <Rotina
+                  routinesData={routinesData}
+                  activeRoutine={activeRoutine}
+                  setActiveRoutine={setActiveRoutine}
+                  newRoutineTask={newRoutineTask}
+                  setNewRoutineTask={setNewRoutineTask}
+                  handleAddRoutineTask={handleAddRoutineTask}
+                  handleToggleRoutineTask={handleToggleRoutineTask}
+                  handleRemoveRoutineTask={handleRemoveRoutineTask}
+                  gymAttendance={gymAttendance}
+                  setGymAttendance={setGymAttendance}
+                />
+              </ScrollReveal>
+            </div>
+
+            <div id="Nutrição & Base" className="scroll-mt-24 module-section">
+              <ScrollReveal delay={50}>
+                <Nutricao 
+                  dailyTracker={nutritionTracker}
+                  setDailyTracker={setNutritionTracker}
+                />
+              </ScrollReveal>
+            </div>
+
+            <div id="Controle de Sono" className="scroll-mt-24 module-section">
+              <ScrollReveal delay={50}>
+                <Sono 
+                   sleepGoal={sleepGoal} setSleepGoal={setSleepGoal}
+                   sleepData={sleepData} setSleepData={setSleepData}
+                />
+              </ScrollReveal>
+            </div>
+
+            <div id="Academia (Treino)" className="scroll-mt-24 module-section">
+              <ScrollReveal delay={50}>
+                <Treino 
+                  workoutProfile={workoutProfile}
+                  setWorkoutProfile={setWorkoutProfile}
+                  workouts={workouts}
+                  setWorkouts={setWorkouts}
+                />
+              </ScrollReveal>
+            </div>
+
+            <div id="Brain Dump" className="scroll-mt-24 module-section">
+              <ScrollReveal delay={50}>
+                <BrainDump 
+                  notes={brainDumpNotes}
+                  setNotes={setBrainDumpNotes}
+                />
+              </ScrollReveal>
+            </div>
+
+            <div id="Produção Acadêmica" className="scroll-mt-24 module-section">
+              <ScrollReveal delay={50}>
+                <Producao
+                  newProd={newProd}
+                  setNewProd={setNewProd}
+                  productions={productions}
+                  handleAddProduction={handleAddProduction}
+                  handleDeleteProduction={handleDeleteProduction}
+                  newIdea={newIdea}
+                  setNewIdea={setNewIdea}
+                  handleAddIdea={handleAddIdea}
+                  ideas={ideas}
+                  setIdeas={setIdeas}
+                />
+              </ScrollReveal>
+            </div>
+
+            <div id="Competências" className="scroll-mt-24 module-section">
+              <ScrollReveal delay={50}>
+                <Competencias
+                  radarData={radarData}
+                  englishLevel={englishLevel}
+                  setEnglishLevel={setEnglishLevel}
+                  hardSkills={hardSkills}
+                  handleUpdateHardSkill={handleUpdateHardSkill}
+                  handleRemoveHardSkill={handleRemoveHardSkill}
+                  newSkill={newSkill}
+                  setNewSkill={setNewSkill}
+                  handleAddHardSkill={handleAddHardSkill}
+                  softSkills={softSkills}
+                  calculateSoftSkillProgress={calculateSoftSkillProgress}
+                  handleToggleSoftSkill={handleToggleSoftSkill}
+                  englishStreak={englishStreak}
+                  setEnglishStreak={setEnglishStreak}
+                  habits={habits}
+                  setHabits={setHabits}
+                />
+              </ScrollReveal>
+            </div>
+
+            <div id="Faculdade (ADM)" className="scroll-mt-24 module-section">
+              <ScrollReveal delay={50}>
+                <Faculdade
+                  faculdadeData={faculdadeData}
+                  expandedSubject={expandedSubject}
+                  setExpandedSubject={setExpandedSubject}
+                  handleUpdateFaculdade={handleUpdateFaculdade}
+                  calculateFinalGrade={calculateFinalGrade}
+                />
+              </ScrollReveal>
+            </div>
+
+            <div id="Finanças" className="scroll-mt-24 module-section">
+              <ScrollReveal delay={50}>
+                <Financas
+                  financeSummary={financeSummary}
+                  activeMonth={activeMonth}
+                  setActiveMonth={setActiveMonth}
+                  currentMonthFinances={currentMonthFinances}
+                  handleToggleFinanceStatus={handleToggleFinanceStatus}
+                  handleDeleteFinance={handleDeleteFinance}
+                  newTransaction={newTransaction}
+                  setNewTransaction={setNewTransaction}
+                  handleAddTransaction={handleAddTransaction}
+                  MONTHS={MONTHS}
+                />
+              </ScrollReveal>
+            </div>
+
+          </div>
         </div>
       </main>
     </div>
