@@ -65,27 +65,30 @@ body {
 
 /* 1. Módulo Principal (Container) */
 .scroll-reveal-wrapper {
-  /* Duração 450ms, Easing cubic-bezier premium (feeling nativo ios/android) */
-  transition: opacity 450ms cubic-bezier(0.16, 1, 0.3, 1),
-    transform 450ms cubic-bezier(0.16, 1, 0.3, 1);
+  /* Não aplica transition global no wrapper para não afetar os headers.
+     O reveal só deve acontecer no conteúdo interno permitido. */
 }
 
+/* Mantendo o wrapper base invisível sem transição (caso queira revelar conteúdo q não é header) 
+   Mas NÃO aplicamos translateY global */
 .scroll-reveal-wrapper.is-hidden {
   opacity: 0;
 }
 
-/* Sentido do scroll afeta o ponto de origem da animação (cima ou baixo) */
-.scroll-reveal-wrapper.is-hidden.scrolling-down {
-  transform: translateY(20px);
-}
-
-.scroll-reveal-wrapper.is-hidden.scrolling-up {
-  transform: translateY(-20px);
-}
-
 .scroll-reveal-wrapper.is-visible {
   opacity: 1;
-  transform: translateY(0);
+}
+
+/* 2. Conteúdo Interno Direto (Grids e Itens - EXCLUINDO HEADERS) */
+/* Todos os componentes devem estar isolados do Reveal nos títulos */
+.scroll-reveal-wrapper h1,
+.scroll-reveal-wrapper h2,
+.scroll-reveal-wrapper header,
+.scroll-reveal-wrapper .bg-gradient-to-r {
+  /* Zera qualquer efeito de animação nos headers */
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
 }
 
 /* 2. Staggering nos Itens Internos (Ex: cards dentro de um .grid) */
