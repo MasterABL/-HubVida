@@ -27,6 +27,7 @@ import {
   Utensils,
   Lightbulb,
   Scissors,
+  Activity,
 } from 'lucide-react';
 
 import { VisaoGeral } from './components/VisaoGeral';
