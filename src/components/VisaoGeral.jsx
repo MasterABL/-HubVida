@@ -119,12 +119,12 @@ export const VisaoGeral = ({
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       {/* Header Premium */}
-      <div className="bg-gradient-to-r from-[#12141a] to-[#1a1d24] border border-yellow-500/20 rounded-xl p-6 md:p-8 shadow-xl flex flex-col md:flex-row justify-between items-center gap-6">
-        <div>
-          <h1 className="text-2xl font-black italic tracking-wider text-yellow-500 uppercase flex items-center gap-3">
+      <div className="bg-gradient-to-r from-[#12141a] to-[#1a1d24] border border-yellow-500/20 rounded-xl p-4 md:p-8 shadow-xl flex flex-col md:flex-row justify-between items-center gap-6">
+        <div className="text-center md:text-left">
+          <h1 className="text-[clamp(24px,7vw,36px)] font-black italic tracking-wider text-yellow-500 uppercase flex items-center justify-center md:justify-start gap-3">
             <Zap className="w-6 h-6" /> Comando Central
           </h1>
-          <p className="text-sm text-hub-muted mt-2 font-medium">
+          <p className="text-[clamp(10px,3vw,12px)] text-hub-muted mt-2 font-medium uppercase tracking-widest">
             Visão Estratégica e Controle de Performance Pessoal
           </p>
         </div>
@@ -142,16 +142,16 @@ export const VisaoGeral = ({
               ) : cotacoesErro ? (
                 <span className="text-rose-500 text-[10px]">Erro</span>
               ) : (
-                <span className="text-emerald-500 text-sm">R$ {cotacoes[key]}</span>
+                <span className="text-emerald-500 text-[clamp(12px,4vw,14px)]">R$ {cotacoes[key]}</span>
               )}
             </div>
           ))}
           <button
             onClick={fetchCotacoes}
             title="Atualizar cotações"
-            className="bg-hub-inner px-3 py-2 rounded-lg border border-hub-border text-hub-faint hover:text-yellow-500 hover:border-yellow-500/40 transition-all"
+            className="bg-hub-inner px-4 py-2 rounded-lg border border-hub-border text-hub-faint hover:text-yellow-500 hover:border-yellow-500/40 transition-all flex items-center justify-center"
           >
-            <RefreshCw className={`w-4 h-4 ${cotacoesLoading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-5 h-5 ${cotacoesLoading ? 'animate-spin' : ''}`} />
           </button>
         </div>
       </div>
@@ -189,10 +189,10 @@ export const VisaoGeral = ({
             <ExternalLink className="w-4 h-4 text-hub-faint group-hover:text-emerald-500 transition-colors" />
           </div>
           <div className="flex-1 flex flex-col justify-center">
-            <p className="text-[10px] text-hub-faint uppercase tracking-widest font-bold mb-1">
+            <p className="text-[clamp(10px,3vw,12px)] text-hub-faint uppercase tracking-widest font-bold mb-1">
               Saldo Disponível
             </p>
-            <p className="text-4xl font-black text-hub-strong mb-6">
+            <p className="text-[clamp(28px,8vw,40px)] font-black text-hub-strong mb-6 leading-none">
               R${' '}
               {financeSummary.available.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
             </p>
@@ -345,18 +345,18 @@ export const VisaoGeral = ({
               <>
                 <p className="text-sm text-hub-muted font-medium">{proximaProva.titulo}</p>
                 <div className="mt-4">
-                  <p className="text-[10px] text-hub-faint uppercase tracking-widest font-bold mb-1">Contagem Regressiva</p>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-5xl font-black text-hub-strong">{proximaProva.dias}</span>
-                    <span className="text-lg text-emerald-500 font-bold uppercase">Dias</span>
+                  <p className="text-[clamp(10px,3vw,12px)] text-hub-faint uppercase tracking-widest font-bold mb-2">Contagem Regressiva</p>
+                  <div className="flex items-baseline justify-center md:justify-start gap-2">
+                    <span className="text-[clamp(48px,12vw,64px)] font-black text-hub-strong leading-none">{proximaProva.dias}</span>
+                    <span className="text-[clamp(16px,4vw,20px)] text-emerald-500 font-bold uppercase">Dias</span>
                   </div>
-                  <p className="text-[10px] text-hub-faint mt-1">Data: {proximaProva.data}</p>
+                  <p className="text-[clamp(10px,3vw,12px)] text-hub-faint mt-1">Data: {proximaProva.data}</p>
                 </div>
               </>
             ) : (
               <div className="flex flex-col items-center justify-center flex-1 h-32 text-center">
-                <p className="text-hub-faint text-xs">Nenhuma prova cadastrada.</p>
-                <p className="text-slate-700 text-[10px] mt-1">Clique em + para adicionar.</p>
+                <p className="text-hub-faint text-[clamp(10px,3vw,12px)]">Nenhuma prova cadastrada.</p>
+                <p className="text-slate-700 text-[clamp(9px,2.5vw,10px)] mt-1">Clique em + para adicionar.</p>
               </div>
             )}
           </div>
@@ -373,8 +373,8 @@ export const VisaoGeral = ({
             </h2>
             <ExternalLink className="w-4 h-4 text-hub-faint group-hover:text-indigo-400 transition-colors" />
           </div>
-          <div className="relative w-28 h-28 my-2 flex items-center justify-center">
-            <svg className="w-full h-full transform -rotate-90">
+          <div className="relative w-24 h-24 md:w-28 md:h-28 my-2 flex items-center justify-center">
+            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 112 112">
               <circle cx="56" cy="56" r="48" fill="none" stroke="#1f222a" strokeWidth="12" />
               <circle
                 cx="56" cy="56" r="48" fill="none" stroke="#818cf8" strokeWidth="12"
@@ -424,14 +424,14 @@ export const VisaoGeral = ({
                 e.stopPropagation();
                 toggleHaircareDone();
               }}
-              className={`shrink-0 w-32 h-32 rounded-full border-4 flex flex-col items-center justify-center transition-all ${isHaircareDoneToday
-                  ? 'bg-fuchsia-500/10 border-fuchsia-500 text-fuchsia-500 scale-105'
-                  : 'bg-hub-base border-hub-border text-hub-faint hover:border-fuchsia-500/50 hover:text-fuchsia-400'
+              className={`shrink-0 w-24 h-24 md:w-32 md:h-32 rounded-full border-4 flex flex-col items-center justify-center transition-all ${isHaircareDoneToday
+                ? 'bg-fuchsia-500/10 border-fuchsia-500 text-fuchsia-500 scale-105 shadow-[0_0_20px_rgba(217,70,239,0.2)]'
+                : 'bg-hub-base border-hub-border text-hub-faint hover:border-fuchsia-500/50 hover:text-fuchsia-400'
                 }`}
             >
-              <CheckSquare className={`w-8 h-8 mb-2 ${isHaircareDoneToday ? 'hidden' : 'block'}`} />
-              <CheckSquare className={`w-8 h-8 mb-2 ${isHaircareDoneToday ? 'block' : 'hidden'}`} />
-              <span className="font-bold text-sm tracking-wide">
+              <CheckSquare className={`w-6 h-6 md:w-8 md:h-8 mb-1 md:mb-2 ${isHaircareDoneToday ? 'hidden' : 'block'}`} />
+              <CheckSquare className={`w-6 h-6 md:w-8 md:h-8 mb-1 md:mb-2 ${isHaircareDoneToday ? 'block' : 'hidden'}`} />
+              <span className="font-bold text-[10px] md:text-sm tracking-wide">
                 {isHaircareDoneToday ? 'CONCLUÍDO' : 'MARCAR'}
               </span>
             </button>

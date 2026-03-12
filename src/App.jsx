@@ -1004,8 +1004,8 @@ export default function App() {
             </div>
           </aside>
 
-          <main className="flex-1 p-4 md:p-8 lg:p-12 flex flex-col">
-            <div className="max-w-6xl mx-auto">
+          <main className="flex-1 flex flex-col">
+            <div className="max-w-6xl mx-auto w-full px-0">
 
               {/* ALL COMPONENTS RENDERED SEQUENTIALLY FOR SCROLL REVEAL */}
               <div className="space-y-32 pb-32">

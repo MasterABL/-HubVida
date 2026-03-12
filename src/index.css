@@ -219,54 +219,144 @@ body,
 }
 
 /* =========================================================
-   MOBILE RESPONSIVENESS UTILITIES
+   MOBILE-FIRST SENIOR RESPONSIVENESS
    ========================================================= */
-@media (max-width: 768px) {
 
-  /* Grid collapse */
-  .grid-cols-2,
-  .grid-cols-3,
-  .grid-cols-4,
-  .grid-cols-5 {
+/* Global Fixes */
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
+#root {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+@media (max-width: 767px) {
+
+  /* Layout Geral */
+  main {
+    padding: 16px 16px 100px 16px !important;
+    /* Padding lateral 16px e inferior para Bottom Nav */
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+  }
+
+  /* Grid Collapse - Força 1 coluna em tudo que for grid */
+  .grid {
     grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  /* Typography Responsiva com clamp() */
+  h1,
+  .text-3xl,
+  .text-4xl {
+    font-size: clamp(24px, 7vw, 36px) !important;
+    line-height: 1.2 !important;
+  }
+
+  h2,
+  .text-2xl {
+    font-size: clamp(18px, 5vw, 24px) !important;
+  }
+
+  h3,
+  .text-xl {
+    font-size: clamp(16px, 4vw, 20px) !important;
+  }
+
+  p,
+  span,
+  div,
+  .text-base {
+    font-size: clamp(12px, 3.5vw, 14px) !important;
+  }
+
+  .text-sm {
+    font-size: clamp(10px, 3vw, 12px) !important;
+  }
+
+  /* Cards Mobile */
+  .bg-hub-surface,
+  .rounded-2xl,
+  .rounded-3xl {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px !important;
+    margin-bottom: 12px !important;
+    border-radius: 12px !important;
+  }
+
+  /* Bottom Navigation Mobile */
+  nav.md\:hidden.fixed.bottom-0 {
+    height: 65px !important;
+    padding: 0 8px !important;
+    background: var(--hub-surface) !important;
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+    border-top: 1px solid var(--hub-border) !important;
+    display: flex !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+  }
+
+  nav.md\:hidden.fixed.bottom-0 button {
+    flex: 1 !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 2px !important;
+    min-width: 0 !important;
+  }
+
+  nav.md\:hidden.fixed.bottom-0 button span {
+    font-size: 10px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 100% !important;
+    display: block !important;
+  }
+
+  nav.md\:hidden.fixed.bottom-0 button svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  /* Charts & Canvas scaling */
+  canvas,
+  svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  .recharts-responsive-container {
+    width: 100% !important;
+    height: 250px !important;
+    /* Altura fixa controlada para mobile */
   }
 
   /* Section spacing */
   .space-y-32 {
-    gap: 4rem !important;
-    /* Módulos mais próximos em mobile */
+    gap: 2.5rem !important;
+    /* Seções mais compactas */
+    margin-top: 0 !important;
   }
 
-  /* Typography adjustments */
-  h1 {
-    font-size: 1.5rem !important;
-  }
-
-  h2 {
-    font-size: 1.25rem !important;
-  }
-
-  /* Layout adjustments */
-  main {
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-    padding-bottom: 5rem !important;
-    /* Space for bottom nav */
-  }
-
-  /* Sidebar fallback */
+  /* Hide Desktop specific elements */
   aside {
     display: none !important;
-    /* Hide sidebar completely in mobile */
-  }
-
-  /* Cards responsiveness */
-  .rounded-xl {
-    border-radius: 12px !important;
   }
 }
 
-/* Hide scrollbar but keep functionality */
+/* Scrollbar Utility fallback */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
