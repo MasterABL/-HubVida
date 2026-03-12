@@ -798,67 +798,14 @@ export default function App() {
   // Use the merged components logic in return
   return (
     <>
-      <SplashScreen isReady={isAppReady} />
-
-      {!session ? (
+      {!isAppReady ? (
+        <SplashScreen isReady={isAppReady} />
+      ) : !session ? (
         <Auth />
       ) : (
         <div className="min-h-screen bg-hub-base flex flex-col md:flex-row font-sans selection:bg-yellow-500/30 text-hub-content">
           <InstallPWA />
           {session && <Onboarding isVisible={showTour} onClose={handleCloseTour} />}
-          {/* Mobile Header Toggle */}
-          <div className="md:hidden bg-hub-surface p-4 flex justify-between items-center border-b border-hub-border sticky top-0 z-40">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-yellow-400 rounded-md flex items-center justify-center font-black text-slate-900 text-lg">
-                H
-              </div>
-              <span className="font-black tracking-widest text-hub-strong text-lg">
-                HUBVIDA
-              </span>
-              {syncStatus === 'saving' && (
-                <span className="flex items-center gap-1 text-[10px] text-hub-faint font-bold">
-                  <Loader2 className="w-3 h-3 animate-spin" /> Salvando...
-                </span>
-              )}
-              {syncStatus === 'saved' && (
-                <span className="flex items-center gap-1 text-[10px] text-emerald-500 font-bold">
-                  <CheckCircle2 className="w-3 h-3" /> Salvo
-                </span>
-              )}
-              {syncStatus === 'error' && (
-                <span className="flex items-center gap-1 text-[10px] text-rose-500 font-bold">
-                  <Cloud className="w-3 h-3" /> Erro
-                </span>
-              )}
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={toggleTheme}
-                className="text-hub-faint p-2 hover:text-yellow-500 transition-colors"
-                title="Alternar Tema"
-              >
-                <div className="relative w-5 h-5">
-                  <Sun className={`absolute inset-0 w-5 h-5 transition-all duration-[350ms] ease-in-out ${theme === 'dark' ? 'rotate-[360deg] scale-100 opacity-100' : 'rotate-0 scale-50 opacity-0'}`} />
-                  <Moon className={`absolute inset-0 w-5 h-5 transition-all duration-[350ms] ease-in-out ${theme === 'light' ? 'rotate-0 scale-100 opacity-100' : '-rotate-[360deg] scale-50 opacity-0'}`} />
-                </div>
-              </button>
-              <button
-                className="text-hub-strong p-2"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              >
-                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
-            </div>
-          </div>
-
-
-          {/* Overlay for mobile clicking */}
-          {isMobileMenuOpen && (
-            <div
-              className="fixed inset-0 bg-black/50 z-40 md:hidden"
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
-          )}
 
           {/* Sidebar */}
           <aside className={`w-64 bg-hub-surface flex flex-col border-r border-hub-border fixed md:sticky md:top-0 h-screen z-50 transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
@@ -1090,6 +1037,19 @@ export default function App() {
                   </ScrollReveal>
                 </div>
 
+                <div id="Faculdade (ADM)" className="scroll-mt-24 module-section">
+                  <ScrollReveal delay={50}>
+                    <Faculdade
+                      isLoaded={isFaculdadeLoaded}
+                      faculdadeData={faculdadeData}
+                      expandedSubject={expandedSubject}
+                      setExpandedSubject={setExpandedSubject}
+                      handleUpdateFaculdade={handleUpdateFaculdade}
+                      calculateFinalGrade={calculateFinalGrade}
+                    />
+                  </ScrollReveal>
+                </div>
+
                 <div id="Ph.D. Roadmap" className="scroll-mt-24 module-section">
                   <ScrollReveal delay={50}>
                     <Roadmap
@@ -1102,6 +1062,23 @@ export default function App() {
                       setActiveRoadmapTab={setActiveRoadmapTab}
                       expandedYear={expandedYear}
                       setExpandedYear={setExpandedYear}
+                    />
+                  </ScrollReveal>
+                </div>
+
+                <div id="Produção Acadêmica" className="scroll-mt-24 module-section">
+                  <ScrollReveal delay={50}>
+                    <Producao
+                      newProd={newProd}
+                      setNewProd={setNewProd}
+                      productions={productions}
+                      handleAddProduction={handleAddProduction}
+                      handleDeleteProduction={handleDeleteProduction}
+                      newIdea={newIdea}
+                      setNewIdea={setNewIdea}
+                      handleAddIdea={handleAddIdea}
+                      ideas={ideas}
+                      setIdeas={setIdeas}
                     />
                   </ScrollReveal>
                 </div>
@@ -1120,6 +1097,18 @@ export default function App() {
                       handleRemoveRoutineTask={handleRemoveRoutineTask}
                       gymAttendance={gymAttendance}
                       setGymAttendance={setGymAttendance}
+                    />
+                  </ScrollReveal>
+                </div>
+
+                <div id="Academia (Treino)" className="scroll-mt-24 module-section">
+                  <ScrollReveal delay={50}>
+                    <Treino
+                      isLoaded={isTreinosLoaded}
+                      workoutProfile={workoutProfile}
+                      setWorkoutProfile={setWorkoutProfile}
+                      workouts={workouts}
+                      setWorkouts={setWorkouts}
                     />
                   </ScrollReveal>
                 </div>
@@ -1143,18 +1132,6 @@ export default function App() {
                   </ScrollReveal>
                 </div>
 
-                <div id="Academia (Treino)" className="scroll-mt-24 module-section">
-                  <ScrollReveal delay={50}>
-                    <Treino
-                      isLoaded={isTreinosLoaded}
-                      workoutProfile={workoutProfile}
-                      setWorkoutProfile={setWorkoutProfile}
-                      workouts={workouts}
-                      setWorkouts={setWorkouts}
-                    />
-                  </ScrollReveal>
-                </div>
-
                 <div id="Haircare" className="scroll-mt-24 module-section">
                   <ScrollReveal delay={50}>
                     <Haircare
@@ -1167,29 +1144,20 @@ export default function App() {
                   </ScrollReveal>
                 </div>
 
-                <div id="Brain Dump" className="scroll-mt-24 module-section">
+                <div id="Finanças" className="scroll-mt-24 module-section">
                   <ScrollReveal delay={50}>
-                    <BrainDump
-                      isLoaded={isBrainDumpLoaded}
-                      notes={brainDumpNotes}
-                      setNotes={setBrainDumpNotes}
-                    />
-                  </ScrollReveal>
-                </div>
-
-                <div id="Produção Acadêmica" className="scroll-mt-24 module-section">
-                  <ScrollReveal delay={50}>
-                    <Producao
-                      newProd={newProd}
-                      setNewProd={setNewProd}
-                      productions={productions}
-                      handleAddProduction={handleAddProduction}
-                      handleDeleteProduction={handleDeleteProduction}
-                      newIdea={newIdea}
-                      setNewIdea={setNewIdea}
-                      handleAddIdea={handleAddIdea}
-                      ideas={ideas}
-                      setIdeas={setIdeas}
+                    <Financas
+                      isLoaded={isFinancasLoaded}
+                      financeSummary={financeSummary}
+                      activeMonth={activeMonth}
+                      setActiveMonth={setActiveMonth}
+                      currentMonthFinances={currentMonthFinances}
+                      handleToggleFinanceStatus={handleToggleFinanceStatus}
+                      handleDeleteFinance={handleDeleteFinance}
+                      newTransaction={newTransaction}
+                      setNewTransaction={setNewTransaction}
+                      handleAddTransaction={handleAddTransaction}
+                      MONTHS={MONTHS}
                     />
                   </ScrollReveal>
                 </div>
@@ -1217,33 +1185,12 @@ export default function App() {
                   </ScrollReveal>
                 </div>
 
-                <div id="Faculdade (ADM)" className="scroll-mt-24 module-section">
+                <div id="Brain Dump" className="scroll-mt-24 module-section">
                   <ScrollReveal delay={50}>
-                    <Faculdade
-                      isLoaded={isFaculdadeLoaded}
-                      faculdadeData={faculdadeData}
-                      expandedSubject={expandedSubject}
-                      setExpandedSubject={setExpandedSubject}
-                      handleUpdateFaculdade={handleUpdateFaculdade}
-                      calculateFinalGrade={calculateFinalGrade}
-                    />
-                  </ScrollReveal>
-                </div>
-
-                <div id="Finanças" className="scroll-mt-24 module-section">
-                  <ScrollReveal delay={50}>
-                    <Financas
-                      isLoaded={isFinancasLoaded}
-                      financeSummary={financeSummary}
-                      activeMonth={activeMonth}
-                      setActiveMonth={setActiveMonth}
-                      currentMonthFinances={currentMonthFinances}
-                      handleToggleFinanceStatus={handleToggleFinanceStatus}
-                      handleDeleteFinance={handleDeleteFinance}
-                      newTransaction={newTransaction}
-                      setNewTransaction={setNewTransaction}
-                      handleAddTransaction={handleAddTransaction}
-                      MONTHS={MONTHS}
+                    <BrainDump
+                      isLoaded={isBrainDumpLoaded}
+                      notes={brainDumpNotes}
+                      setNotes={setBrainDumpNotes}
                     />
                   </ScrollReveal>
                 </div>
@@ -1251,6 +1198,34 @@ export default function App() {
               </div>
             </div>
           </main>
+
+          {/* Bottom Navigation (Mobile Only) */}
+          <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-hub-surface border-t border-hub-border px-2 py-1 z-50 flex items-center justify-around overflow-x-auto no-scrollbar">
+            {[
+              { id: 'Visão Geral', label: 'Geral', icon: Home },
+              { id: 'Academia (Treino)', label: 'Treino', icon: Dumbbell },
+              { id: 'Nutrição & Base', label: 'Comer', icon: Utensils },
+              { id: 'Controle de Sono', label: 'Sono', icon: Moon },
+              { id: 'Finanças', label: 'Grana', icon: Wallet },
+            ].map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    const el = document.getElementById(item.id);
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}
+                  className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-all min-w-[64px] ${isActive ? 'text-yellow-500' : 'text-hub-faint'
+                    }`}
+                >
+                  <Icon className={`w-5 h-5 ${isActive ? 'text-yellow-500' : 'text-hub-faint'}`} />
+                  <span className="text-[10px] font-bold uppercase tracking-tight">{item.label}</span>
+                </button>
+              );
+            })}
+          </nav>
         </div>
       )}
     </>

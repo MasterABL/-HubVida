@@ -217,3 +217,61 @@ body,
   background-size: 200% 100%;
   animation: shimmer 2s infinite ease-in-out;
 }
+
+/* =========================================================
+   MOBILE RESPONSIVENESS UTILITIES
+   ========================================================= */
+@media (max-width: 768px) {
+
+  /* Grid collapse */
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4,
+  .grid-cols-5 {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+  }
+
+  /* Section spacing */
+  .space-y-32 {
+    gap: 4rem !important;
+    /* Módulos mais próximos em mobile */
+  }
+
+  /* Typography adjustments */
+  h1 {
+    font-size: 1.5rem !important;
+  }
+
+  h2 {
+    font-size: 1.25rem !important;
+  }
+
+  /* Layout adjustments */
+  main {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-bottom: 5rem !important;
+    /* Space for bottom nav */
+  }
+
+  /* Sidebar fallback */
+  aside {
+    display: none !important;
+    /* Hide sidebar completely in mobile */
+  }
+
+  /* Cards responsiveness */
+  .rounded-xl {
+    border-radius: 12px !important;
+  }
+}
+
+/* Hide scrollbar but keep functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
