@@ -28,6 +28,8 @@ import {
   Lightbulb,
   Scissors,
   Activity,
+  Settings,
+  Bell,
 } from 'lucide-react';
 
 import { VisaoGeral } from './components/VisaoGeral';
@@ -589,6 +591,35 @@ export default function App() {
     await supabase.auth.signOut();
   };
 
+  const currentMonthFinances = useMemo(() => {
+    return finances.filter((f) => f.month === activeMonth);
+  }, [finances, activeMonth]);
+
+  const financeSummary = useMemo(() => {
+    let income = 0;
+    let expense = 0;
+    let paidIncome = 0;
+    let paidExpense = 0;
+    currentMonthFinances.forEach((t) => {
+      if (t.type === 'income') {
+        income += Number(t.amount);
+        if (t.status === 'paid') paidIncome += Number(t.amount);
+      } else {
+        expense += Number(t.amount);
+        if (t.status === 'paid') paidExpense += Number(t.amount);
+      }
+    });
+    const prevBalances = {
+      MARÇO: 185.0,
+      ABRIL: 338.53,
+      MAIO: 296.37,
+      JUNHO: 330.99,
+    };
+    const prevMonthBalance = prevBalances[activeMonth] || 0;
+    const available = prevMonthBalance + paidIncome - paidExpense;
+    return { income, expense, prevMonthBalance, available };
+  }, [currentMonthFinances, activeMonth]);
+
   // --- NOTIFICATION SYSTEM LOGIC ---
   useEffect(() => {
     if (session?.user) {
@@ -728,35 +759,6 @@ export default function App() {
     setNewCr({ disciplina: '', nota: '', creditos: '4' });
   };
   const handleDeleteCr = (id) => setCrData(crData.filter((item) => item.id !== id));
-
-  const currentMonthFinances = useMemo(() => {
-    return finances.filter((f) => f.month === activeMonth);
-  }, [finances, activeMonth]);
-
-  const financeSummary = useMemo(() => {
-    let income = 0;
-    let expense = 0;
-    let paidIncome = 0;
-    let paidExpense = 0;
-    currentMonthFinances.forEach((t) => {
-      if (t.type === 'income') {
-        income += Number(t.amount);
-        if (t.status === 'paid') paidIncome += Number(t.amount);
-      } else {
-        expense += Number(t.amount);
-        if (t.status === 'paid') paidExpense += Number(t.amount);
-      }
-    });
-    const prevBalances = {
-      MARÇO: 185.0,
-      ABRIL: 338.53,
-      MAIO: 296.37,
-      JUNHO: 330.99,
-    };
-    const prevMonthBalance = prevBalances[activeMonth] || 0;
-    const available = prevMonthBalance + paidIncome - paidExpense;
-    return { income, expense, prevMonthBalance, available };
-  }, [currentMonthFinances, activeMonth]);
 
   const handleAddTransaction = () => {
     if (!newTransaction.title || !newTransaction.amount) return;
@@ -1078,6 +1080,27 @@ export default function App() {
           </aside>
 
           <main className="flex-1 flex flex-col">
+            {/* NOVO HEADER GLOBAL COM SINO */}
+            <header className="sticky top-0 z-40 w-full bg-hub-surface/80 backdrop-blur-xl border-b border-hub-border px-6 py-4 flex justify-between items-center md:hidden">
+               <div className="flex items-center gap-3">
+                  <button 
+                    onClick={() => setIsMobileMenuOpen(true)}
+                    className="p-2 -ml-2 text-hub-muted hover:text-hub-strong transition-colors"
+                  >
+                    <Menu size={24} />
+                  </button>
+                  <div className="w-8 h-8 bg-yellow-400 rounded-md flex items-center justify-center font-black text-slate-900">H</div>
+               </div>
+               <NotificationCenter user={session?.user} />
+            </header>
+
+            {/* HEADER DESKTOP (Caso prefira flutuante ou fixo no topo do main) */}
+            <div className="hidden md:flex justify-end p-6 fixed top-0 right-0 z-40 pointer-events-none">
+               <div className="pointer-events-auto bg-hub-surface/50 backdrop-blur-md rounded-full border border-hub-border p-1 shadow-lg">
+                  <NotificationCenter user={session?.user} />
+               </div>
+            </div>
+
             <div className="max-w-6xl mx-auto w-full px-0">
 
               {/* ALL COMPONENTS RENDERED SEQUENTIALLY FOR SCROLL REVEAL */}

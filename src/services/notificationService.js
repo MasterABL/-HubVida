@@ -89,12 +89,14 @@ class NotificationService {
 
     // 3. Save to History
     try {
-      await supabase.from('notifications_history').insert({
-        user_id: this.user.id,
-        category,
-        title,
-        body
-      });
+      if (this.user?.id) {
+        await supabase.from('notifications_history').insert({
+          user_id: this.user.id,
+          category,
+          title,
+          body
+        });
+      }
     } catch (err) {
       console.error('Error saving notification to history:', err);
     }

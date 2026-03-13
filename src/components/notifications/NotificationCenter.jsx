@@ -42,8 +42,9 @@ export const NotificationCenter = ({ user }) => {
       setUnreadCount(data.filter(n => !n.read).length);
     }
   };
-
   useEffect(() => {
+    if (!user?.id) return;
+
     fetchNotifications();
 
     // Subscribe to new notifications
