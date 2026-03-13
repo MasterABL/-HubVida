@@ -628,10 +628,14 @@ export default function App() {
         faculdadeData,
         provas,
         gymAttendance,
-        financeSummary
+        financeSummary,
+        sleepData,
+        nutritionTracker,
+        haircareHistory: haircareDateDone ? [{ date: haircareDateDone }] : []
       }));
     }
-  }, [session, faculdadeData, provas, gymAttendance, financeSummary]);
+    return () => notificationService.stopChecking();
+  }, [session, faculdadeData, provas, gymAttendance, financeSummary, sleepData, nutritionTracker, haircareDateDone]);
 
   // Handle complex notification triggers
   useEffect(() => {
