@@ -51,6 +51,11 @@ import { InstallPWA } from './components/InstallPWA';
 import { Changelog } from './components/Changelog';
 import { Onboarding } from './components/Onboarding';
 import { KeyboardShortcuts } from './components/KeyboardShortcuts';
+import { notificationService } from './services/notificationService';
+import { ToastContainer } from './components/notifications/ToastContainer';
+import { NotificationCenter } from './components/notifications/NotificationCenter';
+import { NotificationSettings } from './components/notifications/NotificationSettings';
+import { PermissionModal } from './components/notifications/PermissionModal';
 
 // --- CONFIGURAÇÕES INICIAIS E DADOS MOCKADOS ---
 const INITIAL_HARD_SKILLS = [
@@ -584,6 +589,59 @@ export default function App() {
     await supabase.auth.signOut();
   };
 
+  // --- NOTIFICATION SYSTEM LOGIC ---
+  useEffect(() => {
+    if (session?.user) {
+      notificationService.init(session.user);
+      notificationService.startChecking(() => ({
+        faculdadeData,
+        provas,
+        gymAttendance,
+        financeSummary
+      }));
+    }
+  }, [session, faculdadeData, provas, gymAttendance, financeSummary]);
+
+  // Handle complex notification triggers
+  useEffect(() => {
+    const checkTraining = () => {
+      // Check if any training was marked as done today
+      // In this app, gymAttendance stores 'pending' or 'done' for days 0-6
+      const day = new Date().getDay();
+      if (gymAttendance[day] !== 'done') {
+        notificationService.send('Academia', '👀 Registro de Treino', 'Você foi treinar hoje? Não esqueça de registrar!');
+      }
+    };
+
+    const checkHaircare = (e) => {
+      const date = e.detail.date;
+      // haircareStatus and message are already calculated in App.jsx scope
+      if (isWashDay) {
+        notificationService.send('Haircare', '💇 Dia de Procedimento', `Hoje é dia de ${haircareStatus}! Não esquece.`);
+      }
+    };
+
+    const checkFinanceLimit = () => {
+      if (financeSummary.income > 0) {
+        const usage = (financeSummary.expense / financeSummary.income) * 100;
+        if (usage >= 80) {
+          notificationService.send('Financas', '⚠️ Gasto Alto', 'Atenção! Você já usou 80% da sua receita este mês.');
+        }
+      }
+    };
+
+    window.addEventListener('hubvida_check_training_reg', checkTraining);
+    window.addEventListener('hubvida_check_haircare', checkHaircare);
+    
+    // Check finance limit whenever finances change or month changes
+    checkFinanceLimit();
+
+    return () => {
+      window.removeEventListener('hubvida_check_training_reg', checkTraining);
+      window.removeEventListener('hubvida_check_haircare', checkHaircare);
+    };
+  }, [gymAttendance, financeSummary, isWashDay, haircareStatus]);
+
   // Listener de eventos de sync
   useEffect(() => {
     const handler = (e) => {
@@ -834,6 +892,21 @@ export default function App() {
                   <Cloud className="w-3 h-3" /> Falha ao sincronizar
                 </span>
               )}
+            </div>
+
+            <div className="px-6 mb-4 flex items-center justify-between">
+              <NotificationCenter user={session?.user} />
+              <button
+                 onClick={() => {
+                   const element = document.getElementById('Configurações');
+                   if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                   setIsMobileMenuOpen(false);
+                 }}
+                 className="p-2 text-slate-400 hover:text-white transition-colors rounded-full hover:bg-white/10"
+                 title="Configurações de Notificação"
+              >
+                <Settings size={20} />
+              </button>
             </div>
 
             <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
@@ -1195,6 +1268,14 @@ export default function App() {
                   </ScrollReveal>
                 </div>
 
+                <div id="Configurações" className="scroll-mt-24 module-section">
+                  <ScrollReveal delay={50}>
+                    <div className="px-4">
+                      <NotificationSettings service={notificationService} />
+                    </div>
+                  </ScrollReveal>
+                </div>
+
               </div>
             </div>
           </main>
@@ -1226,6 +1307,10 @@ export default function App() {
               );
             })}
           </nav>
+          
+          {/* Notification System Globals */}
+          <ToastContainer service={notificationService} />
+          <PermissionModal service={notificationService} />
         </div>
       )}
     </>
