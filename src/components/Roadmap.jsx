@@ -309,7 +309,7 @@ export const Roadmap = ({
               <BookOpen className="w-5 h-5 text-hub-faint mb-4" />
               <h4 className="text-hub-strong font-bold mb-2">Curadoria de Fontes</h4>
               <p className="text-xs text-hub-muted leading-relaxed">
-                Vá além do Google. Use Spell.org.br (específico de ADM) e Scielo. Busque por "State of the Art" no seu tema de interesse.
+                Vá além do Google. Use Spell.org.br (específico de ADM) e Scielo. Busque por &quot;State of the Art&quot; no seu tema de interesse.
               </p>
             </div>
             <div className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl">
@@ -346,7 +346,7 @@ export const Roadmap = ({
               <FileText className="w-5 h-5 text-hub-faint mb-4" />
               <h4 className="text-hub-strong font-bold mb-2">Escrita Científica</h4>
               <p className="text-xs text-hub-muted leading-relaxed">
-                Não faça apenas resumos. Aprenda a estruturar um "Paper": Introdução, Referencial, Metodologia e Resultados Esperados.
+                Não faça apenas resumos. Aprenda a estruturar um &quot;Paper&quot;: Introdução, Referencial, Metodologia e Resultados Esperados.
               </p>
             </div>
           </div>
@@ -520,7 +520,7 @@ export const Roadmap = ({
                 <h4 className="font-bold text-hub-strong text-sm uppercase tracking-wide group-hover:text-yellow-500 transition-colors">Eventos Locais (SYMPLA)</h4>
                 <ExternalLink className="w-3.5 h-3.5 text-hub-faint group-hover:text-yellow-500 transition-colors" />
               </div>
-              <p className="text-xs text-hub-muted">Busque por "Congresso Nacional de Administração".</p>
+              <p className="text-xs text-hub-muted">Busque por &quot;Congresso Nacional de Administração&quot;.</p>
             </a>
           </div>
         </div>

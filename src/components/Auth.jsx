@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
-import { Lock, Mail, KeyRound, ArrowRight, Loader2, ShieldCheck, Zap } from 'lucide-react';
+import { Mail, KeyRound, ArrowRight, Loader2, ShieldCheck, Zap } from 'lucide-react';
 
 export const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorPrompt, setErrorPrompt] = useState(null);

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Bell, Check, Trash2, Clock, Info, Moon, Utensils, Scissors, Wallet, Dumbbell, GraduationCap, FlaskConical } from 'lucide-react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Bell, Check, Trash2, Clock, Info, Moon, Scissors, Wallet, Dumbbell, GraduationCap, FlaskConical } from 'lucide-react';
 import { supabase } from '../../supabase';
 
 const CATEGORY_ICONS = {
@@ -28,7 +28,7 @@ export const NotificationCenter = ({ user }) => {
   const [unreadCount, setUnreadCount] = useState(0);
   const dropdownRef = useRef(null);
 
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     if (!user) return;
     const { data, error } = await supabase
       .from('notifications_history')
@@ -41,11 +41,15 @@ export const NotificationCenter = ({ user }) => {
       setNotifications(data);
       setUnreadCount(data.filter(n => !n.read).length);
     }
-  };
+  }, [user]);
+
   useEffect(() => {
     if (!user?.id) return;
 
-    fetchNotifications();
+    // Use a timeout to avoid cascading render warning for initial fetch
+    const timer = setTimeout(() => {
+      fetchNotifications();
+    }, 0);
 
     // Subscribe to new notifications
     const channel = supabase
@@ -61,9 +65,10 @@ export const NotificationCenter = ({ user }) => {
       .subscribe();
 
     return () => {
+      clearTimeout(timer);
       supabase.removeChannel(channel);
     };
-  }, [user]);
+  }, [user, fetchNotifications]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {

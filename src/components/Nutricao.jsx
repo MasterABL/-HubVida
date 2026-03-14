@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Dumbbell,
   Droplets,
@@ -6,19 +6,16 @@ import {
   CheckCircle2,
   Coffee,
   Brain,
-  Zap,
-  Flame,
-  BatteryCharging
+  Zap
 } from 'lucide-react';
 import { Skeleton } from './Skeleton';
 
 export const Nutricao = ({ isLoaded = true, dailyTracker = { water: false, creatine: false, meals: false }, setDailyTracker }) => {
 
   const toggleTracker = (item) => {
-    setDailyTracker(prev => ({
-      ...prev,
-      [item]: !prev[item]
-    }));
+    if (item === 'water') setDailyTracker(prev => ({ ...prev, water: !prev.water }));
+    else if (item === 'creatine') setDailyTracker(prev => ({ ...prev, creatine: !prev.creatine }));
+    else if (item === 'meals') setDailyTracker(prev => ({ ...prev, meals: !prev.meals }));
   };
 
 
@@ -220,7 +217,7 @@ export const Nutricao = ({ isLoaded = true, dailyTracker = { water: false, creat
                 20:30+ - Opcional Pós-Treino / Janta
               </div>
               <p className="text-sm text-hub-content border-l-2 border-slate-500 pl-3">
-                Não complique. Replique a lógica do almoço em menor quantidade, OU repita a "Opção 1" do Café (Pão com Ovos ou Pão com Whey) para não dormir de estômago tão cheio e prejudicar o sono.
+                Não complique. Replique a lógica do almoço em menor quantidade, OU repita a &quot;Opção 1&quot; do Café (Pão com Ovos ou Pão com Whey) para não dormir de estômago tão cheio e prejudicar o sono.
               </p>
             </div>
           </div>
@@ -245,7 +242,7 @@ export const Nutricao = ({ isLoaded = true, dailyTracker = { water: false, creat
 
                 <li className="bg-hub-hover p-3 rounded-lg border border-slate-700/50">
                   <span className="font-bold text-emerald-400 block mb-1">Ter/Qui/Sex (A Salvação Rápida)</span>
-                  <p className="text-xs text-hub-content">Ir treinar assim que sai do inglês cria o "Jejum de Adrenalina". Se precisar comer pra não ter tontura: Um iogurte no "Boa" ou uma (1) Banana madura 30 minutos antes do treino salvarão a sua vida e energia.</p>
+                  <p className="text-xs text-hub-content">Ir treinar assim que sai do inglês cria o &quot;Jejum de Adrenalina&quot;. Se precisar comer pra não ter tontura: Um iogurte no &quot;Boa&quot; ou uma (1) Banana madura 30 minutos antes do treino salvarão a sua vida e energia.</p>
                 </li>
 
                 <li className="bg-hub-hover p-3 rounded-lg border border-slate-700/50">

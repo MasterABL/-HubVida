@@ -1,250 +1,284 @@
-import React from 'react';
-import {
-  Library,
-  ChevronUp,
+import { useState } from 'react';
+import { 
+  GraduationCap, 
+  BookOpen, 
+  Calendar, 
+  CheckCircle2, 
+  Trophy,
   ChevronDown,
-  CheckSquare,
-  CheckCircle2,
-  Activity,
-  NotebookText,
+  ChevronUp,
+  Megaphone,
+  Hand,
+  Settings,
+  BarChart3,
+  Sparkles,
+  Rocket,
+  Compass,
+  Landmark,
+  Zap,
+  ChevronRight,
+  CheckSquare
 } from 'lucide-react';
 import { Skeleton } from './Skeleton';
+import StudyPanel from './faculdade/StudyPanel';
+import { STUDY_CONTENT } from '../data/studyContent';
 
-export const Faculdade = ({
-  isLoaded = true,
-  faculdadeData,
-  expandedSubject,
-  setExpandedSubject,
-  handleUpdateFaculdade,
-  calculateFinalGrade,
+const iconsMap = {
+  'GESTÃO DE MARKETING': Megaphone,
+  'LÍNGUA BRASILEIRA DE SINAIS': Hand,
+  'ORGANIZAÇÃO, SISTEMAS E MÉTODOS': Settings,
+  'PROBABILIDADE E ESTATÍSTICA': BarChart3,
+  'MODELOS INOVADORES EM NEGÓCIOS': Sparkles,
+  'PROJETO MULTIDISCIPLINAR EM ADMINISTRAÇÃO II': Rocket,
+  'PLANO DE ACOMPANHAMENTO DE CARREIRA EM ADMINISTRAÇÃO II': Compass,
+  'AVALIAÇÃO INTEGRADA DE COMPETÊNCIAS EM ADMINISTRAÇÃO II': Trophy,
+  'ATIVIDADES DE EXTENSÃO': Landmark
+};
+
+const Faculdade = ({ 
+  isLoaded = true, 
+  faculdadeData, 
+  studyProgress = [],
+  updateStudyProgress,
+  expandedSubject, 
+  setExpandedSubject, 
+  handleUpdateFaculdade, 
+  calculateFinalGrade 
 }) => {
+  const [selectedDiscipline, setSelectedDiscipline] = useState(null);
+
   if (!isLoaded) {
     return (
       <div className="space-y-6 animate-in fade-in duration-500">
-        <div className="flex justify-between items-end mb-8">
-          <Skeleton className="w-64 h-10" />
-          <Skeleton className="w-32 h-16 rounded-xl" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-24 rounded-2xl" />)}
         </div>
-        <div className="space-y-4">
-          <Skeleton className="w-full h-16 rounded-xl" />
-          <Skeleton className="w-full h-16 rounded-xl" />
-          <Skeleton className="w-full h-16 rounded-xl" />
-          <Skeleton className="w-full h-16 rounded-xl" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {[1, 2].map(i => <Skeleton key={i} className="h-64 rounded-2xl" />)}
         </div>
       </div>
     );
   }
 
+  // If a discipline is selected, show the Study Panel
+  if (selectedDiscipline) {
+    const key = selectedDiscipline.name === 'ORGANIZAÇÃO, SISTEMAS E MÉTODOS' ? 'osm' : 'none';
+    const content = (key !== 'none' && Object.prototype.hasOwnProperty.call(STUDY_CONTENT, key))
+      ? STUDY_CONTENT[key]
+      : {
+          title: selectedDiscipline.name,
+          sections: [],
+          quiz: []
+        };
+
+    return (
+      <StudyPanel 
+        discipline={selectedDiscipline} 
+        content={content}
+        onBack={() => setSelectedDiscipline(null)} 
+        onSaveProgress={(score, total) => {
+          updateStudyProgress(key || selectedDiscipline.name.toLowerCase(), score, total);
+        }}
+      />
+    );
+  }
+
+  const calculateProgress = (checks) => {
+    if (!checks) return 0;
+    const items = [checks.as1, checks.as2, checks.as3, checks.as4];
+    const completed = items.filter(Boolean).length;
+    return (completed / items.length) * 100;
+  };
+
+  const getQuizProgress = (discName) => {
+    const key = discName === 'ORGANIZAÇÃO, SISTEMAS E MÉTODOS' ? 'osm' : discName.toLowerCase();
+    const prog = studyProgress.find(p => p.disciplina === key);
+    if (!prog || prog.quiz_total === 0) return 0;
+    return (prog.quiz_score / prog.quiz_total) * 100;
+  };
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
+      {/* Header */}
       <div className="flex justify-between items-end mb-8">
         <div>
           <h1 className="text-2xl font-black italic tracking-wider text-hub-strong">
-            FACULDADE <span className="text-yellow-500">(ADM)</span>
+            FACULDADE <span className="text-yellow-500 text-lg md:text-xl">(ADM)</span>
           </h1>
-          <p className="text-xs text-hub-faint mt-1 uppercase tracking-widest font-bold">
+          <p className="text-[10px] text-hub-faint mt-1 uppercase tracking-widest font-bold">
             Gestão Acadêmica Cruzeiro do Sul
           </p>
         </div>
-        <div className="bg-hub-surface border border-hub-border rounded-xl px-4 py-2 text-right shadow-lg">
-          <p className="text-[10px] text-hub-faint uppercase font-bold tracking-wider">
-            Média de Aprovação
-          </p>
+        <div className="hidden md:block bg-hub-surface border border-hub-border rounded-xl px-4 py-2 text-right shadow-lg">
+          <p className="text-[10px] text-hub-faint uppercase font-bold tracking-wider">Média de Aprovação</p>
           <p className="text-xl font-bold text-emerald-500">≥ 7.0</p>
         </div>
       </div>
 
-      <div className="space-y-4">
-        {faculdadeData.map((disc) => {
-          const isExpanded = expandedSubject === disc.id;
-          const finalGrade = calculateFinalGrade(disc.notas.as, disc.notas.a1);
-          const isApproved = finalGrade !== null && Number(finalGrade) >= 7.0;
-          const isFailed = finalGrade !== null && Number(finalGrade) < 7.0;
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <StatCard icon={BookOpen} label="Disciplinas" value={faculdadeData?.length || 0} color="blue" />
+        <StatCard icon={Zap} label="Painéis" value="1" color="amber" />
+        <StatCard icon={Calendar} label="Semestre" value="1º/24" color="emerald" />
+        <StatCard icon={CheckCircle2} label="Concluídas" value="0" color="purple" />
+      </div>
 
-          return (
-            <div
-              key={disc.id}
-              className="bg-hub-surface border border-hub-border rounded-xl shadow-md overflow-hidden transition-all duration-300"
-            >
-              {/* Row Header (Clickable) */}
-              <div
-                onClick={() => setExpandedSubject(isExpanded ? null : disc.id)}
-                className={`p-5 flex items-center justify-between cursor-pointer hover:bg-hub-hover transition-colors ${isExpanded ? 'border-b border-hub-border bg-hub-hover' : ''
-                  }`}
-              >
-                <div className="flex items-center gap-4">
-                  <Library
-                    className={`w-5 h-5 ${isExpanded ? 'text-yellow-500' : 'text-hub-faint'
-                      }`}
-                  />
-                  <h3 className="font-bold text-hub-strong text-sm md:text-base">
+      <div className="flex flex-col gap-8">
+        {/* Painéis de Estudo Section */}
+        <section>
+          <h2 className="text-xs font-black text-hub-faint uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+            <Sparkles size={14} className="text-yellow-500" /> Painéis de Estudo
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {faculdadeData?.map((disc) => {
+              const Icon = Object.prototype.hasOwnProperty.call(iconsMap, disc.name) ? iconsMap[disc.name] : GraduationCap;
+              const hasContent = disc.name === 'ORGANIZAÇÃO, SISTEMAS E MÉTODOS';
+              const quizProg = getQuizProgress(disc.name);
+
+              return (
+                <div key={`panel-${disc.id}`} className="group bg-hub-surface border border-hub-border rounded-2xl p-5 hover:shadow-xl hover:border-blue-500/30 transition-all duration-300">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-hub-inner flex items-center justify-center text-hub-muted group-hover:bg-blue-500 group-hover:text-white transition-all">
+                      <Icon size={20} />
+                    </div>
+                    <span className={`px-2 py-0.5 rounded-[4px] text-[8px] font-black uppercase tracking-tighter ${hasContent ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-hub-inner text-hub-faint border border-hub-border'}`}>
+                      {hasContent ? 'Painel Disponível' : 'Em breve'}
+                    </span>
+                  </div>
+                  
+                  <h3 className="text-xs font-black text-hub-strong leading-tight h-8 mb-4 line-clamp-2 uppercase tracking-tight">
                     {disc.name}
                   </h3>
-                </div>
 
-                <div className="flex items-center gap-6">
-                  {/* Badge Média Dinâmica no Header */}
-                  {finalGrade !== null && (
-                    <div
-                      className={`px-3 py-1 rounded text-xs font-bold ${isApproved
-                          ? 'bg-emerald-500/10 text-emerald-500'
-                          : 'bg-rose-500/10 text-rose-500'
-                        }`}
-                    >
-                      NF: {finalGrade}
+                  <div className="space-y-3 mb-5">
+                    <div className="flex justify-between items-center text-[9px] font-bold uppercase tracking-widest text-hub-faint">
+                      <span>Quiz Score</span>
+                      <span className={quizProg > 0 ? 'text-emerald-400' : ''}>{Math.round(quizProg)}%</span>
                     </div>
-                  )}
-                  {isExpanded ? (
-                    <ChevronUp className="w-5 h-5 text-yellow-500" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5 text-hub-faint" />
-                  )}
-                </div>
-              </div>
+                    <div className="h-1 w-full bg-hub-inner rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-emerald-500 transition-all duration-700"
+                        style={{ width: `${quizProg}%` }}
+                      ></div>
+                    </div>
+                  </div>
 
-              {/* Expanded Panel */}
-              {isExpanded && (
-                <div className="p-6 bg-hub-base grid grid-cols-1 lg:grid-cols-3 gap-8 animate-in slide-in-from-top-2">
-                  {/* Coluna 1: Checklist AS */}
-                  <div className="space-y-4">
-                    <h4 className="text-[10px] text-yellow-500 font-bold uppercase tracking-widest flex items-center gap-2 mb-4">
-                      <CheckSquare className="w-3.5 h-3.5" /> Checklist de
-                      Unidades
-                    </h4>
-                    <div className="grid grid-cols-2 gap-3">
-                      {['as1', 'as2', 'as3', 'as4'].map((asKey, idx) => (
-                        <label
-                          key={asKey}
-                          className="flex items-center gap-3 cursor-pointer group bg-hub-surface p-3 rounded-lg border border-hub-border hover:border-yellow-500/50 transition-colors"
-                        >
-                          <input
-                            type="checkbox"
-                            className="hidden"
-                            checked={disc.checks[asKey]}
-                            onChange={(e) =>
-                              handleUpdateFaculdade(
-                                disc.id,
-                                'checks',
-                                asKey,
-                                e.target.checked
-                              )
-                            }
-                          />
-                          <div
-                            className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${disc.checks[asKey]
-                                ? 'bg-emerald-500/20 border-emerald-500 text-emerald-500'
-                                : 'border-slate-600 group-hover:border-slate-400'
-                              }`}
-                          >
-                            {disc.checks[asKey] && (
-                              <CheckCircle2 className="w-3 h-3" />
-                            )}
+                  <button 
+                    disabled={!hasContent}
+                    onClick={() => setSelectedDiscipline(disc)}
+                    className={`w-full py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${hasContent ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-600/20 active:scale-95' : 'bg-hub-inner text-hub-faint cursor-not-allowed opacity-50'}`}
+                  >
+                    {hasContent ? 'Estudar agora' : 'Indisponível'}
+                    {hasContent && <ChevronRight size={14} />}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Acadêmico List Section */}
+        <section>
+          <h2 className="text-xs font-black text-hub-faint uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+            <CheckSquare size={14} className="text-blue-500" /> Gestão Acadêmica
+          </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {faculdadeData?.map((disc) => {
+              const isExpanded = expandedSubject === disc.id;
+              const progress = calculateProgress(disc.checks);
+              const finalGrade = calculateFinalGrade(disc.notas.as, disc.notas.a1);
+              const isApproved = finalGrade !== null && Number(finalGrade) >= 7.0;
+
+              return (
+                <div key={disc.id} className="bg-hub-surface border border-hub-border rounded-xl overflow-hidden shadow-sm">
+                  <div 
+                    onClick={() => setExpandedSubject(isExpanded ? null : disc.id)}
+                    className="p-4 cursor-pointer hover:bg-hub-hover/50 transition-colors flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isApproved ? 'bg-emerald-500 text-white' : 'bg-hub-inner text-hub-muted'}`}>
+                        <GraduationCap size={16} />
+                      </div>
+                      <div>
+                        <h3 className="text-[11px] font-bold text-hub-content leading-tight">{disc.name}</h3>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-[9px] text-hub-faint font-bold uppercase">AS: {Math.round(progress)}%</span>
+                          {finalGrade && <span className="text-[9px] text-emerald-500 font-black">NF: {finalGrade}</span>}
+                        </div>
+                      </div>
+                    </div>
+                    {isExpanded ? <ChevronUp className="text-yellow-500" size={16} /> : <ChevronDown className="text-hub-faint" size={16} />}
+                  </div>
+
+                  {isExpanded && (
+                    <div className="px-4 pb-4 pt-2 bg-hub-inner/10 border-t border-hub-border/30 animate-in slide-in-from-top-1">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label className="text-[8px] text-hub-faint font-bold uppercase tracking-wider">Unidades AS</label>
+                          <div className="grid grid-cols-2 gap-1.5">
+                            {['as1', 'as2', 'as3', 'as4'].map((key) => (
+                              <button
+                                key={key}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleUpdateFaculdade(disc.id, 'checks', key, !disc.checks?.[key]);
+                                }}
+                                className={`p-1.5 rounded-md border text-[8px] font-bold text-center transition-all ${disc.checks?.[key] ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-hub-surface text-hub-faint border-hub-border'}`}
+                              >
+                                {key.toUpperCase()}
+                              </button>
+                            ))}
                           </div>
-                          <span
-                            className={`text-xs font-bold ${disc.checks[asKey]
-                                ? 'text-emerald-500'
-                                : 'text-hub-muted group-hover:text-hub-content'
-                              }`}
-                          >
-                            AS-{idx + 1}
-                          </span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Coluna 2: Calculadora */}
-                  <div className="bg-hub-surface border border-hub-border rounded-xl p-5 shadow-inner flex flex-col justify-between">
-                    <h4 className="text-[10px] text-yellow-500 font-bold uppercase tracking-widest flex items-center gap-2 mb-4">
-                      <Activity className="w-3.5 h-3.5" /> Calculadora de Média
-                    </h4>
-
-                    <div className="flex gap-4 mb-4">
-                      <div className="flex-1">
-                        <label className="text-[10px] text-hub-faint uppercase font-bold block mb-1">
-                          Média AS (40%)
-                        </label>
-                        <input
-                          type="number"
-                          step="0.1"
-                          placeholder="0.0"
-                          value={disc.notas.as}
-                          onChange={(e) =>
-                            handleUpdateFaculdade(
-                              disc.id,
-                              'notas',
-                              'as',
-                              e.target.value
-                            )
-                          }
-                          className="w-full bg-hub-base border border-hub-border rounded p-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <label className="text-[10px] text-hub-faint uppercase font-bold block mb-1">
-                          Prova A1 (60%)
-                        </label>
-                        <input
-                          type="number"
-                          step="0.1"
-                          placeholder="0.0"
-                          value={disc.notas.a1}
-                          onChange={(e) =>
-                            handleUpdateFaculdade(
-                              disc.id,
-                              'notas',
-                              'a1',
-                              e.target.value
-                            )
-                          }
-                          className="w-full bg-hub-base border border-hub-border rounded p-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500"
-                        />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[8px] text-hub-faint font-bold uppercase tracking-wider">Lançar Notas</label>
+                          <div className="flex gap-2">
+                            <input
+                              placeholder="AS"
+                              type="number"
+                              value={disc.notas.as}
+                              onClick={e => e.stopPropagation()}
+                              onChange={(e) => handleUpdateFaculdade(disc.id, 'notas', 'as', e.target.value)}
+                              className="w-full bg-hub-surface border border-hub-border rounded-lg p-1.5 text-[10px] text-white outline-none focus:border-blue-500"
+                            />
+                            <input
+                              placeholder="A1"
+                              type="number"
+                              value={disc.notas.a1}
+                              onClick={e => e.stopPropagation()}
+                              onChange={(e) => handleUpdateFaculdade(disc.id, 'notas', 'a1', e.target.value)}
+                              className="w-full bg-hub-surface border border-hub-border rounded-lg p-1.5 text-[10px] text-white outline-none focus:border-blue-500"
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
-
-                    <div className="flex justify-between items-center border-t border-hub-border pt-4 mt-auto">
-                      <span className="text-xs text-hub-muted font-bold uppercase">
-                        Nota Final:
-                      </span>
-                      <span
-                        className={`text-2xl font-black ${finalGrade === null
-                            ? 'text-hub-faint'
-                            : isApproved
-                              ? 'text-emerald-500'
-                              : 'text-rose-500'
-                          }`}
-                      >
-                        {finalGrade !== null ? finalGrade : '-.-'}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Coluna 3: Caderno de Anotações */}
-                  <div className="flex flex-col">
-                    <h4 className="text-[10px] text-yellow-500 font-bold uppercase tracking-widest flex items-center gap-2 mb-2">
-                      <NotebookText className="w-3.5 h-3.5" /> Caderno de
-                      Anotações
-                    </h4>
-                    <textarea
-                      value={disc.notes}
-                      onChange={(e) =>
-                        handleUpdateFaculdade(
-                          disc.id,
-                          'notes',
-                          null,
-                          e.target.value
-                        )
-                      }
-                      placeholder="Datas de provas, avisos dos tutores, resumos rápidos..."
-                      className="flex-1 bg-hub-surface border border-hub-border rounded-xl p-3 text-xs text-hub-content resize-none focus:outline-none focus:border-yellow-500/50 transition-colors w-full min-h-[100px]"
-                    />
-                  </div>
+                  )}
                 </div>
-              )}
-            </div>
-          );
-        })}
+              );
+            })}
+          </div>
+        </section>
       </div>
     </div>
   );
 };
+
+const StatCard = ({ icon: Icon, label, value, color }) => {
+  let colorClasses = 'text-blue-500 bg-blue-500/10 border-blue-500/20';
+  if (color === 'emerald') colorClasses = 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20';
+  else if (color === 'amber') colorClasses = 'text-amber-500 bg-amber-500/10 border-amber-500/20';
+  else if (color === 'purple') colorClasses = 'text-purple-500 bg-purple-500/10 border-purple-500/20';
+
+  return (
+    <div className={`p-4 rounded-2xl border ${colorClasses} shadow-sm transition-transform cursor-default group`}>
+      <div className="flex items-center gap-3 mb-1">
+        <Icon size={16} className="opacity-70 group-hover:scale-110 transition-transform" />
+        <span className="text-[10px] uppercase tracking-wider font-extrabold opacity-60">{label}</span>
+      </div>
+      <div className="text-2xl font-black">{value}</div>
+    </div>
+  );
+};
+
+export default Faculdade;

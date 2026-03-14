@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  PieChart,
   TrendingUp,
   CheckCircle2,
   Circle,

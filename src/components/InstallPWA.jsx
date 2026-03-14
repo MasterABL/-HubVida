@@ -3,8 +3,13 @@ import { Download, X } from 'lucide-react';
 
 export function InstallPWA() {
     const [deferredPrompt, setDeferredPrompt] = useState(null);
-    const [isVisible, setIsVisible] = useState(false);
-    const [isIOS, setIsIOS] = useState(false);
+    const [isIOS] = useState(() => typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
+    const [isVisible, setIsVisible] = useState(() => {
+        if (typeof window === 'undefined') return false;
+        const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isPWA = window.matchMedia('(display-mode: standalone)').matches;
+        return ios && !isPWA;
+    });
 
     useEffect(() => {
         const handler = (e) => {
@@ -12,15 +17,6 @@ export function InstallPWA() {
             setDeferredPrompt(e);
             setIsVisible(true);
         };
-
-        // Detect current platform
-        const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        const isPWA = window.matchMedia('(display-mode: standalone)').matches;
-        
-        if (ios && !isPWA) {
-            setIsIOS(true);
-            setIsVisible(true);
-        }
 
         window.addEventListener('beforeinstallprompt', handler);
         return () => window.removeEventListener('beforeinstallprompt', handler);

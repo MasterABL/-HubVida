@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { X, Bell, Info, CheckCircle, AlertTriangle, Moon, Utensils, Scissors, Wallet, Dumbbell, GraduationCap, Droplets, FlaskConical } from 'lucide-react';
+import { X, Info, Moon, Scissors, Wallet, Dumbbell, GraduationCap, FlaskConical } from 'lucide-react';
 
 const CATEGORY_STYLES = {
   Faculdade: { icon: GraduationCap, color: 'text-blue-500', bg: 'bg-blue-500/10', border: 'border-blue-500/20' },
@@ -12,7 +12,14 @@ const CATEGORY_STYLES = {
 };
 
 const Toast = ({ id, category, title, body, onDismiss }) => {
-  const style = CATEGORY_STYLES[category] || CATEGORY_STYLES.Default;
+  let style = CATEGORY_STYLES.Default;
+  if (category === 'Faculdade') style = CATEGORY_STYLES.Faculdade;
+  else if (category === 'Academia') style = CATEGORY_STYLES.Academia;
+  else if (category === 'Sono') style = CATEGORY_STYLES.Sono;
+  else if (category === 'Nutricao') style = CATEGORY_STYLES.Nutricao;
+  else if (category === 'Haircare') style = CATEGORY_STYLES.Haircare;
+  else if (category === 'Financas') style = CATEGORY_STYLES.Financas;
+
   const Icon = style.icon;
 
   useEffect(() => {
@@ -49,13 +56,14 @@ export const ToastContainer = ({ service }) => {
 
   useEffect(() => {
     if (service) {
-      service.onNotificationReceived = (toast) => {
+      const unsubscribe = service.on((toast) => {
         setToasts(prev => {
           const newToasts = [...prev, { ...toast, id: Date.now() }];
           if (newToasts.length > 3) return newToasts.slice(1);
           return newToasts;
         });
-      };
+      });
+      return unsubscribe;
     }
   }, [service]);
 

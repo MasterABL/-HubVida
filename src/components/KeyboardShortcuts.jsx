@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { HelpCircle, Command, X } from 'lucide-react';
+import { Command, X } from 'lucide-react';
 
 const SHORTCUTS = [
     { key: 'Alt + 1', label: 'Academia (Treino)', id: 'Academia (Treino)' },

@@ -2,12 +2,21 @@ import { supabase } from '../supabase';
 
 class NotificationService {
   constructor() {
-    this.permission = Notification.permission;
+    this.permission = typeof Notification !== 'undefined' ? Notification.permission : 'default';
     this.settings = null;
-    this.onNotificationReceived = null; // Callback for in-app toasts
-    this.checkInterval = null;
-    this.lastCheckedMinute = null;
-    this.user = null;
+    this.listeners = [];
+  }
+
+  on(callback) {
+    this.listeners.push(callback);
+    return () => {
+      this.listeners = this.listeners.filter(l => l !== callback);
+    };
+  }
+
+  emit(notification) {
+    if (this.onNotificationReceived) this.onNotificationReceived(notification); // Legacy support
+    this.listeners.forEach(l => l(notification));
   }
 
   async init(user) {
@@ -47,10 +56,22 @@ class NotificationService {
   async updateSettings(updates) {
     try {
       if (!this.user?.id) return false;
-      
+      const sanitizedUpdates = {};
+      if (updates.enabled !== undefined) sanitizedUpdates.enabled = updates.enabled;
+      if (updates.faculdade !== undefined) sanitizedUpdates.faculdade = updates.faculdade;
+      if (updates.academia !== undefined) sanitizedUpdates.academia = updates.academia;
+      if (updates.sono !== undefined) sanitizedUpdates.sono = updates.sono;
+      if (updates.nutricao !== undefined) sanitizedUpdates.nutricao = updates.nutricao;
+      if (updates.haircare !== undefined) sanitizedUpdates.haircare = updates.haircare;
+      if (updates.financas !== undefined) sanitizedUpdates.financas = updates.financas;
+      if (updates.hora_dormir !== undefined) sanitizedUpdates.hora_dormir = updates.hora_dormir;
+      if (updates.hora_treino_lembrete !== undefined) sanitizedUpdates.hora_treino_lembrete = updates.hora_treino_lembrete;
+
+      if (Object.keys(sanitizedUpdates).length === 0) return false;
+
       const { data, error } = await supabase
         .from('user_notification_settings')
-        .update({ ...updates, updated_at: new Date().toISOString() })
+        .update({ ...sanitizedUpdates, updated_at: new Date().toISOString() })
         .eq('user_id', this.user.id)
         .select()
         .single();
@@ -116,13 +137,21 @@ class NotificationService {
   }
 
   async send(category, title, body, options = {}) {
-    // 0. Check settings
     if (!this.settings || !this.settings.enabled) return;
-    const catKey = category.toLowerCase() === 'nutrição' ? 'nutricao' : 
-                   category.toLowerCase() === 'finanças' ? 'financas' : 
-                   category.toLowerCase();
-                   
-    if (this.settings[catKey] === false) return;
+    const catCheck = category.toLowerCase() === 'nutrição' ? 'nutricao' : 
+                     category.toLowerCase() === 'finanças' ? 'financas' : 
+                     category.toLowerCase();
+    
+    let isCatEnabled = false;
+    if (catCheck === 'enabled') isCatEnabled = this.settings.enabled;
+    else if (catCheck === 'faculdade') isCatEnabled = this.settings.faculdade;
+    else if (catCheck === 'academia') isCatEnabled = this.settings.academia;
+    else if (catCheck === 'sono') isCatEnabled = this.settings.sono;
+    else if (catCheck === 'nutricao') isCatEnabled = this.settings.nutricao;
+    else if (catCheck === 'haircare') isCatEnabled = this.settings.haircare;
+    else if (catCheck === 'financas') isCatEnabled = this.settings.financas;
+
+    if (!isCatEnabled) return;
 
     // 1. Deduplication (12h window)
     const isDuplicate = await this.checkDeduplication(category, title);
@@ -134,10 +163,9 @@ class NotificationService {
     console.log(`[NotificationService] Sending: ${category} - ${title}`);
 
     // 2. In-app Toast (with sound)
-    if (this.onNotificationReceived) {
-      this.playDropSound();
-      this.onNotificationReceived({ category, title, body, ...options });
-    }
+    this.playDropSound();
+    this.emit({ category, title, body, ...options });
+
 
     // 3. Native OS Notification (via Service Worker if possible, fallback to Notification API)
     if (this.permission === 'granted') {
@@ -256,7 +284,7 @@ class NotificationService {
       this.send('Academia', 'Dia de treino! 💪', 'Não esquece do treino de hoje. Consistência é tudo.');
     }
     if (workoutDays.includes(dayOfWeek) && currentTime === '21:00') {
-      if (gymAttendance && gymAttendance[dayOfWeek] !== 'done') {
+      if (gymAttendance && typeof dayOfWeek === 'number' && dayOfWeek >= 0 && dayOfWeek <= 6 && gymAttendance[dayOfWeek] !== 'done') {
         this.send('Academia', 'Você treinou hoje? 👀', 'Não esqueça de registrar seu treino no HubVida.');
       }
     }
@@ -274,8 +302,12 @@ class NotificationService {
     }
     if (currentTime === '12:30') {
       const todayStr = now.toISOString().split('T')[0];
-      // Updated nutritionTracker check: it might be an array of entries or an object with meals
-      const hasLunch = nutritionTracker?.some?.(m => (m.type === 'Almoço' || m.meal_type === 'Almoço') && m.date === todayStr);
+      const hasLunch = (nutritionTracker || []).some(m => {
+        if (m.type === 'Almoço' || m.meal_type === 'Almoço') {
+          return m.date === todayStr;
+        }
+        return false;
+      });
       if (!hasLunch) {
         this.send('Nutricao', 'Não esqueceu do almoço? 🍽️', 'Registra suas refeições no módulo de Nutrição.');
       }

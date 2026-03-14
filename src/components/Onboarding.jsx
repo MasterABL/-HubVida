@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, ArrowLeft, X, Check, Hand } from 'lucide-react';
+import { ArrowRight, X, Check, Hand } from 'lucide-react';
 
 const TOUR_STEPS = [
     {

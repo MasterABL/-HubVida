@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import {
   Home,
   GraduationCap,
@@ -8,20 +8,13 @@ import {
   Wallet,
   Library,
   Sun,
-  Bus,
   Briefcase,
-  BookOpen,
-  Coffee,
-  Target,
   Moon,
   Dumbbell,
-  MapPin,
   Menu,
-  X,
   Cloud,
   CheckCircle2,
   Loader2,
-  ShieldCheck,
   Lock,
   ChevronRight,
   Utensils,
@@ -29,7 +22,6 @@ import {
   Scissors,
   Activity,
   Settings,
-  Bell,
 } from 'lucide-react';
 
 import { VisaoGeral } from './components/VisaoGeral';
@@ -346,7 +338,7 @@ const useSupabaseStorage = (key, initialValue) => {
 
     fetchFromSupabase();
     return () => { isMounted = false; };
-  }, [key]);
+  }, [key, initialValue]);
 
   // 2. Salvar na nuvem com debounce e emitir eventos de status
   const isFirstMount = React.useRef(true);
@@ -429,6 +421,64 @@ export default function App() {
   // -- ESTADOS DE SONO --
   const [sleepGoal, setSleepGoal] = useSupabaseStorage('hubvida_sleep_goal', 8);
   const [sleepData, setSleepData] = useSupabaseStorage('hubvida_sleep_data', []);
+
+  // -- ESTADOS DE ESTUDO (PROGRESSO) --
+  const [studyProgress, setStudyProgress] = useState([]);
+  const [isStudyProgressLoaded, setIsStudyProgressLoaded] = useState(false);
+
+  const fetchStudyProgress = useCallback(async () => {
+    if (!session?.user?.id) return;
+    try {
+      const { data, error } = await supabase
+        .from('study_progress')
+        .select('*')
+        .eq('user_id', session.user.id);
+
+      if (error) throw error;
+      setStudyProgress(data || []);
+    } catch (err) {
+      console.error('Error fetching study progress:', err);
+    } finally {
+      setIsStudyProgressLoaded(true);
+    }
+  }, [session?.user?.id]);
+
+  useEffect(() => {
+    fetchStudyProgress();
+  }, [fetchStudyProgress]);
+
+  const updateStudyProgress = async (disciplina, score, total) => {
+    if (!session?.user?.id) return;
+    try {
+      const { error } = await supabase
+        .from('study_progress')
+        .upsert({
+          user_id: session.user.id,
+          disciplina,
+          quiz_score: score,
+          quiz_total: total,
+          ultima_sessao: new Date().toISOString()
+        }, { onConflict: 'user_id,disciplina' });
+
+      if (error) throw error;
+      
+      // Update local state
+      setStudyProgress(prev => {
+        const index = prev.findIndex(p => p.disciplina === disciplina);
+        const newItem = { disciplina, quiz_score: score, quiz_total: total, ultima_sessao: new Date().toISOString() };
+        if (index >= 0) {
+          const newArr = [...prev];
+          newArr[index] = { ...newArr[index], ...newItem };
+          return newArr;
+        }
+        return [...prev, newItem];
+      });
+
+      notificationService.send('Faculdade', `Quiz ${disciplina.toUpperCase()} concluído! Você acertou ${score}/${total} ✅`);
+    } catch (err) {
+      console.error('Erro ao salvar progresso de estudo:', err);
+    }
+  };
 
   const [englishStreak, setEnglishStreak] = useSupabaseStorage('hubvida_english_streak', {
     count: 0,
@@ -571,6 +621,7 @@ export default function App() {
       setSession(session);
 
       if (session) {
+        fetchStudyProgress();
         // Verifica onboarding
         const hasSeenTour = localStorage.getItem('@hubvida/hasSeenTour');
         if (!hasSeenTour) {
@@ -580,7 +631,7 @@ export default function App() {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [fetchStudyProgress]);
 
   const handleCloseTour = () => {
     setShowTour(false);
@@ -609,13 +660,12 @@ export default function App() {
         if (t.status === 'paid') paidExpense += Number(t.amount);
       }
     });
-    const prevBalances = {
-      MARÇO: 185.0,
-      ABRIL: 338.53,
-      MAIO: 296.37,
-      JUNHO: 330.99,
-    };
-    const prevMonthBalance = prevBalances[activeMonth] || 0;
+    let prevMonthBalance = 0;
+    if (activeMonth === 'MARÇO') prevMonthBalance = 185.0;
+    else if (activeMonth === 'ABRIL') prevMonthBalance = 338.53;
+    else if (activeMonth === 'MAIO') prevMonthBalance = 296.37;
+    else if (activeMonth === 'JUNHO') prevMonthBalance = 330.99;
+    
     const available = prevMonthBalance + paidIncome - paidExpense;
     return { income, expense, prevMonthBalance, available };
   }, [currentMonthFinances, activeMonth]);
@@ -643,13 +693,21 @@ export default function App() {
       // Check if any training was marked as done today
       // In this app, gymAttendance stores 'pending' or 'done' for days 0-6
       const day = new Date().getDay();
-      if (gymAttendance[day] !== 'done') {
+      let status = 'pending';
+      if (day === 0) status = gymAttendance[0];
+      else if (day === 1) status = gymAttendance[1];
+      else if (day === 2) status = gymAttendance[2];
+      else if (day === 3) status = gymAttendance[3];
+      else if (day === 4) status = gymAttendance[4];
+      else if (day === 5) status = gymAttendance[5];
+      else if (day === 6) status = gymAttendance[6];
+
+      if (status !== 'done') {
         notificationService.send('Academia', '👀 Registro de Treino', 'Você foi treinar hoje? Não esqueça de registrar!');
       }
     };
 
-    const checkHaircare = (e) => {
-      const date = e.detail.date;
+    const checkHaircare = () => {
       // haircareStatus and message are already calculated in App.jsx scope
       if (isWashDay) {
         notificationService.send('Haircare', '💇 Dia de Procedimento', `Hoje é dia de ${haircareStatus}! Não esquece.`);
@@ -696,43 +754,62 @@ export default function App() {
 
   useEffect(() => {
     if (lastRoutineDate && lastRoutineDate !== todayStr && Object.keys(routinesData).length > 0) {
-      let newData = { ...routinesData };
-      Object.keys(newData).forEach(day => {
-        newData[day].timeline = newData[day].timeline.map(t => ({ ...t, checked: false }));
-      });
+      const resetTimeline = (timeline) => timeline.map(t => ({ ...t, checked: false }));
+      const newData = { ...routinesData };
+      if (newData.Segunda) newData.Segunda = { ...newData.Segunda, timeline: resetTimeline(newData.Segunda.timeline) };
+      if (newData.Terça) newData.Terça = { ...newData.Terça, timeline: resetTimeline(newData.Terça.timeline) };
+      if (newData.Quarta) newData.Quarta = { ...newData.Quarta, timeline: resetTimeline(newData.Quarta.timeline) };
+      if (newData.Quinta) newData.Quinta = { ...newData.Quinta, timeline: resetTimeline(newData.Quinta.timeline) };
+      if (newData.Sexta) newData.Sexta = { ...newData.Sexta, timeline: resetTimeline(newData.Sexta.timeline) };
+      if (newData.Sábado) newData.Sábado = { ...newData.Sábado, timeline: resetTimeline(newData.Sábado.timeline) };
+      if (newData.Domingo) newData.Domingo = { ...newData.Domingo, timeline: resetTimeline(newData.Domingo.timeline) };
+      
       setRoutinesData(newData);
       setLastRoutineDate(todayStr);
     } else if (lastRoutineDate === '') {
       setLastRoutineDate(todayStr);
     }
-  }, [lastRoutineDate, routinesData]);
+  }, [lastRoutineDate, routinesData, setLastRoutineDate, setRoutinesData, todayStr]);
 
-  const calculateCategoryAvg = (category) => {
+  const calculateCategoryAvg = useCallback((category) => {
     const skills = hardSkills.filter((s) => s.category === category);
     if (skills.length === 0) return 0;
     const sum = skills.reduce((acc, curr) => acc + Number(curr.level), 0);
     return sum / skills.length;
-  };
+  }, [hardSkills]);
 
-  const calculateSoftSkillProgress = (category) => {
-    const items = softSkills[category];
+  const calculateSoftSkillProgress = useCallback((category) => {
+    let items = [];
+    if (category === 'comunicacao') items = softSkills.comunicacao;
+    else if (category === 'lideranca') items = softSkills.lideranca;
+    else if (category === 'produtividade') items = softSkills.produtividade;
+    else if (category === 'foco') items = softSkills.foco;
+    
+    if (!items || items.length === 0) return 0;
     const checkedCount = items.filter((item) => item.checked).length;
     return Math.round((checkedCount / items.length) * 100);
-  };
-
+  }, [softSkills]);
   const radarData = useMemo(() => ({
     gestao: calculateCategoryAvg('Gestão (ADM)'),
     ingles: englishLevel,
     pesquisa: calculateCategoryAvg('Pesquisa Científica'),
     ferramentas: calculateCategoryAvg('Ferramentas Digitais'),
     comunicacao: calculateSoftSkillProgress('comunicacao'),
-  }), [hardSkills, englishLevel, softSkills]);
+  }), [englishLevel, calculateCategoryAvg, calculateSoftSkillProgress]);
 
-  const handleToggleSoftSkill = (category, id) =>
-    setSoftSkills((prev) => ({
-      ...prev,
-      [category]: prev[category].map((item) => item.id === id ? { ...item, checked: !item.checked } : item),
-    }));
+  const handleToggleSoftSkill = (category, id) => {
+    setSoftSkills((prev) => {
+      let items = [];
+      if (category === 'comunicacao') items = prev.comunicacao;
+      else if (category === 'lideranca') items = prev.lideranca;
+      else if (category === 'produtividade') items = prev.produtividade;
+      else if (category === 'foco') items = prev.foco;
+      else return prev;
+
+      const newItems = items.map((item) => item.id === id ? { ...item, checked: !item.checked } : item);
+      return { ...prev, [category]: newItems };
+    });
+  };
 
   const handleAddHardSkill = () => {
     if (!newSkill.name) return;
@@ -789,36 +866,93 @@ export default function App() {
 
   const handleAddRoutineTask = () => {
     if (!newRoutineTask.time || !newRoutineTask.title) return;
-    setRoutinesData((prev) => ({
-      ...prev,
-      [activeRoutine]: {
-        ...prev[activeRoutine],
-        timeline: [
-          ...prev[activeRoutine].timeline,
-          {
-            time: newRoutineTask.time,
-            title: newRoutineTask.title,
-            type: 'gray',
-            icon: 'Target',
-            checked: false,
-          },
-        ].sort((a, b) => a.time.localeCompare(b.time)),
-      },
-    }));
+    setRoutinesData((prev) => {
+      let current = null;
+      if (activeRoutine === 'Segunda') current = prev.Segunda;
+      else if (activeRoutine === 'Terça') current = prev.Terça;
+      else if (activeRoutine === 'Quarta') current = prev.Quarta;
+      else if (activeRoutine === 'Quinta') current = prev.Quinta;
+      else if (activeRoutine === 'Sexta') current = prev.Sexta;
+      else if (activeRoutine === 'Sábado') current = prev.Sábado;
+      else if (activeRoutine === 'Domingo') current = prev.Domingo;
+      
+      if (!current) return prev;
+      
+      const newTimeline = [
+        ...current.timeline,
+        {
+          time: newRoutineTask.time,
+          title: newRoutineTask.title,
+          type: 'gray',
+          icon: 'Target',
+          checked: false,
+        },
+      ].sort((a, b) => a.time.localeCompare(b.time));
+
+      if (activeRoutine === 'Segunda') return { ...prev, Segunda: { ...current, timeline: newTimeline } };
+      if (activeRoutine === 'Terça') return { ...prev, Terça: { ...current, timeline: newTimeline } };
+      if (activeRoutine === 'Quarta') return { ...prev, Quarta: { ...current, timeline: newTimeline } };
+      if (activeRoutine === 'Quinta') return { ...prev, Quinta: { ...current, timeline: newTimeline } };
+      if (activeRoutine === 'Sexta') return { ...prev, Sexta: { ...current, timeline: newTimeline } };
+      if (activeRoutine === 'Sábado') return { ...prev, Sábado: { ...current, timeline: newTimeline } };
+      if (activeRoutine === 'Domingo') return { ...prev, Domingo: { ...current, timeline: newTimeline } };
+      
+      return prev;
+    });
     setNewRoutineTask({ time: '', title: '' });
   };
   const handleRemoveRoutineTask = (index) => {
     setRoutinesData((prev) => {
-      const newTimeline = [...prev[activeRoutine].timeline];
+      let current = null;
+      if (activeRoutine === 'Segunda') current = prev.Segunda;
+      else if (activeRoutine === 'Terça') current = prev.Terça;
+      else if (activeRoutine === 'Quarta') current = prev.Quarta;
+      else if (activeRoutine === 'Quinta') current = prev.Quinta;
+      else if (activeRoutine === 'Sexta') current = prev.Sexta;
+      else if (activeRoutine === 'Sábado') current = prev.Sábado;
+      else if (activeRoutine === 'Domingo') current = prev.Domingo;
+      
+      if (!current) return prev;
+      const newTimeline = [...current.timeline];
       newTimeline.splice(index, 1);
-      return { ...prev, [activeRoutine]: { ...prev[activeRoutine], timeline: newTimeline } };
+      
+      if (activeRoutine === 'Segunda') return { ...prev, Segunda: { ...current, timeline: newTimeline } };
+      if (activeRoutine === 'Terça') return { ...prev, Terça: { ...current, timeline: newTimeline } };
+      if (activeRoutine === 'Quarta') return { ...prev, Quarta: { ...current, timeline: newTimeline } };
+      if (activeRoutine === 'Quinta') return { ...prev, Quinta: { ...current, timeline: newTimeline } };
+      if (activeRoutine === 'Sexta') return { ...prev, Sexta: { ...current, timeline: newTimeline } };
+      if (activeRoutine === 'Sábado') return { ...prev, Sábado: { ...current, timeline: newTimeline } };
+      if (activeRoutine === 'Domingo') return { ...prev, Domingo: { ...current, timeline: newTimeline } };
+      
+      return prev;
     });
   };
   const handleToggleRoutineTask = (index) => {
     setRoutinesData((prev) => {
-      const newTimeline = [...prev[activeRoutine].timeline];
-      newTimeline[index].checked = !newTimeline[index].checked;
-      return { ...prev, [activeRoutine]: { ...prev[activeRoutine], timeline: newTimeline } };
+      let current = null;
+      if (activeRoutine === 'Segunda') current = prev.Segunda;
+      else if (activeRoutine === 'Terça') current = prev.Terça;
+      else if (activeRoutine === 'Quarta') current = prev.Quarta;
+      else if (activeRoutine === 'Quinta') current = prev.Quinta;
+      else if (activeRoutine === 'Sexta') current = prev.Sexta;
+      else if (activeRoutine === 'Sábado') current = prev.Sábado;
+      else if (activeRoutine === 'Domingo') current = prev.Domingo;
+      
+      if (!current) return prev;
+      const newTimeline = [...current.timeline];
+      if (newTimeline[index]) {
+        newTimeline[index].checked = !newTimeline[index].checked;
+      }
+      
+      if (activeRoutine === 'Segunda') return { ...prev, Segunda: { ...current, timeline: newTimeline } };
+      if (activeRoutine === 'Terça') return { ...prev, Terça: { ...current, timeline: newTimeline } };
+      if (activeRoutine === 'Quarta') return { ...prev, Quarta: { ...current, timeline: newTimeline } };
+      if (activeRoutine === 'Quinta') return { ...prev, Quinta: { ...current, timeline: newTimeline } };
+      if (activeRoutine === 'Sexta') return { ...prev, Sexta: { ...current, timeline: newTimeline } };
+      if (activeRoutine === 'Sábado') return { ...prev, Sábado: { ...current, timeline: newTimeline } };
+      if (activeRoutine === 'Domingo') return { ...prev, Domingo: { ...current, timeline: newTimeline } };
+      
+      return prev;
     });
   };
 
@@ -826,8 +960,27 @@ export default function App() {
     setFaculdadeData((prev) =>
       prev.map((d) => {
         if (d.id !== id) return d;
-        if (subfield) return { ...d, [field]: { ...d[field], [subfield]: value } };
-        return { ...d, [field]: value };
+        
+        if (field === 'notas') {
+          return {
+            ...d,
+            notas: {
+              ...d.notas,
+              [subfield]: value
+            }
+          };
+        } else if (field === 'checks') {
+          const newChecks = { ...d.checks, [subfield]: value };
+          return { ...d, checks: newChecks };
+        } else if (field === 'expandido') {
+          return { ...d, expandido: value };
+        } else if (field === 'status') {
+          return { ...d, status: value };
+        } else if (field === 'notes') {
+          return { ...d, notes: value };
+        }
+        
+        return d;
       })
     );
   };
@@ -1065,7 +1218,7 @@ export default function App() {
                   )}
                   {syncStatus === 'saved' && (
                     <span className="flex items-center gap-1 text-[9px] text-emerald-500 font-bold">
-                      <CheckCircle2 className="w-2.5 h-2.5" /> Salvo ✓
+                      <CheckCircle2 className="w-2.5 h-2.5" /> Salvo
                     </span>
                   )}
                   {syncStatus === 'error' && (
@@ -1140,8 +1293,10 @@ export default function App() {
                 <div id="Faculdade (ADM)" className="scroll-mt-24 module-section">
                   <ScrollReveal delay={50}>
                     <Faculdade
-                      isLoaded={isFaculdadeLoaded}
+                      isLoaded={isFaculdadeLoaded && isStudyProgressLoaded}
                       faculdadeData={faculdadeData}
+                      studyProgress={studyProgress}
+                      updateStudyProgress={updateStudyProgress}
                       expandedSubject={expandedSubject}
                       setExpandedSubject={setExpandedSubject}
                       handleUpdateFaculdade={handleUpdateFaculdade}

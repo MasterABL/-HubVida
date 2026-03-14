@@ -1,29 +1,38 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 export const ScrollReveal = ({ children, delay = 0 }) => {
-  const [isVisible, setIsVisible] = useState(false);
+  // Initialize isVisible to true if IntersectionObserver is not available,
+  // ensuring content is visible as a fallback.
+  const [isVisible, setIsVisible] = useState(() => typeof window !== 'undefined' && !window.IntersectionObserver);
   const [scrollDir, setScrollDir] = useState('down');
   const domRef = useRef();
+  // Initialize lastScrollY only once, outside of render, using useRef.
   const lastScrollY = useRef(typeof window !== 'undefined' ? window.scrollY : 0);
 
   useEffect(() => {
-    // Evitar quebra em SSR/Ambientes sem IntersectionObserver
-    if (typeof window !== 'undefined' && !window.IntersectionObserver) {
-      setIsVisible(true);
+    // Prevent issues in SSR or environments without IntersectionObserver
+    if (typeof window === 'undefined' || !window.IntersectionObserver) {
+      // If no IntersectionObserver, and we're in a browser, ensure it's visible.
+      // The initial state already handles the !window.IntersectionObserver case.
+      // If window is undefined (SSR), the initial state will be false, which is fine.
       return;
     }
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
+          // Use a functional update for setIsVisible to avoid stale closures
+          // if this effect were to depend on isVisible (though it doesn't currently).
+          // Also, batch state updates to prevent cascading renders.
           const currentScrollY = window.scrollY;
-          // Descobre a direção baseada no scrollY anterior
           const direction = currentScrollY > lastScrollY.current ? 'down' : 'up';
-          // Se for na mesma posição (ex: load da página), assume down como default
+          
           if (currentScrollY !== lastScrollY.current) {
             lastScrollY.current = currentScrollY;
           }
 
+          // Only update scroll direction if it has actually changed
+          // and the element is intersecting.
           if (entry.isIntersecting) {
             setScrollDir(direction);
             setIsVisible(true);

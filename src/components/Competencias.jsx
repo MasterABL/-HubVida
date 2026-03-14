@@ -1,5 +1,5 @@
 import React from 'react';
-import { Brain, Trash2, CheckCircle2, Flame, Star, Trophy } from 'lucide-react';
+import { Brain, Trash2, CheckCircle2, Flame, Trophy } from 'lucide-react';
 import { RadarChart } from './RadarChart';
 
 const getTodayStr = () => new Date().toISOString().slice(0, 10);

@@ -195,7 +195,7 @@ export const Haircare = ({ haircareStatus, haircareMessage, isWashDay, isHaircar
                     </div>
                     <h3 className="text-hub-strong font-bold mb-2">3. Técnica de Fitagem</h3>
                     <p className="text-xs text-hub-muted leading-relaxed">
-                        Para reter a definição, com o cabelo gotejando creme de pentear, separe as mechas em fitas nos dedos e amasse de baixo para cima. Desmanche a "casinha" dura depois com óleo secante.
+                        Para reter a definição, com o cabelo gotejando creme de pentear, separe as mechas em fitas nos dedos e amasse de baixo para cima. Desmanche a &quot;casinha&quot; dura depois com óleo secante.
                     </p>
                 </div>
 

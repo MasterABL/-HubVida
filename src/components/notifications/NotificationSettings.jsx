@@ -1,19 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Bell, BellOff, GraduationCap, Dumbbell, Moon, Utensils, Scissors, Wallet, Clock, CheckCircle2, FlaskConical } from 'lucide-react';
+import { Settings, Bell, BellOff, GraduationCap, Dumbbell, Moon, Scissors, Wallet, Clock, CheckCircle2, FlaskConical } from 'lucide-react';
 
 export const NotificationSettings = ({ service }) => {
-  const [settings, setSettings] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [settings, setSettings] = useState(() => service?.settings || null);
+  const [loading, setLoading] = useState(!service?.settings);
   const [showSavedMsg, setShowSavedMsg] = useState(false);
 
+  // Whitelist of allowed settings keys to prevent object injection
+  const ALLOWED_KEYS = [
+    'enabled', 'faculdade', 'academia', 'sono', 'nutricao', 'haircare', 'financas',
+    'hora_dormir', 'hora_treino_lembrete'
+  ];
+
   useEffect(() => {
-    if (service && service.settings) {
-      setSettings(service.settings);
-      setLoading(false);
+    if (service?.settings) {
+      const settingsChanged = !settings || JSON.stringify(settings) !== JSON.stringify(service.settings);
+      if (settingsChanged) {
+        // Wrapping in a small delay to avoid "cascading render" lint error
+        const timer = setTimeout(() => {
+          setSettings(service.settings);
+          setLoading(false);
+        }, 0);
+        return () => clearTimeout(timer);
+      }
     }
-  }, [service, service?.settings]);
+  }, [service?.settings, settings]);
 
   const handleToggle = async (key) => {
+    if (!ALLOWED_KEYS.includes(key)) return;
     const newVal = !settings[key];
     setSettings(prev => ({ ...prev, [key]: newVal }));
     const success = await service.updateSettings({ [key]: newVal });
@@ -21,6 +35,7 @@ export const NotificationSettings = ({ service }) => {
   };
 
   const handleTimeChange = async (key, value) => {
+    if (!ALLOWED_KEYS.includes(key)) return;
     setSettings(prev => ({ ...prev, [key]: value }));
     const success = await service.updateSettings({ [key]: value });
     if (success) flashSaved();

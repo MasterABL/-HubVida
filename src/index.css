@@ -1,19 +1,5 @@
 @import "tailwindcss";
 
-@theme {
-  --color-hub-base: var(--hub-base);
-  --color-hub-surface: var(--hub-surface);
-  --color-hub-inner: var(--hub-inner);
-  --color-hub-hover: var(--hub-hover);
-  --color-hub-border: var(--hub-border);
-  --color-hub-border-hover: var(--hub-border-hover);
-
-  --color-hub-content: var(--hub-content);
-  --color-hub-muted: var(--hub-muted);
-  --color-hub-faint: var(--hub-faint);
-  --color-hub-strong: var(--hub-strong);
-}
-
 :root {
   /* LIGHT MODE - Soft premium background */
   --hub-base-gradient: linear-gradient(135deg, #f0f4ff 0%, #faf5ff 100%);
