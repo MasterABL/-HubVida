@@ -12,7 +12,8 @@ import {
   Layers,
   Search,
   FileText,
-  BookOpen
+  BookOpen,
+  Calendar
 } from 'lucide-react';
 
 const StudyPanel = ({ discipline, content, onBack, onSaveProgress }) => {

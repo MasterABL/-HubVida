@@ -1025,7 +1025,7 @@ export default function App() {
           {session && <Onboarding isVisible={showTour} onClose={handleCloseTour} />}
 
           {/* Sidebar */}
-          <aside className={`w-64 bg-hub-surface flex flex-col border-r border-hub-border fixed left-0 top-0 md:sticky md:top-0 h-screen z-50 transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+          <aside className={`w-64 bg-hub-surface flex flex-col border-r border-hub-border fixed left-0 top-0 h-screen z-[100] transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
             <div className="p-6 hidden md:flex flex-col gap-1">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-yellow-400 rounded-md flex items-center justify-center font-black text-slate-900 text-lg">
@@ -1236,7 +1236,7 @@ export default function App() {
             </div>
           </aside>
 
-          <main className="flex-1 flex flex-col">
+          <main className="flex-1 flex flex-col md:ml-64">
             {/* NOVO HEADER GLOBAL COM SINO */}
             <header className="sticky top-0 z-40 w-full bg-hub-surface/80 backdrop-blur-xl border-b border-hub-border px-6 py-4 flex justify-between items-center md:hidden">
                <div className="flex items-center gap-3">
