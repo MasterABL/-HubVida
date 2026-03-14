@@ -13,13 +13,13 @@ const CATEGORY_ICONS = {
 };
 
 const CATEGORY_COLORS = {
-  Faculdade: 'text-blue-500',
-  Academia: 'text-green-500',
-  Sono: 'text-purple-400',
-  Nutricao: 'text-orange-500',
-  Haircare: 'text-pink-500',
-  Financas: 'text-yellow-500',
-  Default: 'text-slate-400'
+  Faculdade: 'text-yellow-500',
+  Academia: 'text-emerald-500',
+  Sono: 'text-yellow-500',
+  Nutricao: 'text-emerald-500',
+  Haircare: 'text-fuchsia-500',
+  Financas: 'text-emerald-500',
+  Default: 'text-hub-faint'
 };
 
 export const NotificationCenter = ({ user }) => {
@@ -136,23 +136,23 @@ export const NotificationCenter = ({ user }) => {
       >
         <Bell size={24} />
         {unreadCount > 0 && (
-          <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+          <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-yellow-500 text-[10px] font-bold text-slate-900">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 md:w-96 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl z-50 overflow-hidden backdrop-blur-xl bg-opacity-95">
-          <div className="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-800/50">
-            <h3 className="font-bold text-slate-100 flex items-center">
+        <div className="absolute right-0 mt-2 w-80 md:w-96 bg-hub-surface border border-hub-border rounded-2xl shadow-2xl z-50 overflow-hidden backdrop-blur-xl">
+          <div className="p-4 border-b border-hub-border flex justify-between items-center bg-hub-inner/50">
+            <h3 className="font-bold text-hub-strong flex items-center">
               Notificações
-              {unreadCount > 0 && <span className="ml-2 text-xs font-normal text-slate-400">({unreadCount} novas)</span>}
+              {unreadCount > 0 && <span className="ml-2 text-xs font-normal text-hub-faint">({unreadCount} novas)</span>}
             </h3>
             {unreadCount > 0 && (
               <button 
                 onClick={markAllAsRead}
-                className="text-xs text-blue-400 hover:text-blue-300 transition-colors flex items-center"
+                className="text-xs text-yellow-500 hover:text-yellow-400 transition-colors flex items-center"
               >
                 <Check size={14} className="mr-1" /> Marcar todas como lidas
               </button>
@@ -176,22 +176,22 @@ export const NotificationCenter = ({ user }) => {
                 return (
                   <div 
                     key={n.id} 
-                    className={`flex items-start p-4 border-b border-slate-800/50 hover:bg-white/5 transition-colors group ${!n.read ? 'bg-blue-500/5' : 'opacity-60'}`}
+                    className={`flex items-start p-4 border-b border-hub-border/50 hover:bg-white/5 transition-colors group ${!n.read ? 'bg-yellow-500/5' : 'opacity-60'}`}
                   >
-                    <div className={`p-2 rounded-lg bg-slate-800 ${iconColor} mr-3 flex-shrink-0`}>
+                    <div className={`p-2 rounded-lg bg-hub-inner ${iconColor} mr-3 flex-shrink-0`}>
                       <Icon size={18} />
                     </div>
                     <div className="flex-1 min-w-0" onClick={() => !n.read && markAsRead(n.id)}>
                       <div className="flex justify-between items-start mb-1">
-                        <h4 className={`text-sm font-semibold truncate ${!n.read ? 'text-slate-100' : 'text-slate-400'}`}>
+                        <h4 className={`text-sm font-semibold truncate ${!n.read ? 'text-hub-strong' : 'text-hub-muted'}`}>
                           {n.title}
                         </h4>
-                        <span className="text-[10px] text-slate-500 whitespace-nowrap ml-2 flex items-center">
+                        <span className="text-[10px] text-hub-faint whitespace-nowrap ml-2 flex items-center">
                           <Clock size={10} className="mr-1" />
                           {formatRelativeTime(n.created_at)}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-400 line-clamp-2 pr-4">{n.body}</p>
+                      <p className="text-xs text-hub-muted line-clamp-2 pr-4">{n.body}</p>
                     </div>
                     <button 
                       onClick={(e) => { e.stopPropagation(); deleteNotification(n.id); }}
@@ -206,8 +206,8 @@ export const NotificationCenter = ({ user }) => {
           </div>
 
           {notifications.length > 0 && (
-            <div className="p-3 bg-slate-800/30 text-center">
-               <span className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Exibindo as últimas 20 notificações</span>
+            <div className="p-3 bg-hub-inner/30 text-center">
+               <span className="text-[10px] text-hub-faint uppercase tracking-wider font-semibold">Exibindo as últimas 20 notificações</span>
             </div>
           )}
         </div>

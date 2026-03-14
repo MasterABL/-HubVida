@@ -20,17 +20,19 @@
 }
 
 .dark {
-  /* DARK MODE - Premium deep gradient & glass morphism */
-  --hub-base-gradient: linear-gradient(135deg, #0f0f1a 0%, #1a0f2e 100%);
-  --hub-surface: rgba(255, 255, 255, 0.05);
-  /* 5% opacity background for glass */
+  /* DARK MODE - Premium deep black & graphite */
+  --hub-base-gradient: linear-gradient(135deg, #000000 0%, #0d0d0d 100%);
+  --hub-base: #000000;
+  --hub-main: #0d0d0d;
+  --hub-surface: #141414;
+  /* Reduzido de glass para favor de solidez neutral */
   --hub-backdrop: blur(10px);
   --hub-surface-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
 
-  --hub-inner: rgba(255, 255, 255, 0.02);
-  --hub-hover: rgba(255, 255, 255, 0.08);
+  --hub-inner: #0d0d0d;
+  --hub-hover: #1a1a1a;
   --hub-border: rgba(255, 255, 255, 0.08);
-  --hub-border-hover: rgba(255, 255, 255, 0.15);
+  --hub-border-hover: rgba(255, 255, 255, 0.12);
 
   --hub-content: #cbd5e1;
   --hub-muted: #94a3b8;
@@ -468,10 +470,10 @@ body,
 }
 
 .flip-card-back {
-  background-color: #1e293b;
+  background-color: #1a1a1a;
   color: white;
   transform: rotateY(180deg);
-  border-color: rgba(59, 130, 246, 0.3);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Methodology Flow Items */

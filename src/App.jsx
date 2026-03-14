@@ -1092,7 +1092,7 @@ export default function App() {
                   name: 'Estudos',
                   icon: GraduationCap,
                   items: [
-                    { name: 'Faculdade (ADM)', icon: Library },
+                    { name: 'Faculdade ADM', icon: Library },
                     { name: 'Ph.D. Roadmap', icon: GraduationCap },
                     { name: 'Produção Acadêmica', icon: FileText },
                   ]
@@ -1142,6 +1142,7 @@ export default function App() {
                               const element = document.getElementById(item.name);
                               if (element) {
                                 element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                setActiveTab(item.name);
                               }
                               setIsMobileMenuOpen(false);
                             }}
@@ -1246,7 +1247,7 @@ export default function App() {
                   >
                     <Menu size={24} />
                   </button>
-                  <div className="w-8 h-8 bg-yellow-400 rounded-md flex items-center justify-center font-black text-slate-900">H</div>
+                  <div className="w-8 h-8 bg-yellow-400 rounded-md flex items-center justify-center font-black text-black">H</div>
                </div>
                <NotificationCenter user={session?.user} />
             </header>
@@ -1290,7 +1291,7 @@ export default function App() {
                   </ScrollReveal>
                 </div>
 
-                <div id="Faculdade (ADM)" className="scroll-mt-24 module-section">
+                <div id="Faculdade ADM" className="scroll-mt-24 module-section">
                   <ScrollReveal delay={50}>
                     <Faculdade
                       isLoaded={isFaculdadeLoaded && isStudyProgressLoaded}

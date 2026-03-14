@@ -119,7 +119,7 @@ export const VisaoGeral = ({
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       {/* Header Premium */}
-      <div className="bg-gradient-to-r from-[#12141a] to-[#1a1d24] border border-yellow-500/20 rounded-xl p-4 md:p-8 shadow-xl flex flex-col md:flex-row justify-between items-center gap-4 overflow-hidden max-w-full">
+      <div className="bg-gradient-to-r from-[#000000] to-[#0d0d0d] border border-yellow-500/20 rounded-xl p-4 md:p-8 shadow-xl flex flex-col md:flex-row justify-between items-center gap-4 overflow-hidden max-w-full">
         <div className="text-center md:text-left w-full md:w-auto">
           <h1 className="text-[clamp(18px,5.5vw,28px)] font-black italic tracking-wider text-yellow-500 uppercase flex items-center justify-center md:justify-start gap-2 break-words">
             <Zap className="w-5 h-5 shrink-0" /> Comando Central
@@ -216,13 +216,13 @@ export const VisaoGeral = ({
         {/* Widget 3: Próximas Tarefas da Rotina */}
         <div
           onClick={() => setActiveTab('Rotina Diária')}
-          className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl cursor-pointer group hover:border-indigo-500/50 transition-all flex flex-col h-72"
+          className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl cursor-pointer group hover:border-yellow-500/50 transition-all flex flex-col h-72"
         >
           <div className="w-full flex justify-between items-center mb-6">
-            <h2 className="text-indigo-400 font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+            <h2 className="text-yellow-500 font-bold text-xs uppercase tracking-wider flex items-center gap-2">
               <Calendar className="w-4 h-4" /> Próximas Tarefas
             </h2>
-            <ExternalLink className="w-4 h-4 text-hub-faint group-hover:text-indigo-400 transition-colors" />
+            <ExternalLink className="w-4 h-4 text-hub-faint group-hover:text-yellow-500 transition-colors" />
           </div>
           <div className="flex-1 flex flex-col justify-center space-y-3">
             {routinesData[activeRoutine].timeline
@@ -234,7 +234,7 @@ export const VisaoGeral = ({
                     key={idx}
                     className="flex items-center gap-3 bg-hub-inner p-3 rounded-lg border border-hub-border group-hover:border-hub-border-hover transition-colors"
                   >
-                    <IconComponent className="w-4 h-4 text-indigo-400 opacity-80" />
+                    <IconComponent className="w-4 h-4 text-yellow-500 opacity-80" />
                     <div className="flex-1 overflow-hidden">
                       <p className="text-xs font-bold text-hub-strong truncate">{item.title}</p>
                     </div>
@@ -368,16 +368,16 @@ export const VisaoGeral = ({
           className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl cursor-pointer group hover:border-indigo-500/50 transition-all flex flex-col justify-between items-center text-center h-72"
         >
           <div className="w-full flex justify-between items-center mb-2">
-            <h2 className="text-indigo-400 font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+            <h2 className="text-emerald-500 font-bold text-xs uppercase tracking-wider flex items-center gap-2">
               <PieChart className="w-4 h-4" /> Progresso Semestral
             </h2>
-            <ExternalLink className="w-4 h-4 text-hub-faint group-hover:text-indigo-400 transition-colors" />
+            <ExternalLink className="w-4 h-4 text-hub-faint group-hover:text-emerald-500 transition-colors" />
           </div>
           <div className="relative w-24 h-24 md:w-28 md:h-28 my-2 flex items-center justify-center">
             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 112 112">
               <circle cx="56" cy="56" r="48" fill="none" stroke="#1f222a" strokeWidth="12" />
               <circle
-                cx="56" cy="56" r="48" fill="none" stroke="#818cf8" strokeWidth="12"
+                cx="56" cy="56" r="48" fill="none" stroke="#eab308" strokeWidth="12"
                 strokeDasharray="301"
                 strokeDashoffset={
                   301 - 301 * (visaoGeralMetrics.disciplinasAprovadas / visaoGeralMetrics.totalDisciplinas)
@@ -518,7 +518,7 @@ export const VisaoGeral = ({
         {/* GRÁFICO 3: Horas de Sono (AreaChart) */}
         <div className="bg-hub-surface border border-hub-border rounded-xl p-5 shadow-xl flex flex-col h-72">
           <div className="flex items-center gap-2 mb-4">
-            <Moon className="w-4 h-4 text-sky-500" />
+            <Moon className="w-4 h-4 text-emerald-500" />
             <h3 className="text-xs font-bold text-hub-faint uppercase tracking-widest">Padrão de Sono (h)</h3>
           </div>
           <div className="flex-1 w-full relative">
@@ -534,8 +534,8 @@ export const VisaoGeral = ({
               ]}>
                 <defs>
                   <linearGradient id="colorHoras" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#2a2d35" vertical={false} />
@@ -543,9 +543,9 @@ export const VisaoGeral = ({
                 <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} width={20} />
                 <RechartsTooltip
                   contentStyle={{ backgroundColor: '#0f1115', borderColor: '#1f222a', borderRadius: '8px', fontSize: '12px', fontWeight: 'bold' }}
-                  itemStyle={{ color: '#0ea5e9' }}
+                  itemStyle={{ color: '#10b981' }}
                 />
-                <Area type="monotone" dataKey="horas" stroke="#0ea5e9" strokeWidth={3} fillOpacity={1} fill="url(#colorHoras)" />
+                <Area type="monotone" dataKey="horas" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorHoras)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>

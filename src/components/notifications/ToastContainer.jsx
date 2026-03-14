@@ -2,13 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { X, Info, Moon, Scissors, Wallet, Dumbbell, GraduationCap, FlaskConical } from 'lucide-react';
 
 const CATEGORY_STYLES = {
-  Faculdade: { icon: GraduationCap, color: 'text-blue-500', bg: 'bg-blue-500/10', border: 'border-blue-500/20' },
-  Academia: { icon: Dumbbell, color: 'text-green-500', bg: 'bg-green-500/10', border: 'border-green-500/20' },
-  Sono: { icon: Moon, color: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500/20' },
-  Nutricao: { icon: FlaskConical, color: 'text-orange-500', bg: 'bg-orange-500/10', border: 'border-orange-500/20' },
-  Haircare: { icon: Scissors, color: 'text-pink-500', bg: 'bg-pink-500/10', border: 'border-pink-500/20' },
-  Financas: { icon: Wallet, color: 'text-yellow-500', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20' },
-  Default: { icon: Info, color: 'text-slate-400', bg: 'bg-slate-500/10', border: 'border-slate-500/20' }
+  Faculdade: { icon: GraduationCap, color: 'text-yellow-500', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20' },
+  Academia: { icon: Dumbbell, color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
+  Sono: { icon: Moon, color: 'text-yellow-500', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20' },
+  Nutricao: { icon: FlaskConical, color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
+  Haircare: { icon: Scissors, color: 'text-fuchsia-500', bg: 'bg-fuchsia-500/10', border: 'border-fuchsia-500/20' },
+  Financas: { icon: Wallet, color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
+  Default: { icon: Info, color: 'text-hub-faint', bg: 'bg-hub-inner', border: 'border-hub-border' }
 };
 
 const Toast = ({ id, category, title, body, onDismiss }) => {
@@ -35,12 +35,12 @@ const Toast = ({ id, category, title, body, onDismiss }) => {
         <Icon size={20} />
       </div>
       <div className="flex-1 min-w-0">
-        <h4 className="text-sm font-semibold text-slate-100 truncate">{title}</h4>
-        <p className="text-xs text-slate-400 mt-1 line-clamp-2">{body}</p>
+        <h4 className="text-sm font-semibold text-hub-strong truncate">{title}</h4>
+        <p className="text-xs text-hub-muted mt-1 line-clamp-2">{body}</p>
       </div>
       <button 
         onClick={() => onDismiss(id)}
-        className="text-slate-500 hover:text-slate-300 transition-colors ml-2"
+        className="text-hub-faint hover:text-hub-strong transition-colors ml-2"
       >
         <X size={16} />
       </button>

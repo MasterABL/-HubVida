@@ -52,7 +52,7 @@ export const Auth = () => {
     <div className="min-h-screen bg-hub-base text-hub-content font-sans selection:bg-yellow-500/30 selection:text-yellow-200 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Background Decorativo */}
       <div className="absolute top-0 left-0 w-full h-96 bg-yellow-500/5 blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-indigo-500/5 blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-yellow-500/5 blur-[150px] pointer-events-none" />
 
       <div className="w-full max-w-md bg-hub-surface border border-hub-border rounded-2xl shadow-2xl overflow-hidden relative z-10">
         <div className="p-8 pb-6 border-b border-hub-border">
