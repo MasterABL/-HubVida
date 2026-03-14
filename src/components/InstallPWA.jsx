@@ -4,67 +4,83 @@ import { Download, X } from 'lucide-react';
 export function InstallPWA() {
     const [deferredPrompt, setDeferredPrompt] = useState(null);
     const [isVisible, setIsVisible] = useState(false);
+    const [isIOS, setIsIOS] = useState(false);
 
     useEffect(() => {
         const handler = (e) => {
-            // Previne o prompt padrão
             e.preventDefault();
-            // Salva o evento para acionar depois
             setDeferredPrompt(e);
             setIsVisible(true);
         };
 
-        window.addEventListener('beforeinstallprompt', handler);
+        // Detect current platform
+        const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isPWA = window.matchMedia('(display-mode: standalone)').matches;
+        
+        if (ios && !isPWA) {
+            setIsIOS(true);
+            setIsVisible(true);
+        }
 
+        window.addEventListener('beforeinstallprompt', handler);
         return () => window.removeEventListener('beforeinstallprompt', handler);
     }, []);
 
     const handleInstallClick = async () => {
         if (!deferredPrompt) return;
-
-        // Mostra o prompt de instalação
         deferredPrompt.prompt();
-
-        // Aguarda a resposta do usuário
         const { outcome } = await deferredPrompt.userChoice;
-
         if (outcome === 'accepted') {
-            console.log('User accepted the A2HS prompt');
+            setDeferredPrompt(null);
+            setIsVisible(false);
         }
-
-        setDeferredPrompt(null);
-        setIsVisible(false);
     };
 
     if (!isVisible) return null;
 
     return (
-        <div className="fixed bottom-4 left-4 z-50 animate-in slide-in-from-left-4 fade-in duration-500">
-            <div className="bg-indigo-600 text-white rounded-2xl shadow-xl p-4 pr-12 relative flex items-center gap-3 border border-indigo-400/30">
-                <div className="bg-white/20 p-2 rounded-xl">
-                    <Download className="w-5 h-5" />
-                </div>
-                <div>
-                    <p className="font-bold text-sm">Instalar App</p>
-                    <p className="text-xs text-indigo-100 opacity-80">Acesso super rápido offline</p>
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-md animate-slide-in-up">
+            <div className="bg-hub-inner border border-hub-border p-5 rounded-3xl shadow-2xl backdrop-blur-xl flex flex-col gap-4">
+                <div className="flex items-start gap-4">
+                    <div className="bg-yellow-500/20 p-3 rounded-2xl text-yellow-500">
+                        <Download size={24} />
+                    </div>
+                    <div className="flex-1">
+                        <p className="font-bold text-slate-100 flex items-center gap-2">
+                            📲 Instalar HubVida
+                        </p>
+                        <p className="text-sm text-slate-400 mt-1">
+                            Instale para receber notificações nativas e ter acesso rápido.
+                        </p>
+                    </div>
+                    <button 
+                        onClick={() => setIsVisible(false)}
+                        className="text-slate-500 hover:text-slate-300 transition-colors"
+                    >
+                        <X size={20} />
+                    </button>
                 </div>
 
-                {/* Usamos botão inteiro como clicável */}
-                <button
-                    onClick={handleInstallClick}
-                    className="absolute inset-0 w-full h-full cursor-pointer z-10"
-                    aria-label="Instalar HubVida"
-                />
-
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setIsVisible(false);
-                    }}
-                    className="absolute top-1/2 -translate-y-1/2 right-3 w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors z-20"
-                >
-                    <X className="w-4 h-4" />
-                </button>
+                {isIOS ? (
+                    <div className="bg-white/5 p-4 rounded-2xl text-xs text-slate-300 leading-tight">
+                        No Safari: toque em <span className="font-bold text-white italic">Compartilhar</span> e depois em <span className="font-bold text-white italic">Adicionar à Tela de Início</span>.
+                    </div>
+                ) : (
+                    <div className="flex gap-3">
+                        <button
+                            onClick={handleInstallClick}
+                            className="flex-1 bg-yellow-500 text-black font-bold py-3 px-6 rounded-2xl transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-yellow-500/20"
+                        >
+                            Instalar Agora
+                        </button>
+                        <button
+                            onClick={() => setIsVisible(false)}
+                            className="flex-1 bg-white/5 text-slate-300 font-bold py-3 px-6 rounded-2xl transition-all hover:bg-white/10"
+                        >
+                            Agora não
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

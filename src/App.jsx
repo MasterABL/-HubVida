@@ -1338,6 +1338,7 @@ export default function App() {
           {/* Notification System Globals */}
           <ToastContainer service={notificationService} />
           <PermissionModal service={notificationService} />
+          <InstallPWA />
         </div>
       )}
     </>

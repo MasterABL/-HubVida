@@ -23,7 +23,7 @@ const Toast = ({ id, category, title, body, onDismiss }) => {
   }, [id, onDismiss]);
 
   return (
-    <div className={`flex items-start p-4 mb-3 w-80 max-w-sm ${style.bg} border ${style.border} rounded-xl shadow-2xl backdrop-blur-md animate-slide-in-right pointer-events-auto`}>
+    <div className={`relative flex items-start p-4 mb-3 w-80 max-w-sm ${style.bg} border ${style.border} rounded-xl shadow-2xl backdrop-blur-md animate-slide-in-right pointer-events-auto overflow-hidden`}>
       <div className={`p-2 rounded-lg ${style.bg} ${style.color} mr-3`}>
         <Icon size={20} />
       </div>
@@ -37,6 +37,9 @@ const Toast = ({ id, category, title, body, onDismiss }) => {
       >
         <X size={16} />
       </button>
+      
+      {/* Progress Bar */}
+      <div className="absolute bottom-0 left-0 h-1 bg-current opacity-30 animate-progress-bar" />
     </div>
   );
 };
@@ -61,7 +64,7 @@ export const ToastContainer = ({ service }) => {
   }, []);
 
   return (
-    <div className="fixed top-4 right-4 z-[9999] pointer-events-none flex flex-col items-end">
+    <div className="fixed bottom-6 right-6 z-[9999] pointer-events-none flex flex-col items-end">
       {toasts.map(toast => (
         <Toast key={toast.id} {...toast} onDismiss={dismiss} />
       ))}

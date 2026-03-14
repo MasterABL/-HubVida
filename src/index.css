@@ -367,46 +367,34 @@ body {
 }
 
 /* =========================================================
-   NOTIFICATION ANIMATIONS
+   NOTIFICATION & PWA ANIMATIONS
    ========================================================= */
 
-@keyframes slide-in-right {
-  0% {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
+@keyframes slideInRight {
+  from { transform: translateX(110%); }
+  to { transform: translateX(0); }
 }
 
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+@keyframes slideInUp {
+  from { transform: translate(-50%, 110%); }
+  to { transform: translate(-50%, 0); }
 }
 
-@keyframes zoom-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+@keyframes progressBar {
+  from { width: 100%; }
+  to { width: 0%; }
 }
 
 .animate-slide-in-right {
-  animation: slide-in-right 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.animate-fade-in {
-  animation: fade-in 0.3s ease-out forwards;
+.animate-slide-in-up {
+  animation: slideInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.animate-zoom-in {
-  animation: zoom-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+.animate-progress-bar {
+  animation: progressBar 5s linear forwards;
 }
 
 /* Custom Scrollbar for Notification Center */

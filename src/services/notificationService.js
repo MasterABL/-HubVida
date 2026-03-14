@@ -65,35 +65,53 @@ class NotificationService {
     return false;
   }
 
-  async requestPermission() {
-    const permission = await Notification.requestPermission();
-    this.permission = permission;
-    return permission;
+  async registerPushNotifications() {
+    try {
+      // 1. Pede permissão
+      const permission = await Notification.requestPermission();
+      this.permission = permission;
+      if (permission !== 'granted') return;
+
+      // 2. Registra o service worker
+      if ('serviceWorker' in navigator) {
+        const registration = await navigator.serviceWorker.ready;
+
+        // 3. Dispara notificação nativa direto pelo service worker
+        registration.showNotification('HubVida ativado! 🎉', {
+          body: 'Você receberá lembretes inteligentes sobre sua rotina.',
+          icon: '/icons/icon-192.png',
+          badge: '/icons/icon-192.png',
+          tag: 'welcome'
+        });
+      }
+    } catch (err) {
+      console.error('Error registering push notifications:', err);
+    }
   }
 
-  async checkDeduplication(category, title) {
-    if (!this.user?.id) return true;
-    
+  playDropSound() {
     try {
-      const twelveHoursAgo = new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString();
-      const { data, error } = await supabase
-        .from('notifications_history')
-        .select('id')
-        .eq('user_id', this.user.id)
-        .eq('category', category)
-        .eq('title', title)
-        .gte('created_at', twelveHoursAgo)
-        .limit(1);
-
-      if (error) {
-        console.error('Error checking deduplication:', error);
-        return false;
-      }
-
-      return data && data.length > 0;
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      
+      const ctx = new AudioContext();
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(880, ctx.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.1);
+      
+      gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+      
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + 0.4);
     } catch (err) {
-      console.error('Unexpected error in checkDeduplication:', err);
-      return false;
+      console.warn('Could not play drop sound:', err);
     }
   }
 
@@ -115,21 +133,33 @@ class NotificationService {
 
     console.log(`[NotificationService] Sending: ${category} - ${title}`);
 
-    // 2. In-app Toast
+    // 2. In-app Toast (with sound)
     if (this.onNotificationReceived) {
+      this.playDropSound();
       this.onNotificationReceived({ category, title, body, ...options });
     }
 
-    // 3. Browser Native Notification
+    // 3. Native OS Notification (via Service Worker if possible, fallback to Notification API)
     if (this.permission === 'granted') {
       try {
-        new Notification(title, {
-          body,
-          icon: '/logo192.png',
-          ...options
-        });
+        if ('serviceWorker' in navigator) {
+          const registration = await navigator.serviceWorker.ready;
+          registration.showNotification(title, {
+            body,
+            icon: '/icons/icon-192.png',
+            badge: '/icons/icon-192.png',
+            tag: options.tag || category.toLowerCase(),
+            ...options
+          });
+        } else {
+          new Notification(title, {
+            body,
+            icon: '/icons/icon-192.png',
+            ...options
+          });
+        }
       } catch (err) {
-        console.error('Error showing browser notification:', err);
+        console.error('Error showing native notification:', err);
       }
     }
 
