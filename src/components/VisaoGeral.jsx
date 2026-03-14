@@ -119,39 +119,39 @@ export const VisaoGeral = ({
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       {/* Header Premium */}
-      <div className="bg-gradient-to-r from-[#12141a] to-[#1a1d24] border border-yellow-500/20 rounded-xl p-4 md:p-8 shadow-xl flex flex-col md:flex-row justify-between items-center gap-6">
-        <div className="text-center md:text-left">
-          <h1 className="text-[clamp(24px,7vw,36px)] font-black italic tracking-wider text-yellow-500 uppercase flex items-center justify-center md:justify-start gap-3">
-            <Zap className="w-6 h-6" /> Comando Central
+      <div className="bg-gradient-to-r from-[#12141a] to-[#1a1d24] border border-yellow-500/20 rounded-xl p-4 md:p-8 shadow-xl flex flex-col md:flex-row justify-between items-center gap-4 overflow-hidden max-w-full">
+        <div className="text-center md:text-left w-full md:w-auto">
+          <h1 className="text-[clamp(18px,5.5vw,28px)] font-black italic tracking-wider text-yellow-500 uppercase flex items-center justify-center md:justify-start gap-2 break-words">
+            <Zap className="w-5 h-5 shrink-0" /> Comando Central
           </h1>
-          <p className="text-[clamp(10px,3vw,12px)] text-hub-muted mt-2 font-medium uppercase tracking-widest">
-            Visão Estratégica e Controle de Performance Pessoal
+          <p className="text-[clamp(9px,2.5vw,11px)] text-hub-muted mt-1.5 font-medium uppercase tracking-widest">
+            Visão Estratégica e Controle de Performance
           </p>
         </div>
         {/* Cotações em Tempo Real */}
-        <div className="flex gap-3 text-xs font-bold font-mono text-hub-content w-full md:w-auto justify-center md:justify-end flex-wrap">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs font-bold font-mono text-hub-content w-full md:w-auto">
           {[
             { label: 'USD', key: 'USD' },
             { label: 'EUR', key: 'EUR' },
             { label: 'GBP', key: 'GBP' },
           ].map(({ label, key }) => (
-            <div key={key} className="bg-hub-inner px-4 py-2 rounded-lg border border-hub-border shadow-inner flex flex-col items-center min-w-[72px]">
-              <span className="text-hub-faint text-[9px] uppercase tracking-widest mb-1">{label}</span>
+            <div key={key} className="bg-hub-inner px-2 py-1.5 rounded-lg border border-hub-border shadow-inner flex flex-col items-center">
+              <span className="text-hub-faint text-[8px] uppercase tracking-widest mb-0.5">{label}</span>
               {cotacoesLoading ? (
-                <span className="text-hub-faint text-sm animate-pulse">···</span>
+                <span className="text-hub-faint text-xs animate-pulse">···</span>
               ) : cotacoesErro ? (
-                <span className="text-rose-500 text-[10px]">Erro</span>
+                <span className="text-rose-500 text-[8px]">Erro</span>
               ) : (
-                <span className="text-emerald-500 text-[clamp(12px,4vw,14px)]">R$ {cotacoes[key]}</span>
+                <span className="text-emerald-500 text-[clamp(10px,3vw,12px)]">R${cotacoes[key]}</span>
               )}
             </div>
           ))}
           <button
             onClick={fetchCotacoes}
             title="Atualizar cotações"
-            className="bg-hub-inner px-4 py-2 rounded-lg border border-hub-border text-hub-faint hover:text-yellow-500 hover:border-yellow-500/40 transition-all flex items-center justify-center"
+            className="bg-hub-inner px-2 py-2 rounded-lg border border-hub-border text-hub-faint hover:text-yellow-500 hover:border-yellow-500/40 transition-all flex items-center justify-center"
           >
-            <RefreshCw className={`w-5 h-5 ${cotacoesLoading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 md:w-5 md:h-5 ${cotacoesLoading ? 'animate-spin' : ''}`} />
           </button>
         </div>
       </div>

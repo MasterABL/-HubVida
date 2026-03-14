@@ -64,7 +64,7 @@ export const ToastContainer = ({ service }) => {
   }, []);
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9999] pointer-events-none flex flex-col items-end">
+    <div className="toast-container fixed bottom-6 right-6 md:right-8 z-[9999] pointer-events-none flex flex-col items-center md:items-end">
       {toasts.map(toast => (
         <Toast key={toast.id} {...toast} onDismiss={dismiss} />
       ))}
