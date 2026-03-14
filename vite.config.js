@@ -2,11 +2,16 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
+import eslint from 'vite-plugin-eslint'
 
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    eslint({
+      failOnError: true,
+      failOnWarning: false
+    }),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'hubvida.svg', 'apple-touch-icon-180x180.png'],

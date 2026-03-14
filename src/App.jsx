@@ -391,6 +391,8 @@ const useSupabaseStorage = (key, initialValue) => {
 
 // --- COMPONENTE PRINCIPAL APP ---
 export default function App() {
+  const [session, setSession] = useState(null);
+  const [showTour, setShowTour] = useState(false);
   const [activeTab, setActiveTab] = useState(() => localStorage.getItem('hubvida_activeTab') || 'Visão Geral');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -561,8 +563,6 @@ export default function App() {
   const [newCr, setNewCr] = useState({ disciplina: '', nota: '', creditos: '4' });
   const [expandedSubject, setExpandedSubject] = useState(null);
   const [syncStatus, setSyncStatus] = useState(null); // null | 'saving' | 'saved' | 'error'
-  const [session, setSession] = useState(null);
-  const [showTour, setShowTour] = useState(false);
   // -- TEMA CLARO/ESCURO --
   const [theme, setTheme] = useState(() => localStorage.getItem('hubvida_theme') || 'dark');
 
