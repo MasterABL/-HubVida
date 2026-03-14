@@ -26,7 +26,7 @@ import {
 
 import { VisaoGeral } from './components/VisaoGeral';
 import { Competencias } from './components/Competencias';
-import { Faculdade } from './components/Faculdade';
+import Faculdade from './components/Faculdade';
 import { Financas } from './components/Financas';
 import { Producao } from './components/Producao';
 import { Roadmap } from './components/Roadmap';
