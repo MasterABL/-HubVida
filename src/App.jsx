@@ -1028,7 +1028,7 @@ export default function App() {
           <aside className={`w-64 bg-hub-surface flex flex-col border-r border-hub-border fixed left-0 top-0 h-screen z-[100] transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
             <div className="p-6 hidden md:flex flex-col gap-1">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-yellow-400 rounded-md flex items-center justify-center font-black text-slate-900 text-lg">
+                <div className="w-8 h-8 bg-yellow-400 rounded-md flex items-center justify-center font-black text-[#111111] text-lg">
                   H
                 </div>
                 <span className="font-black tracking-widest text-hub-strong text-lg">
@@ -1061,7 +1061,7 @@ export default function App() {
                    if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                    setIsMobileMenuOpen(false);
                  }}
-                 className="p-2 text-slate-400 hover:text-white transition-colors rounded-full hover:bg-white/10"
+                 className="p-2 text-hub-muted hover:text-hub-strong transition-colors rounded-full hover:bg-white/10"
                  title="Configurações de Notificação"
               >
                 <Settings size={20} />
@@ -1175,7 +1175,7 @@ export default function App() {
                       AB
                     </div>
                     {/* Bolinha de status online */}
-                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-[#1a1d24] rounded-full" />
+                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-[#1a1a1a] rounded-full" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-black text-hub-strong leading-none">Abimael</p>
@@ -1228,7 +1228,7 @@ export default function App() {
                     </span>
                   )}
                   {!syncStatus && (
-                    <span className="flex items-center gap-1 text-[9px] text-slate-700 font-bold">
+                    <span className="flex items-center gap-1 text-[9px] text-hub-faint font-bold">
                       <Cloud className="w-2.5 h-2.5" /> Nuvem
                     </span>
                   )}

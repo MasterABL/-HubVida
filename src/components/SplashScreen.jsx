@@ -18,7 +18,7 @@ export const SplashScreen = ({ isReady }) => {
         {/* Logo Shield Ping */}
         <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-yellow-500 to-amber-600 flex items-center justify-center mb-6 shadow-2xl shadow-yellow-500/20 relative">
           <div className="absolute inset-0 rounded-3xl animate-ping opacity-20 bg-yellow-500 hidden sm:block"></div>
-          <ShieldCheck className="w-12 h-12 text-slate-900 relative z-10" />
+          <ShieldCheck className="w-12 h-12 text-[#111111] relative z-10" />
         </div>
         
         {/* Typografia da Marca */}

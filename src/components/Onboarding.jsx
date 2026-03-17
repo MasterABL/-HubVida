@@ -109,14 +109,14 @@ export function Onboarding({ isVisible, onClose }) {
                     {currentStep < TOUR_STEPS.length - 1 ? (
                         <button
                             onClick={() => setCurrentStep(prev => prev + 1)}
-                            className="bg-yellow-500 text-slate-900 px-5 py-2 rounded-xl font-black text-sm hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
+                            className="bg-yellow-500 text-[#111111] px-5 py-2 rounded-xl font-black text-sm hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
                         >
                             Avançar <ArrowRight className="w-4 h-4" />
                         </button>
                     ) : (
                         <button
                             onClick={onClose}
-                            className="bg-emerald-500 text-slate-900 px-5 py-2 rounded-xl font-black text-sm hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
+                            className="bg-emerald-500 text-[#111111] px-5 py-2 rounded-xl font-black text-sm hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
                         >
                             Vamos lá! <Check className="w-4 h-4" />
                         </button>

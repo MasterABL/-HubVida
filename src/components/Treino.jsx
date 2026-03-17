@@ -146,7 +146,7 @@ export function Treino({ isLoaded = true, workoutProfile, setWorkoutProfile, wor
               </div>
               <button
                 onClick={handleSaveProfile}
-                className="ml-2 bg-yellow-500 text-slate-900 rounded-lg p-2 hover:bg-yellow-400 transition-colors"
+                className="ml-2 bg-yellow-500 text-[#111111] rounded-lg p-2 hover:bg-yellow-400 transition-colors"
                 title="Salvar"
               >
                 <CheckCircle className="w-4 h-4" />
@@ -201,7 +201,7 @@ export function Treino({ isLoaded = true, workoutProfile, setWorkoutProfile, wor
             {/* Lista de Exercícios */}
             <div className="p-4 flex-1 flex flex-col gap-3">
               {day.exercises.map((ex, exIndex) => (
-                <div key={exIndex} className="bg-hub-base p-3 rounded-xl border border-hub-border hover:border-slate-700 transition-colors group/ex">
+                <div key={exIndex} className="bg-hub-base p-3 rounded-xl border border-hub-border hover:border-hub-border-hover transition-colors group/ex">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1 flex items-center">
                       <span className="text-[11px] font-bold text-yellow-500 mr-2">{exIndex + 1}.</span>

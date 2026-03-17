@@ -151,7 +151,7 @@ export const Roadmap = ({
           ];
           const colorMap = {
             active: { ring: 'border-yellow-500', dot: 'bg-yellow-500', text: 'text-yellow-500', pulse: true },
-            future: { ring: 'border-slate-700',  dot: 'bg-[#1f222a]',  text: 'text-hub-faint',  pulse: false },
+            future: { ring: 'border-hub-border',  dot: 'bg-[#1a1a1a]',  text: 'text-hub-faint',  pulse: false },
             dream:  { ring: 'border-yellow-400', dot: 'bg-yellow-400', text: 'text-yellow-400', pulse: false },
           };
           return (
@@ -239,7 +239,7 @@ export const Roadmap = ({
             </div>
             <button
               onClick={handleAddCr}
-              className="w-full bg-yellow-500 hover:bg-yellow-400 text-slate-900 font-black text-xs py-4 rounded-lg uppercase tracking-wider transition-colors"
+              className="w-full bg-yellow-500 hover:bg-yellow-400 text-[#111111] font-black text-xs py-4 rounded-lg uppercase tracking-wider transition-colors"
             >
               Registrar no Histórico
             </button>
@@ -255,7 +255,7 @@ export const Roadmap = ({
                 <th className="py-4 px-6 font-semibold text-right">Ação</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#1f222a]">
+            <tbody className="divide-y divide-hub-border">
               {crData.length === 0 ? (
                 <tr>
                   <td colSpan="4" className="py-12 text-center text-hub-faint text-xs italic uppercase tracking-widest">
@@ -360,7 +360,7 @@ export const Roadmap = ({
       <div className="mb-4 animate-in fade-in">
         <button
           onClick={() => setExpandedYear(expandedYear === id ? null : id)}
-          className="w-full bg-hub-surface border border-hub-border rounded-xl p-6 flex justify-between items-center hover:border-slate-700 transition-colors shadow-lg"
+          className="w-full bg-hub-surface border border-hub-border rounded-xl p-6 flex justify-between items-center hover:border-hub-muted/30 transition-colors shadow-lg"
         >
           <div className="text-left">
             <h3 className="text-xl font-black text-hub-strong flex items-center gap-4">

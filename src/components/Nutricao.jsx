@@ -148,7 +148,7 @@ export const Nutricao = ({ isLoaded = true, dailyTracker = { water: false, creat
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative z-10">
-            <div className="bg-hub-hover border border-slate-700/50 hover:border-sky-500/30 transition-colors rounded-xl p-4 flex flex-col justify-between">
+            <div className="bg-hub-hover border border-hub-border hover:border-sky-500/30 transition-colors rounded-xl p-4 flex flex-col justify-between">
               <div>
                 <h4 className="font-bold text-sky-400 mb-2">Opção 1: Clássico Prático</h4>
                 <ul className="text-sm text-hub-content space-y-1.5 mb-4">
@@ -164,7 +164,7 @@ export const Nutricao = ({ isLoaded = true, dailyTracker = { water: false, creat
               </div>
             </div>
 
-            <div className="bg-hub-hover border border-slate-700/50 hover:border-amber-500/30 transition-colors rounded-xl p-4 flex flex-col justify-between">
+            <div className="bg-hub-hover border border-hub-border hover:border-amber-500/30 transition-colors rounded-xl p-4 flex flex-col justify-between">
               <div>
                 <h4 className="font-bold text-amber-500 mb-2">Opção 2: Ovos (Proteína Pura)</h4>
                 <ul className="text-sm text-hub-content space-y-1.5 mb-4">
@@ -181,7 +181,7 @@ export const Nutricao = ({ isLoaded = true, dailyTracker = { water: false, creat
               </div>
             </div>
 
-            <div className="bg-hub-hover border border-slate-700/50 hover:border-purple-500/30 transition-colors rounded-xl p-4 flex flex-col justify-between">
+            <div className="bg-hub-hover border border-hub-border hover:border-purple-500/30 transition-colors rounded-xl p-4 flex flex-col justify-between">
               <div>
                 <h4 className="font-bold text-purple-400 mb-2">Opção 3: Iogurte Proteico</h4>
                 <ul className="text-sm text-hub-content space-y-1.5 mb-4">
@@ -213,10 +213,10 @@ export const Nutricao = ({ isLoaded = true, dailyTracker = { water: false, creat
               </p>
             </div>
             <div className="border-t border-hub-border pt-4 mt-auto">
-              <div className="inline-block px-3 py-1 bg-slate-500/10 text-hub-muted rounded-lg text-xs font-bold uppercase tracking-wider mb-2 border border-slate-500/20">
+              <div className="inline-block px-3 py-1 bg-hub-inner text-hub-muted rounded-lg text-xs font-bold uppercase tracking-wider mb-2 border border-hub-border">
                 20:30+ - Opcional Pós-Treino / Janta
               </div>
-              <p className="text-sm text-hub-content border-l-2 border-slate-500 pl-3">
+              <p className="text-sm text-hub-content border-l-2 border-hub-border pl-3">
                 Não complique. Replique a lógica do almoço em menor quantidade, OU repita a &quot;Opção 1&quot; do Café (Pão com Ovos ou Pão com Whey) para não dormir de estômago tão cheio e prejudicar o sono.
               </p>
             </div>
@@ -235,17 +235,17 @@ export const Nutricao = ({ isLoaded = true, dailyTracker = { water: false, creat
               <h3 className="text-lg font-bold text-hub-strong mb-4">A Lógica da Mente Focada</h3>
 
               <ul className="space-y-3">
-                <li className="bg-hub-hover p-3 rounded-lg border border-slate-700/50">
+                <li className="bg-hub-hover p-3 rounded-lg border border-hub-border">
                   <span className="font-bold text-indigo-400 block mb-1">A Regra da Creatina (5g)</span>
                   <p className="text-xs text-hub-content">Horário livre. O importante é tomar todos os dias sem falta. Como o almoço é forte, tomar após o almoço ajuda na absorção pelos carboidratos da refeição.</p>
                 </li>
 
-                <li className="bg-hub-hover p-3 rounded-lg border border-slate-700/50">
+                <li className="bg-hub-hover p-3 rounded-lg border border-hub-border">
                   <span className="font-bold text-emerald-400 block mb-1">Ter/Qui/Sex (A Salvação Rápida)</span>
                   <p className="text-xs text-hub-content">Ir treinar assim que sai do inglês cria o &quot;Jejum de Adrenalina&quot;. Se precisar comer pra não ter tontura: Um iogurte no &quot;Boa&quot; ou uma (1) Banana madura 30 minutos antes do treino salvarão a sua vida e energia.</p>
                 </li>
 
-                <li className="bg-hub-hover p-3 rounded-lg border border-slate-700/50">
+                <li className="bg-hub-hover p-3 rounded-lg border border-hub-border">
                   <span className="font-bold text-sky-400 block mb-1">Whey Protein</span>
                   <p className="text-xs text-hub-content">Use primariamente no Café da Manhã. Misturá-lo somente com Água ajuda a acelerar a digestão matinal e bater os macros rápido antes de trampar.</p>
                 </li>

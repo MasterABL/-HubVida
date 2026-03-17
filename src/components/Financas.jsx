@@ -68,7 +68,7 @@ export const Financas = ({
             key={month}
             onClick={() => setActiveMonth(month)}
             className={`flex-none snap-start px-6 py-3 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${activeMonth === month
-                ? 'bg-yellow-500 text-slate-900 shadow'
+                ? 'bg-yellow-500 text-[#111111] shadow'
                 : 'text-hub-faint hover:text-hub-strong hover:bg-hub-hover'
               }`}
           >
@@ -124,7 +124,7 @@ export const Financas = ({
           <div
             key={transaction.id}
             onClick={() => handleToggleFinanceStatus(transaction.id)}
-            className={`cursor-pointer bg-hub-surface border border-hub-border rounded-xl p-4 flex items-center justify-between group hover:border-slate-700 transition-all shadow-sm select-none ${transaction.status === 'paid'
+            className={`cursor-pointer bg-hub-surface border border-hub-border rounded-xl p-4 flex items-center justify-between group hover:border-hub-border-hover transition-all shadow-sm select-none ${transaction.status === 'paid'
                 ? 'opacity-60 hover:opacity-100'
                 : ''
               }`}
@@ -189,7 +189,7 @@ export const Financas = ({
           </div>
         ))}
 
-        <div className="bg-hub-inner border border-dashed border-slate-700 rounded-xl p-4">
+        <div className="bg-hub-inner border border-dashed border-hub-border rounded-xl p-4">
           <p className="text-[10px] text-hub-faint font-bold uppercase tracking-widest mb-3 flex items-center gap-2">
             <Plus className="w-3.5 h-3.5" /> Novo Lançamento
           </p>
@@ -236,7 +236,7 @@ export const Financas = ({
             </select>
             <button
               onClick={handleAddTransaction}
-              className="bg-yellow-500 text-slate-900 font-bold rounded-lg px-4 py-2 text-sm hover:bg-yellow-400 transition-colors"
+              className="bg-yellow-500 text-[#111111] font-bold rounded-lg px-4 py-2 text-sm hover:bg-yellow-400 transition-colors"
             >
               Lançar
             </button>

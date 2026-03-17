@@ -44,22 +44,22 @@ export const Producao = ({
                 onChange={(e) =>
                   setNewProd({ ...newProd, title: e.target.value })
                 }
-                className="flex-1 bg-transparent border border-slate-800 rounded px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500"
+                className="flex-1 bg-transparent border border-hub-border rounded px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500"
               />
               <select
                 value={newProd.type}
                 onChange={(e) =>
                   setNewProd({ ...newProd, type: e.target.value })
                 }
-                className="bg-transparent border border-slate-800 rounded px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500"
+                className="bg-transparent border border-hub-border rounded px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500"
               >
-                <option value="Artigo" className="bg-slate-900">
+                <option value="Artigo" className="bg-[#141414]">
                   Artigo
                 </option>
-                <option value="Resumo" className="bg-slate-900">
+                <option value="Resumo" className="bg-[#141414]">
                   Resumo Expandido
                 </option>
-                <option value="Tese" className="bg-slate-900">
+                <option value="Tese" className="bg-[#141414]">
                   Tese/Dissertação
                 </option>
               </select>
@@ -68,24 +68,24 @@ export const Producao = ({
                 onChange={(e) =>
                   setNewProd({ ...newProd, status: e.target.value })
                 }
-                className="bg-transparent border border-slate-800 rounded px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500"
+                className="bg-transparent border border-hub-border rounded px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500"
               >
-                <option value="Ideia" className="bg-slate-900">
+                <option value="Ideia" className="bg-[#141414]">
                   Ideia
                 </option>
-                <option value="Escrevendo" className="bg-slate-900">
+                <option value="Escrevendo" className="bg-[#141414]">
                   Escrevendo
                 </option>
-                <option value="Revisão" className="bg-slate-900">
+                <option value="Revisão" className="bg-[#141414]">
                   Em Revisão
                 </option>
-                <option value="Publicado" className="bg-slate-900">
+                <option value="Publicado" className="bg-[#141414]">
                   Publicado
                 </option>
               </select>
               <button
                 onClick={handleAddProduction}
-                className="bg-yellow-500 text-slate-900 font-bold px-6 py-2 rounded text-xs hover:bg-yellow-400 transition-colors"
+                className="bg-yellow-500 text-[#111111] font-bold px-6 py-2 rounded text-xs hover:bg-yellow-400 transition-colors"
               >
                 LANÇAR ARTIGO
               </button>
@@ -123,7 +123,7 @@ export const Producao = ({
                           {prod.type}
                         </td>
                         <td className="py-4">
-                          <span className="px-2 py-1 bg-[#1f222a] text-yellow-500 rounded text-xs font-semibold">
+                          <span className="px-2 py-1 bg-hub-inner text-yellow-500 rounded text-xs font-semibold">
                             {prod.status}
                           </span>
                         </td>
@@ -153,11 +153,11 @@ export const Producao = ({
                 value={newIdea}
                 onChange={(e) => setNewIdea(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleAddIdea()}
-                className="flex-1 bg-transparent border border-slate-700 rounded-lg px-4 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500"
+                className="flex-1 bg-transparent border border-hub-border rounded-lg px-4 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500"
               />
               <button
                 onClick={handleAddIdea}
-                className="bg-yellow-500 text-slate-900 p-2 rounded-lg hover:bg-yellow-400 transition-colors"
+                className="bg-yellow-500 text-[#111111] p-2 rounded-lg hover:bg-yellow-400 transition-colors"
               >
                 <Plus className="w-5 h-5" />
               </button>

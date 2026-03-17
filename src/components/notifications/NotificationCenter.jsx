@@ -132,11 +132,11 @@ export const NotificationCenter = ({ user }) => {
     <div className="relative" ref={dropdownRef}>
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-slate-400 hover:text-white transition-colors rounded-full hover:bg-white/10"
+        className="relative p-2 text-hub-muted hover:text-hub-strong transition-colors rounded-full hover:bg-white/10"
       >
         <Bell size={24} />
         {unreadCount > 0 && (
-          <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-yellow-500 text-[10px] font-bold text-slate-900">
+          <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-yellow-500 text-[10px] font-bold text-[#111111]">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
@@ -162,11 +162,11 @@ export const NotificationCenter = ({ user }) => {
           <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
             {notifications.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
-                <div className="p-4 bg-slate-800/50 rounded-full mb-4 text-slate-600">
+                <div className="p-4 bg-hub-inner rounded-full mb-4 text-hub-faint">
                   <Bell size={32} />
                 </div>
-                <p className="text-slate-400 font-medium">Tudo limpo por aqui!</p>
-                <p className="text-slate-500 text-xs mt-1">Você não tem notificações no momento.</p>
+                <p className="text-hub-muted font-medium">Tudo limpo por aqui!</p>
+                <p className="text-hub-faint text-xs mt-1">Você não tem notificações no momento.</p>
               </div>
             ) : (
               notifications.map((n) => {
@@ -195,7 +195,7 @@ export const NotificationCenter = ({ user }) => {
                     </div>
                     <button 
                       onClick={(e) => { e.stopPropagation(); deleteNotification(n.id); }}
-                      className="opacity-0 group-hover:opacity-100 p-1.5 text-slate-600 hover:text-red-400 transition-all rounded-md hover:bg-red-500/10"
+                      className="opacity-0 group-hover:opacity-100 p-1.5 text-hub-faint hover:text-red-400 transition-all rounded-md hover:bg-red-500/10"
                     >
                       <Trash2 size={14} />
                     </button>

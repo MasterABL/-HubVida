@@ -58,7 +58,7 @@ export function Sono({ sleepGoal, setSleepGoal, sleepData, setSleepData }) {
       case 'Boa':       return 'text-emerald-400 bg-emerald-500/10 border-emerald-500/50';
       case 'Média':     return 'text-yellow-400 bg-yellow-500/10 border-yellow-500/50';
       case 'Ruim':      return 'text-rose-400 bg-rose-500/10 border-rose-500/50';
-      default:          return 'text-hub-muted bg-slate-500/10 border-slate-500/50';
+      default:          return 'text-hub-muted bg-hub-inner border-hub-border';
     }
   };
 
@@ -102,7 +102,7 @@ export function Sono({ sleepGoal, setSleepGoal, sleepData, setSleepData }) {
                  <p className="text-[10px] text-hub-faint font-bold uppercase tracking-widest">Meta de Sono</p>
                  <p className="text-xl font-black text-hub-strong">{sleepGoal} hrs</p>
                </div>
-               <div className="h-8 w-px bg-[#1f222a]"></div>
+               <div className="h-8 w-px bg-hub-border"></div>
                <div className="text-center group-hover:text-indigo-400 transition-colors">
                  <p className="text-[10px] text-hub-faint font-bold uppercase tracking-widest">Média (7 dias)</p>
                  <p className={`text-xl font-black ${avgHours >= sleepGoal ? 'text-emerald-500' : 'text-yellow-500'}`}>
@@ -190,7 +190,7 @@ export function Sono({ sleepGoal, setSleepGoal, sleepData, setSleepData }) {
                           </div>
                           
                           {/* Barra de Progresso vs Meta */}
-                          <div className="h-1.5 w-full bg-[#1f222a] rounded-full overflow-hidden">
+                          <div className="h-1.5 w-full bg-hub-inner rounded-full overflow-hidden">
                             <div 
                               className={`h-full rounded-full transition-all duration-1000 ${isSuccess ? 'bg-emerald-500' : 'bg-indigo-500'}`}
                               style={{ width: `${percentage}%` }}
@@ -215,7 +215,7 @@ export function Sono({ sleepGoal, setSleepGoal, sleepData, setSleepData }) {
 
         {/* Painel Direito: Science Vault (Higiene do Sono) */}
         <div className="space-y-6">
-           <section className="bg-gradient-to-b from-[#12141a] to-[#0a0b0e] border border-hub-border rounded-2xl p-6 shadow-xl relative overflow-hidden">
+           <section className="bg-gradient-to-b from-[#111111] to-[#0a0a0a] border border-hub-border rounded-2xl p-6 shadow-xl relative overflow-hidden">
              {/* Decorator line */}
              <div className="absolute top-0 right-0 w-full h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent"></div>
              

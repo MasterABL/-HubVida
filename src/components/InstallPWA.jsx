@@ -42,16 +42,16 @@ export function InstallPWA() {
                         <Download size={24} />
                     </div>
                     <div className="flex-1">
-                        <p className="font-bold text-slate-100 flex items-center gap-2">
+                        <p className="font-bold text-hub-strong flex items-center gap-2">
                             📲 Instalar HubVida
                         </p>
-                        <p className="text-sm text-slate-400 mt-1">
+                        <p className="text-sm text-hub-muted mt-1">
                             Instale para receber notificações nativas e ter acesso rápido.
                         </p>
                     </div>
                     <button 
                         onClick={() => setIsVisible(false)}
-                        className="text-slate-500 hover:text-slate-300 transition-colors"
+                        className="text-hub-faint hover:text-hub-strong transition-colors"
                     >
                         <X size={20} />
                     </button>
@@ -71,7 +71,7 @@ export function InstallPWA() {
                         </button>
                         <button
                             onClick={() => setIsVisible(false)}
-                            className="flex-1 bg-white/5 text-slate-300 font-bold py-3 px-6 rounded-2xl transition-all hover:bg-white/10"
+                            className="flex-1 bg-white/5 text-hub-content font-bold py-3 px-6 rounded-2xl transition-all hover:bg-white/10"
                         >
                             Agora não
                         </button>

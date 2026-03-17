@@ -273,7 +273,7 @@ export const VisaoGeral = ({
               <span>{visaoGeralMetrics.progressoMes}%</span>
               <span className="text-hub-faint text-sm font-bold pt-1">Meta: 100%</span>
             </div>
-            <div className="w-full h-2 bg-[#1f222a] rounded-full overflow-hidden">
+            <div className="w-full h-2 bg-hub-inner rounded-full overflow-hidden">
               <div
                 className="h-full bg-yellow-500 rounded-full transition-all duration-1000"
                 style={{ width: `${visaoGeralMetrics.progressoMes}%` }}
@@ -317,7 +317,7 @@ export const VisaoGeral = ({
                     onChange={e => setNovaProva({ ...novaProva, data: e.target.value })}
                     className="w-20 bg-hub-base border border-hub-border rounded px-2 py-1 text-xs text-hub-strong focus:outline-none focus:border-yellow-500"
                   />
-                  <button onClick={handleAddProva} className="bg-yellow-500 text-slate-900 rounded px-2 py-1 text-xs font-bold hover:bg-yellow-400">+</button>
+                  <button onClick={handleAddProva} className="bg-yellow-500 text-[#111111] rounded px-2 py-1 text-xs font-bold hover:bg-yellow-400">+</button>
                 </div>
                 {[...(provas || [])].sort((a, b) => {
                   const dA = parseDate(a.data);
@@ -356,7 +356,7 @@ export const VisaoGeral = ({
             ) : (
               <div className="flex flex-col items-center justify-center flex-1 h-32 text-center">
                 <p className="text-hub-faint text-[clamp(10px,3vw,12px)]">Nenhuma prova cadastrada.</p>
-                <p className="text-slate-700 text-[clamp(9px,2.5vw,10px)] mt-1">Clique em + para adicionar.</p>
+                <p className="text-hub-faint text-[clamp(9px,2.5vw,10px)] mt-1">Clique em + para adicionar.</p>
               </div>
             )}
           </div>
@@ -441,7 +441,7 @@ export const VisaoGeral = ({
 
       {/* SECÃO DE GRÁFICOS (RECHARTS) */}
       <h2 className="text-sm font-black italic uppercase tracking-wider text-hub-strong mb-6 mt-12 flex items-center gap-2">
-        <Activity className="w-5 h-5 text-yellow-500" /> Métricas Ph.D. <span className="text-[10px] text-hub-faint bg-hub-inner px-2 py-0.5 rounded-full border border-slate-700/50">BETA</span>
+        <Activity className="w-5 h-5 text-yellow-500" /> Métricas Ph.D. <span className="text-[10px] text-hub-faint bg-hub-inner px-2 py-0.5 rounded-full border border-hub-border">BETA</span>
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
 

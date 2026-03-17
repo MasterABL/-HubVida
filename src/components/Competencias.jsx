@@ -95,7 +95,7 @@ export const Competencias = ({
             <input
               type="range" min="0" max="100" value={englishLevel}
               onChange={(e) => setEnglishLevel(Number(e.target.value))}
-              className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-yellow-500"
+              className="w-full h-1.5 bg-hub-inner rounded-lg appearance-none cursor-pointer accent-yellow-500"
             />
             <div className="flex justify-between text-[9px] text-hub-faint font-bold mt-1 px-0.5">
               {['A1','A2','B1','B2','C1','C2'].map(l => (
@@ -109,7 +109,7 @@ export const Competencias = ({
             <p className="text-[9px] font-bold text-hub-faint uppercase tracking-widest">Sequência de Prática</p>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Flame className={`w-7 h-7 ${streak > 0 ? 'text-orange-500' : 'text-slate-700'}`} />
+                <Flame className={`w-7 h-7 ${streak > 0 ? 'text-orange-500' : 'text-[#333333]'}`} />
                 <div>
                   <p className="text-2xl font-black text-hub-strong leading-none">{streak}</p>
                   <p className="text-[9px] text-hub-faint font-bold">dias seguidos</p>
@@ -131,7 +131,7 @@ export const Competencias = ({
               className={`w-full py-2.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${
                 alreadyCheckedIn
                   ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 cursor-default'
-                  : 'bg-yellow-500 text-slate-900 hover:bg-yellow-400 active:scale-95'
+                  : 'bg-yellow-500 text-[#111111] hover:bg-yellow-400 active:scale-95'
               }`}
             >
               {alreadyCheckedIn ? '✓ Pratiquei Hoje!' : '🔥 Pratiquei Hoje'}
@@ -145,7 +145,7 @@ export const Competencias = ({
                   className={`text-[9px] font-bold px-2 py-0.5 rounded-full border transition-all ${
                     longest >= marco
                       ? 'border-yellow-500/50 text-yellow-500 bg-yellow-500/10'
-                      : 'border-slate-800 text-slate-700'
+                      : 'border-hub-border text-hub-faint'
                   }`}
                 >
                 </span>
@@ -165,7 +165,7 @@ export const Competencias = ({
             </h2>
             <p className="text-xs text-hub-faint mt-1">Registros técnicos.</p>
           </div>
-          <span className="text-[10px] px-3 py-1 border border-slate-700 rounded-full text-hub-muted">
+          <span className="text-[10px] px-3 py-1 border border-hub-border rounded-full text-hub-muted">
             LATTES-READY
           </span>
         </div>
@@ -198,17 +198,17 @@ export const Competencias = ({
                       }
                       className="bg-transparent text-xs w-full focus:outline-none focus:border-yellow-500"
                     >
-                      <option className="bg-slate-900" value="Gestão (ADM)">
+                      <option className="bg-[#141414]" value="Gestão (ADM)">
                         Gestão (ADM)
                       </option>
                       <option
-                        className="bg-slate-900"
+                        className="bg-[#141414]"
                         value="Ferramentas Digitais"
                       >
                         Ferramentas Digitais
                       </option>
                       <option
-                        className="bg-slate-900"
+                        className="bg-[#141414]"
                         value="Pesquisa Científica"
                       >
                         Pesquisa Científica
@@ -222,7 +222,7 @@ export const Competencias = ({
                       onChange={(e) =>
                         handleUpdateHardSkill(skill.id, 'name', e.target.value)
                       }
-                      className="bg-transparent border border-transparent hover:border-slate-700 rounded p-1 w-full text-hub-strong font-medium focus:outline-none"
+                      className="bg-transparent border border-transparent hover:border-hub-border rounded p-1 w-full text-hub-strong font-medium focus:outline-none"
                     />
                   </td>
                   <td className="py-3 pr-4">
@@ -247,7 +247,7 @@ export const Competencias = ({
                       onChange={(e) =>
                         handleUpdateHardSkill(skill.id, 'cert', e.target.value)
                       }
-                      className="bg-transparent border border-transparent hover:border-slate-700 rounded p-1 w-full focus:outline-none"
+                      className="bg-transparent border border-transparent hover:border-hub-border rounded p-1 w-full focus:outline-none"
                     />
                   </td>
                   <td className="py-3 text-right pr-2">
@@ -267,7 +267,7 @@ export const Competencias = ({
                     onChange={(e) =>
                       setNewSkill({ ...newSkill, category: e.target.value })
                     }
-                    className="bg-hub-inner border border-slate-700 rounded p-2 text-xs w-full text-hub-strong focus:outline-none"
+                    className="bg-hub-inner border border-hub-border rounded p-2 text-xs w-full text-hub-strong focus:outline-none"
                   >
                     <option value="Gestão (ADM)">Gestão (ADM)</option>
                     <option value="Ferramentas Digitais">
@@ -286,7 +286,7 @@ export const Competencias = ({
                     onChange={(e) =>
                       setNewSkill({ ...newSkill, name: e.target.value })
                     }
-                    className="bg-hub-inner border border-slate-700 rounded p-2 text-sm w-full text-hub-strong focus:outline-none"
+                    className="bg-hub-inner border border-hub-border rounded p-2 text-sm w-full text-hub-strong focus:outline-none"
                   />
                 </td>
                 <td className="py-3 pr-4">
@@ -297,7 +297,7 @@ export const Competencias = ({
                       onChange={(e) =>
                         setNewSkill({ ...newSkill, level: e.target.value })
                       }
-                      className="bg-hub-inner border border-slate-700 rounded py-2 px-2 w-16 text-center text-hub-strong focus:outline-none"
+                      className="bg-hub-inner border border-hub-border rounded py-2 px-2 w-16 text-center text-hub-strong focus:outline-none"
                     />
                     <span className="text-hub-faint text-xs">%</span>
                   </div>
@@ -310,13 +310,13 @@ export const Competencias = ({
                     onChange={(e) =>
                       setNewSkill({ ...newSkill, cert: e.target.value })
                     }
-                    className="bg-hub-inner border border-slate-700 rounded p-2 text-sm w-full text-hub-strong focus:outline-none"
+                    className="bg-hub-inner border border-hub-border rounded p-2 text-sm w-full text-hub-strong focus:outline-none"
                   />
                 </td>
                 <td className="py-3 text-right pr-2">
                   <button
                     onClick={handleAddHardSkill}
-                    className="bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500 hover:text-slate-900 transition-colors text-xs font-bold px-4 py-2 rounded"
+                    className="bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500 hover:text-[#111111] transition-colors text-xs font-bold px-4 py-2 rounded"
                   >
                     ADICIONAR
                   </button>
@@ -357,10 +357,10 @@ export const Competencias = ({
                     {progress}%
                   </span>
                 </div>
-                <div className="h-1 w-full bg-slate-800 rounded-full mb-6 overflow-hidden">
+                <div className="h-1 w-full bg-hub-inner rounded-full mb-6 overflow-hidden">
                   <div
                     className={`h-full transition-all duration-500 ${
-                      isCom ? 'bg-yellow-500' : 'bg-slate-400'
+                      isCom ? 'bg-yellow-500' : 'bg-[#555555]'
                     }`}
                     style={{ width: `${progress}%` }}
                   ></div>
@@ -383,7 +383,7 @@ export const Competencias = ({
                         className={`mt-0.5 flex-shrink-0 w-4 h-4 rounded flex items-center justify-center border transition-colors ${
                           item.checked
                             ? 'bg-emerald-500/20 border-emerald-500 text-emerald-500'
-                            : 'border-slate-600 group-hover:border-slate-400'
+                            : 'border-hub-border group-hover:border-hub-muted'
                         }`}
                       >
                         {item.checked && <CheckCircle2 className="w-3 h-3" />}

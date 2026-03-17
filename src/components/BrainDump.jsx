@@ -119,7 +119,7 @@ export const BrainDump = ({ isLoaded = true, notes = [], setNotes }) => {
                 onClick={() => toggleMood(mood.id)}
                 className={`flex-none flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-bold transition-all ${isSelected
                     ? `${mood.bg} ${mood.border} ${mood.color} ring-2 ring-indigo-500/50`
-                    : 'bg-hub-hover border-slate-700/50 text-hub-muted hover:bg-slate-800 hover:text-hub-strong'
+                    : 'bg-hub-hover border-hub-border text-hub-muted hover:bg-[#222222] hover:text-hub-strong'
                   }`}
               >
                 <Icon className="w-3.5 h-3.5" /> {mood.label}
@@ -144,7 +144,7 @@ export const BrainDump = ({ isLoaded = true, notes = [], setNotes }) => {
           ) : (
             <button
               onClick={() => setIsAddingMood(true)}
-              className="flex-none flex items-center gap-1 px-3 py-1.5 rounded-full border border-dashed border-slate-600 text-xs font-bold text-hub-faint hover:text-indigo-400 hover:border-indigo-400 transition-colors"
+              className="flex-none flex items-center gap-1 px-3 py-1.5 rounded-full border border-dashed border-hub-border text-xs font-bold text-hub-faint hover:text-indigo-400 hover:border-indigo-400 transition-colors"
             >
               + Criar
             </button>
@@ -156,12 +156,12 @@ export const BrainDump = ({ isLoaded = true, notes = [], setNotes }) => {
             value={noteText}
             onChange={(e) => setNoteText(e.target.value)}
             placeholder="O que está pesando na mente agora?"
-            className="w-full bg-hub-hover border border-slate-700/50 rounded-xl p-4 text-hub-strong placeholder-slate-500 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 resize-none min-h-[120px] transition-all"
+            className="w-full bg-hub-hover border border-hub-border rounded-xl p-4 text-hub-strong placeholder-hub-faint focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 resize-none min-h-[120px] transition-all"
           />
           <button
             onClick={handleAddNote}
             disabled={!noteText.trim()}
-            className="absolute bottom-3 right-3 bg-indigo-500 hover:bg-indigo-400 disabled:bg-slate-700 disabled:text-hub-faint text-white p-2.5 rounded-lg transition-colors flex items-center gap-2 font-bold text-sm"
+            className="absolute bottom-3 right-3 bg-indigo-500 hover:bg-indigo-400 disabled:bg-[#1f1f1f] disabled:text-hub-faint text-white p-2.5 rounded-lg transition-colors flex items-center gap-2 font-bold text-sm"
           >
             <Send className="w-4 h-4" /> <span className="hidden sm:inline">Descarregar</span>
           </button>
@@ -174,7 +174,7 @@ export const BrainDump = ({ isLoaded = true, notes = [], setNotes }) => {
           <Clock className="w-4 h-4" /> Extrato Cognitivo (Histórico)
         </h2>
 
-        <div className="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-800 before:to-transparent">
+        <div className="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-[#2a2a2a] before:to-transparent">
 
           {notes.map((note) => {
             const primaryMoodId = note.moods?.[0] || note.mood || 'neutral';
@@ -184,7 +184,7 @@ export const BrainDump = ({ isLoaded = true, notes = [], setNotes }) => {
             return (
               <div key={note.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                 {/* Marcador Central (Timeline Node) */}
-                <div className={`flex items-center justify-center w-10 h-10 rounded-full border-4 border-[#0f1115] ${primaryMoodData.bg} ${primaryMoodData.color} shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow absolute left-0 md:left-1/2 -translate-x-1/2`}>
+                <div className={`flex items-center justify-center w-10 h-10 rounded-full border-4 border-[#111111] ${primaryMoodData.bg} ${primaryMoodData.color} shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow absolute left-0 md:left-1/2 -translate-x-1/2`}>
                   <PrimaryIcon className="w-4 h-4" />
                 </div>
 
@@ -222,7 +222,7 @@ export const BrainDump = ({ isLoaded = true, notes = [], setNotes }) => {
           })}
 
           {notes.length === 0 && (
-            <div className="text-center p-8 bg-hub-surface border border-dashed border-slate-700 rounded-xl relative z-10">
+            <div className="text-center p-8 bg-hub-surface border border-dashed border-hub-border rounded-xl relative z-10">
               <p className="text-hub-faint text-sm">A mente está limpa. Nenhuma descarga cognitiva recente.</p>
             </div>
           )}
