@@ -100,12 +100,12 @@ export const Producao = ({
                     <th className="pb-3 font-semibold text-right">Ação</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#1f222a]">
+                <tbody className="divide-y divide-hub-border">
                   {productions.length === 0 ? (
                     <tr>
                       <td
                         colSpan="4"
-                        className="py-8 text-center text-hub-faint text-sm italic"
+                        className="py-8 text-center text-hub-muted text-sm italic"
                       >
                         Nenhum artigo em produção.
                       </td>

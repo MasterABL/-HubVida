@@ -157,7 +157,7 @@ export const Nutricao = ({ isLoaded = true, dailyTracker = { water: false, creat
                 </ul>
               </div>
               <div>
-                <div className="flex justify-between text-[10px] font-mono text-hub-faint bg-hub-inner p-2 rounded mb-2 border border-hub-border">
+                <div className="flex justify-between text-[10px] font-mono text-hub-content bg-hub-inner p-2 rounded mb-2 border border-hub-border">
                   <span>30g P</span><span>25g C</span><span>12g G</span>
                 </div>
                 <p className="text-xs font-bold text-emerald-500 text-right">R$ 130/mês</p>
@@ -174,7 +174,7 @@ export const Nutricao = ({ isLoaded = true, dailyTracker = { water: false, creat
                 </ul>
               </div>
               <div>
-                <div className="flex justify-between text-[10px] font-mono text-hub-faint bg-hub-inner p-2 rounded mb-2 border border-hub-border">
+                <div className="flex justify-between text-[10px] font-mono text-hub-content bg-hub-inner p-2 rounded mb-2 border border-hub-border">
                   <span>22g P</span><span>0g C</span><span>15g G</span>
                 </div>
                 <p className="text-xs font-bold text-emerald-500 text-right">R$ 80/mês</p>
@@ -191,7 +191,7 @@ export const Nutricao = ({ isLoaded = true, dailyTracker = { water: false, creat
                 </ul>
               </div>
               <div>
-                <div className="flex justify-between text-[10px] font-mono text-hub-faint bg-hub-inner p-2 rounded mb-2 border border-hub-border">
+                <div className="flex justify-between text-[10px] font-mono text-hub-content bg-hub-inner p-2 rounded mb-2 border border-hub-border">
                   <span>35g P</span><span>35g C</span><span>5g G</span>
                 </div>
                 <p className="text-xs font-bold text-emerald-500 text-right">R$ 170/mês</p>

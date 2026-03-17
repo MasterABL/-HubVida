@@ -162,7 +162,7 @@ export function Sono({ sleepGoal, setSleepGoal, sleepData, setSleepData }) {
 
           {/* Histórico Visual (Lista com ProgressBar visual) */}
           <div className="bg-hub-surface border border-hub-border p-6 rounded-2xl shadow-lg">
-             <h3 className="text-sm font-black uppercase tracking-widest mb-4 text-hub-muted flex items-center gap-2">
+             <h3 className="text-sm font-black uppercase tracking-widest mb-4 text-hub-content flex items-center gap-2">
                 <Clock className="w-4 h-4" /> Histórico Recente (Últimos 14 dias)
              </h3>
 

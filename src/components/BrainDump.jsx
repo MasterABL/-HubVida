@@ -99,7 +99,7 @@ export const BrainDump = ({ isLoaded = true, notes = [], setNotes }) => {
         <h1 className="text-3xl font-black italic tracking-widest text-hub-strong mb-2">
           BRAIN <span className="text-indigo-400">DUMP</span>
         </h1>
-        <p className="text-hub-muted text-sm max-w-xl mx-auto">
+        <p className="text-hub-content text-sm max-w-xl mx-auto">
           O armazenamento externo da sua mente. Não guarde tarefas aleatórias ou estresse no seu cérebro de Ph.D. Descarregue aqui e libere memória RAM orgânica.
         </p>
       </div>
@@ -170,7 +170,7 @@ export const BrainDump = ({ isLoaded = true, notes = [], setNotes }) => {
 
       {/* TIMELINE DE NOTAS (HISTÓRICO) */}
       <div className="mt-12">
-        <h2 className="text-xs font-bold text-hub-faint uppercase tracking-widest mb-6 px-1 flex items-center gap-2">
+        <h2 className="text-xs font-bold text-hub-muted uppercase tracking-widest mb-6 px-1 flex items-center gap-2">
           <Clock className="w-4 h-4" /> Extrato Cognitivo (Histórico)
         </h2>
 
@@ -223,7 +223,7 @@ export const BrainDump = ({ isLoaded = true, notes = [], setNotes }) => {
 
           {notes.length === 0 && (
             <div className="text-center p-8 bg-hub-surface border border-dashed border-hub-border rounded-xl relative z-10">
-              <p className="text-hub-faint text-sm">A mente está limpa. Nenhuma descarga cognitiva recente.</p>
+              <p className="text-hub-muted text-sm">A mente está limpa. Nenhuma descarga cognitiva recente.</p>
             </div>
           )}
 
