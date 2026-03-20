@@ -27,6 +27,8 @@ import {
 import { VisaoGeral } from './components/VisaoGeral';
 import { Competencias } from './components/Competencias';
 import Faculdade from './components/Faculdade';
+import StudyPanel from './components/faculdade/StudyPanel';
+import { STUDY_CONTENT } from './data/studyContent';
 import { Financas } from './components/Financas';
 import { Producao } from './components/Producao';
 import { Roadmap } from './components/Roadmap';
@@ -562,6 +564,7 @@ export default function App() {
   const [expandedYear, setExpandedYear] = useState('Ano 3');
   const [newCr, setNewCr] = useState({ disciplina: '', nota: '', creditos: '4' });
   const [expandedSubject, setExpandedSubject] = useState(null);
+  const [studyPanelDiscipline, setStudyPanelDiscipline] = useState(null);
   const [syncStatus, setSyncStatus] = useState(null); // null | 'saving' | 'saved' | 'error'
   // -- TEMA CLARO/ESCURO --
   const [theme, setTheme] = useState(() => localStorage.getItem('hubvida_theme') || 'dark');
@@ -1302,6 +1305,7 @@ export default function App() {
                       setExpandedSubject={setExpandedSubject}
                       handleUpdateFaculdade={handleUpdateFaculdade}
                       calculateFinalGrade={calculateFinalGrade}
+                      onOpenStudyPanel={setStudyPanelDiscipline}
                     />
                   </ScrollReveal>
                 </div>
@@ -1491,6 +1495,18 @@ export default function App() {
             })}
           </nav>
           
+          {/* StudyPanel Portal — rendered above main scroll so fixed inset-0 works */}
+          {studyPanelDiscipline && (
+            <StudyPanel
+              discipline={{ name: studyPanelDiscipline.label }}
+              content={STUDY_CONTENT[studyPanelDiscipline.key] || { title: studyPanelDiscipline.label, sections: [], quiz: [] }}
+              onBack={() => setStudyPanelDiscipline(null)}
+              onSaveProgress={(score, total) => {
+                updateStudyProgress(studyPanelDiscipline.key, score, total);
+              }}
+            />
+          )}
+
           {/* Notification System Globals */}
           <ToastContainer service={notificationService} />
           <PermissionModal service={notificationService} />

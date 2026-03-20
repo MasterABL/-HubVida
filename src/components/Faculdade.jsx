@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { 
   GraduationCap, 
   BookOpen, 
@@ -16,8 +15,6 @@ import {
   CheckSquare
 } from 'lucide-react';
 import { Skeleton } from './Skeleton';
-import StudyPanel from './faculdade/StudyPanel';
-import { STUDY_CONTENT } from '../data/studyContent';
 
 // 4 fixed study discipline panels
 const DISCIPLINE_PANELS = [
@@ -66,9 +63,9 @@ const Faculdade = ({
   expandedSubject, 
   setExpandedSubject, 
   handleUpdateFaculdade, 
-  calculateFinalGrade 
+  calculateFinalGrade,
+  onOpenStudyPanel,
 }) => {
-  const [selectedDiscipline, setSelectedDiscipline] = useState(null);
 
   if (!isLoaded) {
     return (
@@ -83,25 +80,6 @@ const Faculdade = ({
     );
   }
 
-  // If a discipline is selected, show the Study Panel
-  if (selectedDiscipline) {
-    const content = STUDY_CONTENT[selectedDiscipline.key] || {
-      title: selectedDiscipline.label,
-      sections: [],
-      quiz: []
-    };
-
-    return (
-      <StudyPanel 
-        discipline={{ name: selectedDiscipline.label }}
-        content={content}
-        onBack={() => setSelectedDiscipline(null)} 
-        onSaveProgress={(score, total) => {
-          updateStudyProgress(selectedDiscipline.key, score, total);
-        }}
-      />
-    );
-  }
 
   const calculateProgress = (checks) => {
     if (!checks) return 0;
@@ -187,7 +165,7 @@ const Faculdade = ({
                   </div>
 
                   <button
-                    onClick={() => setSelectedDiscipline(disc)}
+                    onClick={() => onOpenStudyPanel(disc)}
                     className={`w-full py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 text-white shadow-lg active:scale-95 ${colors.btn}`}
                   >
                     Estudar agora <ChevronRight size={14} />
