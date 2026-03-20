@@ -39,7 +39,7 @@ const StudyPanel = ({ discipline, content, onBack, onSaveProgress }) => {
       
       {/* Mobile Header */}
       <header className="md:hidden flex items-center justify-between p-4 bg-hub-surface border-b border-hub-border z-20">
-        <button onClick={onBack} className="p-2 text-hub-muted hover:text-hub-strong">
+        <button onClick={onBack} className="p-2 text-hub-muted hover:text-hub-strong transition-colors rounded-xl hover:bg-hub-hover">
           <ArrowLeft size={20} />
         </button>
         <h2 className="text-xs font-black uppercase tracking-wider line-clamp-1">{discipline.name}</h2>
@@ -50,9 +50,9 @@ const StudyPanel = ({ discipline, content, onBack, onSaveProgress }) => {
 
       {/* Sidebar / Navigation */}
       <aside className={`
-        fixed inset-y-0 left-0 z-50 w-72 bg-hub-surface border-r border-hub-border flex flex-col transition-transform duration-300 transform
+        fixed inset-y-0 left-0 z-[70] w-72 bg-hub-surface border-r border-hub-border flex flex-col transition-transform duration-300 transform
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        md:relative md:translate-x-0
+        md:relative md:translate-x-0 md:z-auto
       `}>
         <div className="p-6 border-b border-hub-border flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -126,12 +126,20 @@ const StudyPanel = ({ discipline, content, onBack, onSaveProgress }) => {
       <main className="flex-1 flex flex-col bg-hub-base overflow-hidden relative">
         {/* Top Header Desktop */}
         <header className="hidden md:flex items-center justify-between px-8 py-5 border-b border-hub-border bg-hub-base/80 backdrop-blur-md z-10 sticky top-0">
-          <div>
-            <h1 className="text-lg font-black text-hub-strong uppercase tracking-tight">{discipline.name}</h1>
-            <div className="flex items-center gap-3 mt-1">
-              <span className="text-[9px] font-bold text-blue-400 uppercase tracking-widest bg-blue-500/10 px-2 py-0.5 rounded">Fase 4: Métodos</span>
-             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-              <span className="text-[9px] text-hub-faint font-bold uppercase tracking-widest">Sincronizado com Nuvem</span>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={onBack}
+              className="flex items-center gap-2 px-3 py-2 rounded-xl border border-hub-border text-xs font-bold text-hub-muted hover:text-hub-strong hover:bg-hub-hover hover:border-hub-border-hover transition-all"
+            >
+              <ArrowLeft size={16} /> Voltar
+            </button>
+            <div>
+              <h1 className="text-lg font-black text-hub-strong uppercase tracking-tight">{discipline.name}</h1>
+              <div className="flex items-center gap-3 mt-1">
+                <span className="text-[9px] font-bold text-blue-400 uppercase tracking-widest bg-blue-500/10 px-2 py-0.5 rounded">Fase 4: Métodos</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                <span className="text-[9px] text-hub-faint font-bold uppercase tracking-widest">Sincronizado com Nuvem</span>
+              </div>
             </div>
           </div>
           
@@ -223,8 +231,9 @@ const StudyPanel = ({ discipline, content, onBack, onSaveProgress }) => {
 const SectionItem = ({ icon: Icon, label, isActive, isVisited, onClick }) => (
   <button
     onClick={onClick}
+    type="button"
     className={`
-      w-full flex items-center gap-3 px-4 py-3 rounded-xl text-[11px] font-bold uppercase tracking-widest transition-all
+      w-full flex items-center gap-3 px-4 py-3 rounded-xl text-[11px] font-bold uppercase tracking-widest transition-all cursor-pointer pointer-events-auto
       ${isActive 
         ? 'bg-blue-600/15 text-blue-400 border border-blue-500/30 shadow-lg shadow-blue-500/5' 
         : 'text-hub-muted hover:bg-hub-hover hover:text-hub-strong border border-transparent'}
