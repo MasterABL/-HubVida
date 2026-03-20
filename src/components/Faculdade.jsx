@@ -4,17 +4,13 @@ import {
   BookOpen, 
   Calendar, 
   CheckCircle2, 
-  Trophy,
   ChevronDown,
   ChevronUp,
-  Megaphone,
-  Hand,
   Settings,
   BarChart3,
   Sparkles,
   Rocket,
   Compass,
-  Landmark,
   Zap,
   ChevronRight,
   CheckSquare
@@ -23,16 +19,43 @@ import { Skeleton } from './Skeleton';
 import StudyPanel from './faculdade/StudyPanel';
 import { STUDY_CONTENT } from '../data/studyContent';
 
-const iconsMap = {
-  'GESTÃO DE MARKETING': Megaphone,
-  'LÍNGUA BRASILEIRA DE SINAIS': Hand,
-  'ORGANIZAÇÃO, SISTEMAS E MÉTODOS': Settings,
-  'PROBABILIDADE E ESTATÍSTICA': BarChart3,
-  'MODELOS INOVADORES EM NEGÓCIOS': Sparkles,
-  'PROJETO MULTIDISCIPLINAR EM ADMINISTRAÇÃO II': Rocket,
-  'PLANO DE ACOMPANHAMENTO DE CARREIRA EM ADMINISTRAÇÃO II': Compass,
-  'AVALIAÇÃO INTEGRADA DE COMPETÊNCIAS EM ADMINISTRAÇÃO II': Trophy,
-  'ATIVIDADES DE EXTENSÃO': Landmark
+// 4 fixed study discipline panels
+const DISCIPLINE_PANELS = [
+  {
+    key: 'sistemas_adm',
+    label: 'Sistemas Administrativos',
+    subtitle: 'TGS · SIG · Tomada de Decisão',
+    color: 'blue',
+    icon: BarChart3,
+  },
+  {
+    key: 'estrutura_org',
+    label: 'Estrutura Organizacional',
+    subtitle: 'Formal/Informal · Autoridade · Organogramas',
+    color: 'purple',
+    icon: Compass,
+  },
+  {
+    key: 'processos',
+    label: 'Processos Empresariais',
+    subtitle: 'PDCA · Fluxogramas · 5W2H',
+    color: 'emerald',
+    icon: Rocket,
+  },
+  {
+    key: 'osm',
+    label: 'Métodos Empresariais',
+    subtitle: 'Manuais · Rotinas · Metodologia de Análise',
+    color: 'amber',
+    icon: Settings,
+  },
+];
+
+const colorMap = {
+  blue:    { badge: 'bg-blue-500/10 text-blue-500 border-blue-500/20',    icon: 'group-hover:bg-blue-500',    btn: 'bg-blue-600 hover:bg-blue-500 shadow-blue-600/20',    border: 'hover:border-blue-500/30' },
+  purple:  { badge: 'bg-purple-500/10 text-purple-500 border-purple-500/20', icon: 'group-hover:bg-purple-500', btn: 'bg-purple-600 hover:bg-purple-500 shadow-purple-600/20', border: 'hover:border-purple-500/30' },
+  emerald: { badge: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20', icon: 'group-hover:bg-emerald-500', btn: 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/20', border: 'hover:border-emerald-500/30' },
+  amber:   { badge: 'bg-amber-500/10 text-amber-500 border-amber-500/20',  icon: 'group-hover:bg-amber-500',  btn: 'bg-amber-600 hover:bg-amber-500 shadow-amber-600/20',   border: 'hover:border-amber-500/30' },
 };
 
 const Faculdade = ({ 
@@ -62,22 +85,19 @@ const Faculdade = ({
 
   // If a discipline is selected, show the Study Panel
   if (selectedDiscipline) {
-    const key = selectedDiscipline.name === 'ORGANIZAÇÃO, SISTEMAS E MÉTODOS' ? 'osm' : 'none';
-    const content = (key !== 'none' && Object.prototype.hasOwnProperty.call(STUDY_CONTENT, key))
-      ? STUDY_CONTENT[key]
-      : {
-          title: selectedDiscipline.name,
-          sections: [],
-          quiz: []
-        };
+    const content = STUDY_CONTENT[selectedDiscipline.key] || {
+      title: selectedDiscipline.label,
+      sections: [],
+      quiz: []
+    };
 
     return (
       <StudyPanel 
-        discipline={selectedDiscipline} 
+        discipline={{ name: selectedDiscipline.label }}
         content={content}
         onBack={() => setSelectedDiscipline(null)} 
         onSaveProgress={(score, total) => {
-          updateStudyProgress(key || selectedDiscipline.name.toLowerCase(), score, total);
+          updateStudyProgress(selectedDiscipline.key, score, total);
         }}
       />
     );
@@ -90,8 +110,7 @@ const Faculdade = ({
     return (completed / items.length) * 100;
   };
 
-  const getQuizProgress = (discName) => {
-    const key = discName === 'ORGANIZAÇÃO, SISTEMAS E MÉTODOS' ? 'osm' : discName.toLowerCase();
+  const getQuizProgress = (key) => {
     const prog = studyProgress.find(p => p.disciplina === key);
     if (!prog || prog.quiz_total === 0) return 0;
     return (prog.quiz_score / prog.quiz_total) * 100;
@@ -118,37 +137,41 @@ const Faculdade = ({
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard icon={BookOpen} label="Disciplinas" value={faculdadeData?.length || 0} color="blue" />
-        <StatCard icon={Zap} label="Painéis" value="1" color="amber" />
+        <StatCard icon={Zap} label="Painéis" value="4" color="amber" />
         <StatCard icon={Calendar} label="Semestre" value="1º/24" color="emerald" />
         <StatCard icon={CheckCircle2} label="Concluídas" value="0" color="purple" />
       </div>
 
       <div className="flex flex-col gap-8">
-        {/* Painéis de Estudo Section */}
+        {/* Painéis de Estudo Section — 4 disciplinas fixas */}
         <section>
           <h2 className="text-xs font-black text-hub-faint uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
             <Sparkles size={14} className="text-yellow-500" /> Painéis de Estudo
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {faculdadeData?.map((disc) => {
-              const Icon = Object.prototype.hasOwnProperty.call(iconsMap, disc.name) ? iconsMap[disc.name] : GraduationCap;
-              const hasContent = disc.name === 'ORGANIZAÇÃO, SISTEMAS E MÉTODOS';
-              const quizProg = getQuizProgress(disc.name);
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {DISCIPLINE_PANELS.map((disc) => {
+              const Icon = disc.icon;
+              const quizProg = getQuizProgress(disc.key);
+              const colors = colorMap[disc.color];
 
               return (
-                <div key={`panel-${disc.id}`} className="group bg-hub-surface border border-hub-border rounded-2xl p-5 hover:shadow-xl hover:border-blue-500/30 transition-all duration-300">
+                <div
+                  key={disc.key}
+                  className={`group bg-hub-surface border border-hub-border rounded-2xl p-5 hover:shadow-xl ${colors.border} transition-all duration-300`}
+                >
                   <div className="flex justify-between items-start mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-hub-inner flex items-center justify-center text-hub-muted group-hover:bg-blue-500 group-hover:text-white transition-all">
+                    <div className={`w-10 h-10 rounded-xl bg-hub-inner flex items-center justify-center text-hub-muted ${colors.icon} group-hover:text-white transition-all`}>
                       <Icon size={20} />
                     </div>
-                    <span className={`px-2 py-0.5 rounded-[4px] text-[8px] font-black uppercase tracking-tighter ${hasContent ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-hub-inner text-hub-faint border border-hub-border'}`}>
-                      {hasContent ? 'Painel Disponível' : 'Em breve'}
+                    <span className={`px-2 py-0.5 rounded-[4px] text-[8px] font-black uppercase tracking-tighter border ${colors.badge}`}>
+                      Painel Disponível
                     </span>
                   </div>
-                  
-                  <h3 className="text-xs font-black text-hub-strong leading-tight h-8 mb-4 line-clamp-2 uppercase tracking-tight">
-                    {disc.name}
+
+                  <h3 className="text-xs font-black text-hub-strong leading-tight mb-1 uppercase tracking-tight">
+                    {disc.label}
                   </h3>
+                  <p className="text-[10px] text-hub-faint font-bold mb-4 leading-relaxed">{disc.subtitle}</p>
 
                   <div className="space-y-3 mb-5">
                     <div className="flex justify-between items-center text-[9px] font-bold uppercase tracking-widest text-hub-faint">
@@ -156,20 +179,18 @@ const Faculdade = ({
                       <span className={quizProg > 0 ? 'text-emerald-400' : ''}>{Math.round(quizProg)}%</span>
                     </div>
                     <div className="h-1 w-full bg-hub-inner rounded-full overflow-hidden">
-                      <div 
+                      <div
                         className="h-full bg-emerald-500 transition-all duration-700"
                         style={{ width: `${quizProg}%` }}
                       ></div>
                     </div>
                   </div>
 
-                  <button 
-                    disabled={!hasContent}
+                  <button
                     onClick={() => setSelectedDiscipline(disc)}
-                    className={`w-full py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${hasContent ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-600/20 active:scale-95' : 'bg-hub-inner text-hub-faint cursor-not-allowed opacity-50'}`}
+                    className={`w-full py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 text-white shadow-lg active:scale-95 ${colors.btn}`}
                   >
-                    {hasContent ? 'Estudar agora' : 'Indisponível'}
-                    {hasContent && <ChevronRight size={14} />}
+                    Estudar agora <ChevronRight size={14} />
                   </button>
                 </div>
               );

@@ -254,7 +254,11 @@ export const VisaoGeral = ({
 
         {/* Widget 4: Status do Mês (AS) */}
         <div
-          onClick={() => setActiveTab('Faculdade (ADM)')}
+          onClick={() => {
+            const el = document.getElementById('Faculdade ADM');
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            setActiveTab('Faculdade ADM');
+          }}
           className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl cursor-pointer group hover:border-yellow-500/50 transition-all flex flex-col justify-between h-72"
         >
           <div>
@@ -364,7 +368,11 @@ export const VisaoGeral = ({
 
         {/* Widget 6: Progresso do Semestre */}
         <div
-          onClick={() => setActiveTab('Faculdade (ADM)')}
+          onClick={() => {
+            const el = document.getElementById('Faculdade ADM');
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            setActiveTab('Faculdade ADM');
+          }}
           className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl cursor-pointer group hover:border-indigo-500/50 transition-all flex flex-col justify-between items-center text-center h-72"
         >
           <div className="w-full flex justify-between items-center mb-2">
