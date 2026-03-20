@@ -119,7 +119,7 @@ export const VisaoGeral = ({
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       {/* Header Premium */}
-      <div className="bg-gradient-to-r from-[#000000] to-[#0d0d0d] border border-yellow-500/20 rounded-xl p-4 md:p-8 shadow-xl flex flex-col md:flex-row justify-between items-center gap-4 overflow-hidden max-w-full">
+      <div className="bg-hub-surface border border-yellow-500/20 rounded-xl p-4 md:p-8 shadow-xl flex flex-col md:flex-row justify-between items-center gap-4 overflow-hidden max-w-full">
         <div className="text-center md:text-left w-full md:w-auto">
           <h1 className="text-[clamp(18px,5.5vw,28px)] font-black italic tracking-wider text-yellow-500 uppercase flex items-center justify-center md:justify-start gap-2 break-words">
             <Zap className="w-5 h-5 shrink-0" /> Comando Central
@@ -160,7 +160,11 @@ export const VisaoGeral = ({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Widget 1: Radar de Progresso */}
         <div
-          onClick={() => setActiveTab('Competências')}
+          onClick={() => {
+            const el = document.getElementById('Competências');
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            setActiveTab('Competências');
+          }}
           className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl flex flex-col items-center justify-between cursor-pointer group hover:border-yellow-500/50 transition-all h-72"
         >
           <div className="w-full flex justify-between items-center mb-2">
@@ -179,7 +183,11 @@ export const VisaoGeral = ({
 
         {/* Widget 2: Resumo Financeiro */}
         <div
-          onClick={() => setActiveTab('Finanças')}
+          onClick={() => {
+            const el = document.getElementById('Finanças');
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            setActiveTab('Finanças');
+          }}
           className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl cursor-pointer group hover:border-emerald-500/50 transition-all flex flex-col justify-between h-72"
         >
           <div className="w-full flex justify-between items-center mb-6">
@@ -215,7 +223,11 @@ export const VisaoGeral = ({
 
         {/* Widget 3: Próximas Tarefas da Rotina */}
         <div
-          onClick={() => setActiveTab('Rotina Diária')}
+          onClick={() => {
+            const el = document.getElementById('Rotina Diária');
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            setActiveTab('Rotina Diária');
+          }}
           className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl cursor-pointer group hover:border-yellow-500/50 transition-all flex flex-col h-72"
         >
           <div className="w-full flex justify-between items-center mb-6">
@@ -383,7 +395,7 @@ export const VisaoGeral = ({
           </div>
           <div className="relative w-24 h-24 md:w-28 md:h-28 my-2 flex items-center justify-center">
             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 112 112">
-              <circle cx="56" cy="56" r="48" fill="none" stroke="#1f222a" strokeWidth="12" />
+              <circle cx="56" cy="56" r="48" fill="none" stroke="var(--hub-border)" strokeWidth="12" style={{stroke: 'var(--hub-hover)'}} />
               <circle
                 cx="56" cy="56" r="48" fill="none" stroke="#eab308" strokeWidth="12"
                 strokeDasharray="301"
@@ -406,7 +418,11 @@ export const VisaoGeral = ({
 
         {/* Widget 7: Status Capilar (Haircare) */}
         <div
-          onClick={() => setActiveTab('Haircare')}
+          onClick={() => {
+            const el = document.getElementById('Haircare');
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            setActiveTab('Haircare');
+          }}
           className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl cursor-pointer group hover:border-fuchsia-500/50 transition-all flex flex-col justify-between h-72 md:col-span-2 lg:col-span-3"
         >
           <div className="w-full flex justify-between items-center mb-4">

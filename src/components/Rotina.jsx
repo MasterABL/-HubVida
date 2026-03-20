@@ -132,7 +132,7 @@ export const Rotina = ({
             key={day}
             onClick={() => setActiveRoutine(day)}
             className={`flex-1 min-w-[80px] py-2.5 px-3 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${activeRoutine === day
-              ? 'bg-yellow-500 text-slate-900 shadow'
+              ? 'bg-yellow-500 text-hub-strong shadow'
               : 'text-hub-faint hover:text-hub-strong hover:bg-hub-hover'
               }`}
           >
@@ -158,11 +158,11 @@ export const Rotina = ({
               value={newRoutineTask.title}
               onChange={(e) => setNewRoutineTask({ ...newRoutineTask, title: e.target.value })}
               onKeyDown={(e) => e.key === 'Enter' && handleAddRoutineTask()}
-              className="flex-1 bg-transparent text-hub-content text-sm focus:outline-none p-1 placeholder-slate-600"
+              className="flex-1 bg-transparent text-hub-content text-sm focus:outline-none p-1 placeholder-hub-faint"
             />
             <button
               onClick={handleAddRoutineTask}
-              className="p-1.5 bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500 hover:text-slate-900 rounded-lg transition-colors"
+              className="p-1.5 bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500 hover:text-hub-strong rounded-lg transition-colors"
             >
               <Plus className="w-4 h-4" />
             </button>

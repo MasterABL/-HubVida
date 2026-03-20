@@ -161,7 +161,7 @@ export const BrainDump = ({ isLoaded = true, notes = [], setNotes }) => {
           <button
             onClick={handleAddNote}
             disabled={!noteText.trim()}
-            className="absolute bottom-3 right-3 bg-indigo-500 hover:bg-indigo-400 disabled:bg-[#1f1f1f] disabled:text-hub-faint text-white p-2.5 rounded-lg transition-colors flex items-center gap-2 font-bold text-sm"
+            className="absolute bottom-3 right-3 bg-indigo-500 hover:bg-indigo-400 disabled:bg-hub-inner disabled:text-hub-faint text-white p-2.5 rounded-lg transition-colors flex items-center gap-2 font-bold text-sm"
           >
             <Send className="w-4 h-4" /> <span className="hidden sm:inline">Descarregar</span>
           </button>
@@ -174,7 +174,7 @@ export const BrainDump = ({ isLoaded = true, notes = [], setNotes }) => {
           <Clock className="w-4 h-4" /> Extrato Cognitivo (Histórico)
         </h2>
 
-        <div className="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-[#2a2a2a] before:to-transparent">
+        <div className="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-hub-border before:to-transparent">
 
           {notes.map((note) => {
             const primaryMoodId = note.moods?.[0] || note.mood || 'neutral';
@@ -184,7 +184,7 @@ export const BrainDump = ({ isLoaded = true, notes = [], setNotes }) => {
             return (
               <div key={note.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                 {/* Marcador Central (Timeline Node) */}
-                <div className={`flex items-center justify-center w-10 h-10 rounded-full border-4 border-[#111111] ${primaryMoodData.bg} ${primaryMoodData.color} shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow absolute left-0 md:left-1/2 -translate-x-1/2`}>
+                <div className={`flex items-center justify-center w-10 h-10 rounded-full border-4 border-hub-base ${primaryMoodData.bg} ${primaryMoodData.color} shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow absolute left-0 md:left-1/2 -translate-x-1/2`}>
                   <PrimaryIcon className="w-4 h-4" />
                 </div>
 

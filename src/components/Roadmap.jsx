@@ -151,7 +151,7 @@ export const Roadmap = ({
           ];
           const colorMap = {
             active: { ring: 'border-yellow-500', dot: 'bg-yellow-500', text: 'text-yellow-500', pulse: true },
-            future: { ring: 'border-hub-border',  dot: 'bg-[#1a1a1a]',  text: 'text-hub-faint',  pulse: false },
+            future: { ring: 'border-hub-border',  dot: 'bg-hub-hover',   text: 'text-hub-faint',  pulse: false },
             dream:  { ring: 'border-yellow-400', dot: 'bg-yellow-400', text: 'text-yellow-400', pulse: false },
           };
           return (
@@ -169,7 +169,7 @@ export const Roadmap = ({
                             {c.pulse && <span className="absolute inset-0 rounded-full animate-ping bg-yellow-500 opacity-40" />}
                           </div>
                         </div>
-                        {!isLast && <div className={`w-px flex-1 mt-1 mb-1 ${m.status === 'active' ? 'bg-yellow-500/25' : 'bg-[#1f222a]'}`} />}
+                        {!isLast && <div className={`w-px flex-1 mt-1 mb-1 ${m.status === 'active' ? 'bg-yellow-500/25' : 'bg-hub-border'}`} style={{backgroundColor: m.status !== 'active' ? 'var(--hub-hover)' : undefined}} />}
                       </div>
                       <div className={`flex-1 min-w-0 ${isLast ? 'pb-0' : 'pb-7'}`}>
                         <div className="flex flex-wrap items-center gap-2 mb-0.5">

@@ -2,7 +2,7 @@
 
 :root {
   /* LIGHT MODE - Soft premium background */
-  --hub-base-gradient: linear-gradient(135deg, #f0f4ff 0%, #faf5ff 100%);
+  --hub-base: #f8fafc;
   --hub-surface: #ffffff;
   --hub-backdrop: none;
   --hub-surface-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
@@ -62,7 +62,8 @@ body,
 }
 
 body {
-  background: var(--hub-base-gradient);
+  background: var(--hub-base);
+  background: var(--hub-base-gradient, var(--hub-base));
   background-attachment: fixed;
 }
 
@@ -104,7 +105,7 @@ body::before {
 .text-hub-muted   { color: var(--hub-muted); }
 .text-hub-faint   { color: var(--hub-faint); }
 
-.bg-hub-base    { background-color: var(--hub-base, #0a0a0a); }
+.bg-hub-base    { background-color: var(--hub-base); }
 .bg-hub-inner   { background-color: var(--hub-inner); }
 .bg-hub-hover   { background-color: var(--hub-hover); }
 .bg-hub-surface { background-color: var(--hub-surface); backdrop-filter: var(--hub-backdrop); -webkit-backdrop-filter: var(--hub-backdrop); box-shadow: var(--hub-surface-shadow); }
@@ -488,9 +489,15 @@ body,
 }
 
 .flip-card-back {
+  background-color: var(--hub-inner);
+  color: var(--hub-strong);
+  transform: rotateY(180deg);
+  border-color: var(--hub-border);
+}
+
+.dark .flip-card-back {
   background-color: #1a1a1a;
   color: white;
-  transform: rotateY(180deg);
   border-color: rgba(255, 255, 255, 0.1);
 }
 

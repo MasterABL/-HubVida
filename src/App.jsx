@@ -1178,7 +1178,7 @@ export default function App() {
                       AB
                     </div>
                     {/* Bolinha de status online */}
-                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-[#1a1a1a] rounded-full" />
+                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-hub-base rounded-full" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-black text-hub-strong leading-none">Abimael</p>

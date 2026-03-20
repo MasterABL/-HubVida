@@ -98,7 +98,7 @@ export const NotificationSettings = ({ service }) => {
             onClick={() => handleToggle('enabled')}
             className={`w-14 h-8 rounded-full p-1 transition-all duration-300 ${settings.enabled ? 'bg-yellow-500' : 'bg-hub-hover'}`}
           >
-            <div className={`w-6 h-6 bg-[#0d0d0d] rounded-full transition-transform duration-300 ${settings.enabled ? 'translate-x-6 shadow-lg shadow-yellow-500/20' : 'translate-x-0'}`} />
+            <div className={`w-6 h-6 bg-white rounded-full transition-transform duration-300 ${settings.enabled ? 'translate-x-6 shadow-lg shadow-yellow-500/20' : 'translate-x-0'}`} />
           </button>
         </div>
 

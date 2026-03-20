@@ -53,13 +53,13 @@ export const Producao = ({
                 }
                 className="bg-transparent border border-hub-border rounded px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500"
               >
-                <option value="Artigo" className="bg-[#141414]">
+                <option value="Artigo" className="bg-hub-surface">
                   Artigo
                 </option>
-                <option value="Resumo" className="bg-[#141414]">
+                <option value="Resumo" className="bg-hub-surface">
                   Resumo Expandido
                 </option>
-                <option value="Tese" className="bg-[#141414]">
+                <option value="Tese" className="bg-hub-surface">
                   Tese/Dissertação
                 </option>
               </select>
@@ -70,16 +70,16 @@ export const Producao = ({
                 }
                 className="bg-transparent border border-hub-border rounded px-3 py-2 text-sm text-hub-strong focus:outline-none focus:border-yellow-500"
               >
-                <option value="Ideia" className="bg-[#141414]">
+                <option value="Ideia" className="bg-hub-surface">
                   Ideia
                 </option>
-                <option value="Escrevendo" className="bg-[#141414]">
+                <option value="Escrevendo" className="bg-hub-surface">
                   Escrevendo
                 </option>
-                <option value="Revisão" className="bg-[#141414]">
+                <option value="Revisão" className="bg-hub-surface">
                   Em Revisão
                 </option>
-                <option value="Publicado" className="bg-[#141414]">
+                <option value="Publicado" className="bg-hub-surface">
                   Publicado
                 </option>
               </select>

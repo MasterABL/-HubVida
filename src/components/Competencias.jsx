@@ -198,17 +198,17 @@ export const Competencias = ({
                       }
                       className="bg-transparent text-xs w-full focus:outline-none focus:border-yellow-500"
                     >
-                      <option className="bg-[#141414]" value="Gestão (ADM)">
+                      <option className="bg-hub-surface" value="Gestão (ADM)">
                         Gestão (ADM)
                       </option>
                       <option
-                        className="bg-[#141414]"
+                        className="bg-hub-surface"
                         value="Ferramentas Digitais"
                       >
                         Ferramentas Digitais
                       </option>
                       <option
-                        className="bg-[#141414]"
+                        className="bg-hub-surface"
                         value="Pesquisa Científica"
                       >
                         Pesquisa Científica

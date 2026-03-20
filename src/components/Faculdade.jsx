@@ -59,7 +59,6 @@ const Faculdade = ({
   isLoaded = true, 
   faculdadeData, 
   studyProgress = [],
-  updateStudyProgress,
   expandedSubject, 
   setExpandedSubject, 
   handleUpdateFaculdade, 
@@ -238,7 +237,7 @@ const Faculdade = ({
                               value={disc.notas.as}
                               onClick={e => e.stopPropagation()}
                               onChange={(e) => handleUpdateFaculdade(disc.id, 'notas', 'as', e.target.value)}
-                              className="w-full bg-hub-surface border border-hub-border rounded-lg p-1.5 text-[10px] text-white outline-none focus:border-blue-500"
+                              className="w-full bg-hub-surface border border-hub-border rounded-lg p-1.5 text-[10px] text-hub-strong outline-none focus:border-blue-500"
                             />
                             <input
                               placeholder="A1"
@@ -246,7 +245,7 @@ const Faculdade = ({
                               value={disc.notas.a1}
                               onClick={e => e.stopPropagation()}
                               onChange={(e) => handleUpdateFaculdade(disc.id, 'notas', 'a1', e.target.value)}
-                              className="w-full bg-hub-surface border border-hub-border rounded-lg p-1.5 text-[10px] text-white outline-none focus:border-blue-500"
+                              className="w-full bg-hub-surface border border-hub-border rounded-lg p-1.5 text-[10px] text-hub-strong outline-none focus:border-blue-500"
                             />
                           </div>
                         </div>
