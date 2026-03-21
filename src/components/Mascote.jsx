@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { HUBBOT_PROXY_URL } from '../config/hubbot';
 
 const STATES = {
   CELEBRATING: 'celebrating',
@@ -116,8 +115,11 @@ export const Mascote = ({
       OBJETIVO: Analisar a seção/dado que o usuário está vendo e dar um insight real.
     `;
 
+    console.log('[HubBot] Chamando Worker...');
+    const PROXY_URL = 'https://hubbot-proxy.abimaelbalbino12.workers.dev';
+
     try {
-      const response = await fetch(HUBBOT_PROXY_URL, {
+      const response = await fetch(PROXY_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -136,13 +138,18 @@ export const Mascote = ({
       setFullMessage(aiResponse);
       setState(STATES.HAPPY);
     } catch (err) {
-      console.error("HubBot AI Error:", err);
+      console.error('[HubBot] Erro:', err);
       setFullMessage("Conexão neural instável, chefe. Mas o recado é: foque no progresso!");
       setState(STATES.ALERT);
     } finally {
       setIsThinking(false);
     }
   }, [isThinking, moveToElement]);
+
+  // --- EFEITO: BOOT INICIAL ---
+  useEffect(() => {
+    askHubBot("Diga: HubBot online!");
+  }, [askHubBot]); // Adicionado askHubBot como dependência
 
   // --- LÓGICA DE CONTEXTO POR SEÇÃO ---
   const getSectionContext = useCallback((tab) => {
