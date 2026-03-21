@@ -190,19 +190,19 @@ export const Mascote = ({
 
   // --- EFEITO: REAÇÃO À TROCA DE TAB ---
   useEffect(() => {
-    if (prevTabRef.current !== activeTab) {
-      prevTabRef.current = activeTab;
-      const ctx = getSectionContext(activeTab);
-      if (ctx) {
-        // Delay pequeno para a transição de scroll da página terminar
-        setTimeout(() => {
-          askHubBot(ctx.prompt, ctx.id);
-        }, 1000);
-      } else {
-        // Se for Visão Geral ou algo sem contexto, volta pro canto
-        moveToElement(null);
-      }
-    }
+    if (!activeTab) return;
+    if (prevTabRef.current === activeTab) return;
+    prevTabRef.current = activeTab;
+    
+    console.log('HubBot: activeTab mudou para:', activeTab);
+    
+    const ctx = getSectionContext(activeTab);
+    if (!ctx) return;
+    
+    setTimeout(() => {
+      if (ctx.id) moveToElement(ctx.id);
+      askHubBot(ctx.prompt);
+    }, 800);
   }, [activeTab, getSectionContext, askHubBot, moveToElement]);
 
   // --- EFEITO: ROTAÇÃO DE POSIÇÃO (CIGANO MODE) ---

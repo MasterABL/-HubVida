@@ -136,9 +136,15 @@ class NotificationService {
     }
   }
 
-  async checkDeduplication(_category, _title) {
-    // Implementação básica de deduplicação
-    return false;
+  async checkDeduplication(notificationId, cooldownMinutes = 60) {
+    const key = `notif_dedup_${notificationId}`;
+    const last = localStorage.getItem(key);
+    if (last) {
+      const diff = (Date.now() - parseInt(last)) / 1000 / 60;
+      if (diff < cooldownMinutes) return true; // já enviou, pular
+    }
+    localStorage.setItem(key, Date.now().toString());
+    return false; // pode enviar
   }
 
   async send(category, title, body, options = {}) {
@@ -159,8 +165,8 @@ class NotificationService {
 
     if (!isCatEnabled) return;
 
-    // 1. Deduplication (12h window)
-    const isDuplicate = await this.checkDeduplication(category, title);
+    // 1. Deduplication (60m window por padrão)
+    const isDuplicate = await this.checkDeduplication(`${category}_${title}`);
     if (isDuplicate) {
       console.log(`[NotificationService] Deduplicated: ${category} - ${title}`);
       return;
