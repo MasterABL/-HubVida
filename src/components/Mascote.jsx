@@ -41,6 +41,7 @@ export const Mascote = ({
 
   const typingTimeoutRef = useRef(null);
   const prevTabRef = useRef(null);
+  const isThinkingRef = useRef(false);
 
   // --- EFEITO DE MÁQUINA DE ESCREVER ---
   useEffect(() => {
@@ -94,8 +95,9 @@ export const Mascote = ({
 
   // --- INTEGRAÇÃO COM ANTHROPIC API ---
   const askHubBot = useCallback(async (prompt, targetId = null) => {
-    if (isThinking) return;
+    if (isThinkingRef.current) return;
     
+    isThinkingRef.current = true;
     setIsThinking(true);
     setFullMessage("");
     if (targetId) moveToElement(targetId);
@@ -119,16 +121,21 @@ export const Mascote = ({
     const PROXY_URL = 'https://hubbot-proxy.abimaelbalbino12.workers.dev';
 
     try {
+      const bodyData = {
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 300,
+        system: systemPrompt,
+        messages: [{ role: "user", content: prompt }]
+      };
+
+      console.log('[HubBot] Body enviado:', JSON.stringify(bodyData));
+
       const response = await fetch(PROXY_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          max_tokens: 300,
-          system: systemPrompt,
-          messages: [{ role: "user", content: prompt }]
-        })
+        body: JSON.stringify(bodyData)
       });
 
       if (!response.ok) throw new Error('API Error');
@@ -142,9 +149,10 @@ export const Mascote = ({
       setFullMessage("Conexão neural instável, chefe. Mas o recado é: foque no progresso!");
       setState(STATES.ALERT);
     } finally {
+      isThinkingRef.current = false;
       setIsThinking(false);
     }
-  }, [isThinking, moveToElement]);
+  }, [moveToElement]);
 
   // --- EFEITO: BOOT INICIAL ---
   useEffect(() => {
