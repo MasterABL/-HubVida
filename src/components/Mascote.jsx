@@ -10,17 +10,13 @@ const STATES = {
   THINKING: 'thinking',
 };
 
-// Dados base do Abimael para o contexto da IA
+// Dados base do Abimael (Manter para referência futura se necessário, mas não usado no prompt atual)
+/*
 const USER_CONTEXT = `
 Abimael (24 anos).
-Foco atual: Transição de carreira para Tech/Dev (Node, React, Python).
-Faculdade: 1º Semestre de Gestão Comercial (Cruzeiro do Sul).
-Academia: Ectomorfo, foco em ganho de massa (Upper/Lower 2x).
-Inglês: Nível B2 subindo para C1 (Prep. TOEFL com Argos).
-Finanças: Noivo, economizando para casamento e vida a dois.
-Personalidade: Determinado, irônico/humorado, gosta de dados concretos e ciência.
-O App HubVida é um painel de comando pessoal dele para gerenciar tudo isso.
+...
 `;
+*/
 
 export const Mascote = ({ 
   activeTab,
@@ -102,20 +98,8 @@ export const Mascote = ({
     setFullMessage("");
     if (targetId) moveToElement(targetId);
 
-    const systemPrompt = `
-      Você é o HubBot, o alter ego digital e assistente de performance do Abimael.
-      CONTEXTO DO USUÁRIO: ${USER_CONTEXT}
-      
-      REGRAS DE PERSONALIDADE:
-      1. Use humor seco, inteligente e motivador.
-      2. Seja direto e "faca na caveira" — não enrole.
-      3. Use dados atuais se disponíveis no prompt.
-      4. Fale como se estivesse analisando o painel de comando de um foguete (o HubVida).
-      5. Máximo 2 a 3 frases curtas.
-      6. Se houver algo crítico (finanças negativas, sono ruim), seja mais enérgico.
-
-      OBJETIVO: Analisar a seção/dado que o usuário está vendo e dar um insight real.
-    `;
+    const systemPrompt = `Você é o HubBot, alter ego do Abimael. Seja direto, use humor seco, máximo 2 frases curtas. Use dados do contexto fornecido.`;
+    const userContext = `Seção atual: ${activeTab}. Dê um comentário rápido sobre isso.`;
 
     console.log('[HubBot] Chamando Worker...');
     const PROXY_URL = 'https://hubbot-proxy.abimaelbalbino12.workers.dev';
@@ -125,7 +109,7 @@ export const Mascote = ({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 300,
         system: systemPrompt,
-        messages: [{ role: "user", content: prompt }]
+        messages: [{ role: "user", content: userContext }]
       };
 
       console.log('[HubBot] Body enviado:', JSON.stringify(bodyData));
@@ -152,7 +136,7 @@ export const Mascote = ({
       isThinkingRef.current = false;
       setIsThinking(false);
     }
-  }, [moveToElement]);
+  }, [moveToElement, activeTab]);
 
   // --- EFEITO: BOOT INICIAL ---
   useEffect(() => {

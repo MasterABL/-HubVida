@@ -63,6 +63,8 @@ export default {
           }))
         : [],
     };
+    
+    console.log('[Worker] Body recebido:', JSON.stringify(safeBody));
 
     // Chamar API Anthropic
     const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
@@ -76,6 +78,8 @@ export default {
     });
 
     const data = await anthropicRes.json();
+    console.log('[Worker] Status Anthropic:', anthropicRes.status);
+    console.log('[Worker] Resposta Anthropic:', JSON.stringify(data));
 
     return new Response(JSON.stringify(data), {
       status: anthropicRes.status,
