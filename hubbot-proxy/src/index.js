@@ -53,7 +53,7 @@ export default {
 
     // Sanitizar — só permite campos esperados, força modelo e limita tokens
     const safeBody = {
-      model: 'claude-3-5-sonnet-20240620',
+      model: 'claude-haiku-4-5-20251001',
       max_tokens: Math.min(body.max_tokens || 300, 500), // máximo 500 tokens
       system: typeof body.system === 'string' ? body.system.slice(0, 3000) : '',
       messages: Array.isArray(body.messages)
