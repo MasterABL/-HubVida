@@ -530,24 +530,22 @@ body,
 /* HubBot Mascot Animations */
 @keyframes mascote-float {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
+  50% { transform: translateY(-6px); }
 }
 
 @keyframes mascote-celebrate {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  25% { transform: translateY(-12px) rotate(-10deg); }
-  75% { transform: translateY(-12px) rotate(10deg); }
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-10px) scale(1.05); }
 }
 
 @keyframes mascote-sleep {
-  0%, 100% { transform: translateY(0px) rotate(-5deg); }
-  50% { transform: translateY(4px) rotate(-5deg); }
+  0%, 100% { transform: translateY(0px) rotate(-3deg); }
+  50% { transform: translateY(5px) rotate(-3deg); }
 }
 
 @keyframes mascote-alert {
-  0%, 100% { transform: translateX(0px); }
-  25% { transform: translateX(-4px); }
-  75% { transform: translateX(4px); }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
 }
 
 @keyframes mascote-pulse-antenna {
@@ -555,8 +553,8 @@ body,
   50% { opacity: 0.5; transform: scale(1.3); }
 }
 
-.mascote-float { animation: mascote-float 2s ease-in-out infinite; }
-.mascote-celebrate { animation: mascote-celebrate 0.6s ease-in-out infinite; }
-.mascote-sleep { animation: mascote-sleep 3s ease-in-out infinite; }
-.mascote-alert { animation: mascote-alert 0.3s ease-in-out infinite; }
+.mascote-float { animation: mascote-float 2.5s ease-in-out infinite; }
+.mascote-celebrate { animation: mascote-celebrate 1s ease-in-out infinite; }
+.mascote-sleep { animation: mascote-sleep 4s ease-in-out infinite; }
+.mascote-alert { animation: mascote-alert 2s ease-in-out infinite; }
 .mascote-antenna { animation: mascote-pulse-antenna 1.5s ease-in-out infinite; }

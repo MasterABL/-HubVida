@@ -1514,11 +1514,13 @@ export default function App() {
           <InstallPWA />
           {session && (
             <Mascote
+              activeTab={activeTab}
               gymAttendance={gymAttendance}
               englishStreak={englishStreak}
               sleepData={sleepData}
               financeSummary={financeSummary}
               visaoGeralMetrics={visaoGeralMetrics}
+              nutritionTracker={nutritionTracker}
             />
           )}
         </div>
