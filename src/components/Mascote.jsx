@@ -89,7 +89,7 @@ export const Mascote = ({
     setTimeout(() => el.classList.remove('hubbot-target-glow'), 5000);
   }, []);
 
-  // --- INTEGRAÇÃO COM ANTHROPIC API ---
+  // --- INTEGRAÇÃO COM GROQ API (LLAMA 3.1) ---
   const askHubBot = useCallback(async (prompt, targetId = null) => {
     if (isThinkingRef.current) return;
     
