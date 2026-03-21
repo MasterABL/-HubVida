@@ -558,3 +558,16 @@ body,
 .mascote-sleep { animation: mascote-sleep 4s ease-in-out infinite; }
 .mascote-alert { animation: mascote-alert 2s ease-in-out infinite; }
 .mascote-antenna { animation: mascote-pulse-antenna 1.5s ease-in-out infinite; }
+
+/* HubBot Target Glow */
+@keyframes hubbot-glow {
+  0% { box-shadow: 0 0 0px rgba(234, 179, 8, 0); }
+  50% { box-shadow: 0 0 20px rgba(234, 179, 8, 0.5); border-color: rgba(234, 179, 8, 0.5); }
+  100% { box-shadow: 0 0 0px rgba(234, 179, 8, 0); }
+}
+
+.hubbot-target-glow {
+  animation: hubbot-glow 2s ease-in-out infinite !important;
+  position: relative;
+  z-index: 50;
+}

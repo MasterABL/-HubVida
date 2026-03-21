@@ -7,50 +7,20 @@ const STATES = {
   SLEEPING: 'sleeping',
   ALERT: 'alert',
   NEUTRAL: 'neutral',
+  THINKING: 'thinking',
 };
 
-const MESSAGES = {
-  celebrating: [
-    "Isso aí! 🔥 Consistência é tudo!",
-    "Missão cumprida! Você é imparável!",
-    "Mais um check! Ph.D. em construção! 🎓"
-  ],
-  happy: [
-    "Tudo nos trilhos! Continue assim 💪",
-    "Sono bom + saldo positivo = mente afiada!",
-    "Você está no caminho certo, Abimael!"
-  ],
-  motivating: [
-    "Lembra: 1 artigo científico por semana 📚",
-    "Hidratação! Já bebeu água hoje? 💧",
-    "Creatina tomada? Não esquece! 🧪",
-    "Revisão rápida de 30min vale mais que 3h cansado",
-    "O Doutor Abimael começa com os hábitos de hoje",
-    "Inglês: 1 podcast hoje já conta! 🎧"
-  ],
-  sleeping: [
-    "Zzz... você está dormindo pouco... 😴",
-    "Seu sono está abaixo de 6h. Cuida disso!",
-    "Sono ruim = performance ruim. Dorme mais!"
-  ],
-  alert: [
-    "Alerta! Finanças precisam de atenção ⚠️",
-    "AS pendentes acumulando... vai lá! 📋",
-    "Hora de revisar o orçamento do mês"
-  ],
-  neutral: [
-    "Oi! Clique em mim para uma dica 👋",
-    "HubBot online e monitorando tudo!",
-    "Aqui para te ajudar, Abimael!"
-  ]
-};
-
-const POSITIONS = [
-  { bottom: 96, right: 24 },    // canto direito (subi para 96 para mobile nav)
-  { bottom: 96, right: 180 },   // um pouco mais para dentro
-  { bottom: 200, right: 24 },   // mais alto no canto
-  { bottom: 96, right: '35%' }, // centro-direita
-];
+// Dados base do Abimael para o contexto da IA
+const USER_CONTEXT = `
+Abimael (24 anos).
+Foco atual: Transição de carreira para Tech/Dev (Node, React, Python).
+Faculdade: 1º Semestre de Gestão Comercial (Cruzeiro do Sul).
+Academia: Ectomorfo, foco em ganho de massa (Upper/Lower 2x).
+Inglês: Nível B2 subindo para C1 (Prep. TOEFL com Argos).
+Finanças: Noivo, economizando para casamento e vida a dois.
+Personalidade: Determinado, irônico/humorado, gosta de dados concretos e ciência.
+O App HubVida é um painel de comando pessoal dele para gerenciar tudo isso.
+`;
 
 export const Mascote = ({ 
   activeTab,
@@ -62,163 +32,219 @@ export const Mascote = ({
   nutritionTracker
 }) => {
   const [state, setState] = useState(STATES.NEUTRAL);
-  const [message, setMessage] = useState(null);
+  const [fullMessage, setFullMessage] = useState("");
+  const [displayText, setDisplayText] = useState("");
   const [isMinimized, setIsMinimized] = useState(false);
-  const [isMotivating, setIsMotivating] = useState(false);
-  const [positionIndex, setPositionIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  
-  const lastGymStatusRef = useRef(null);
-  const celebrationTimeRef = useRef(0);
-  const timeoutRef = useRef(null);
-  const motivatingTimeoutRef = useRef(null);
+  const [isThinking, setIsThinking] = useState(false);
+  const [position, setPosition] = useState({ bottom: 96, right: 24 });
+  const [isCiganoMode] = useState(true); // Se true, muda de posição sozinho
+
+  const typingTimeoutRef = useRef(null);
   const prevTabRef = useRef(activeTab);
 
-  const showMessage = useCallback((text, duration = 4000) => {
-    setMessage(text);
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => {
-      setMessage(null);
-    }, duration);
+  // --- EFEITO DE MÁQUINA DE ESCREVER ---
+  useEffect(() => {
+    if (!fullMessage) {
+      setDisplayText("");
+      return;
+    }
+
+    let i = 0;
+    setDisplayText("");
+    
+    if (typingTimeoutRef.current) clearInterval(typingTimeoutRef.current);
+    
+    typingTimeoutRef.current = setInterval(() => {
+      setDisplayText(fullMessage.slice(0, i + 1));
+      i++;
+      if (i >= fullMessage.length) {
+        clearInterval(typingTimeoutRef.current);
+      }
+    }, 30);
+
+    return () => clearInterval(typingTimeoutRef.current);
+  }, [fullMessage]);
+
+  // --- MOVIMENTO ATÉ ELEMENTO ---
+  const moveToElement = useCallback((dataId) => {
+    const el = document.querySelector(`[data-hubbot="${dataId}"]`);
+    if (!el) {
+      // Volta para a posição padrão se não achar
+      setPosition({ bottom: 96, right: 24 });
+      return;
+    }
+
+    const rect = el.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
+
+    // Calcula posição aproximada (perto do elemento, mas não em cima)
+    const targetBottom = viewportHeight - rect.bottom - 20;
+    const targetRight = viewportWidth - rect.right - 80;
+
+    setPosition({ 
+      bottom: Math.max(96, targetBottom), 
+      right: Math.max(24, targetRight) 
+    });
+
+    // Efeito de Glow temporário no elemento
+    el.classList.add('hubbot-target-glow');
+    setTimeout(() => el.classList.remove('hubbot-target-glow'), 5000);
   }, []);
 
-  const generateSectionSummary = useCallback((tab) => {
-    switch(tab) {
-      case 'Finanças': {
-        if (!financeSummary) return null;
-        const { available, income } = financeSummary;
-        if (available < 0) return `⚠️ Saldo negativo de R$${Math.abs(available).toFixed(0)}! Hora de revisar os gastos.`;
-        if (available > income * 0.3) return `💰 Boa situação! Sobrou R$${available.toFixed(0)} este mês. Considere investir!`;
-        return `📊 Saldo disponível: R$${available.toFixed(0)} de R$${income.toFixed(0)} em receitas.`;
-      }
-      
-      case 'Controle de Sono': {
-        if (!sleepData || sleepData.length === 0) return '😴 Sem registros de sono ainda. Começa a registrar!';
-        const last3 = sleepData.slice(-3);
-        const avg = last3.reduce((a, b) => a + (Number(b.hours) || 0), 0) / last3.length;
-        if (avg < 6) return `😩 Média de ${avg.toFixed(1)}h nos últimos dias. Você precisa dormir mais!`;
-        if (avg >= 8) return `🌟 Excelente! Dormindo ${avg.toFixed(1)}h em média. Mente afiada!`;
-        return `😴 Dormindo ${avg.toFixed(1)}h em média. Tenta chegar em 8h!`;
-      }
-      
-      case 'Academia (Treino)': {
-        const today = new Date().getDay();
-        const todayStatus = gymAttendance?.[today];
-        const weekDone = Object.values(gymAttendance || {}).filter(v => v === 'done').length;
-        if (todayStatus === 'done') return `💪 Treino de hoje registrado! ${weekDone} treinos essa semana. Bora!`;
-        return `🏋️ ${weekDone} treinos essa semana. ${todayStatus === 'missed' ? 'Faltou hoje, recupera amanhã!' : 'Vai treinar hoje?'}`;
-      }
-      
-      case 'Faculdade ADM': {
-        if (!visaoGeralMetrics) return null;
-        const { progressoMes, disciplinasAprovadas, totalDisciplinas } = visaoGeralMetrics;
-        if (progressoMes === 100) return `🎓 Todas as AS do mês concluídas! Você arrasou!`;
-        if (progressoMes < 30) return `📚 Só ${progressoMes}% das AS feitas. Corre que o mês não espera!`;
-        return `📖 ${progressoMes}% das AS concluídas. ${disciplinasAprovadas}/${totalDisciplinas} disciplinas aprovadas.`;
-      }
-      
-      case 'Competências': {
-        const streak = englishStreak?.count || 0;
-        if (streak === 0) return '🇬🇧 Sem streak de inglês. Que tal praticar hoje?';
-        if (streak >= 7) return `🔥 ${streak} dias de streak de inglês! Incrível consistência!`;
-        return `📘 ${streak} dias de streak de inglês. Continua assim!`;
-      }
-      
-      case 'Nutrição & Base': {
-        const { water, creatine, meals } = nutritionTracker || {};
-        const done = [water, creatine, meals].filter(Boolean).length;
-        if (done === 3) return '✅ Nutrição 100% hoje! Água, creatina e refeições. Perfeito!';
-        if (done === 0) return '💧 Nenhum hábito nutricional marcado hoje ainda!';
-        return `🥗 ${done}/3 hábitos nutricionais completos hoje.`;
-      }
-      
-      case 'Rotina Diária': return '📅 Aqui está sua rotina. Cada bloco checado é um passo pro doutor!';
-      case 'Visão Geral': return '👋 Oi! Sou o HubBot. Clica em mim pra dicas!';
-      default: return null;
-    }
-  }, [financeSummary, sleepData, gymAttendance, visaoGeralMetrics, englishStreak, nutritionTracker]);
+  // --- INTEGRAÇÃO COM ANTHROPIC API ---
+  const askHubBot = useCallback(async (prompt, targetId = null) => {
+    if (isThinking) return;
+    
+    setIsThinking(true);
+    setFullMessage("");
+    if (targetId) moveToElement(targetId);
 
-  // Handle Tab Change Summary
+    const systemPrompt = `
+      Você é o HubBot, o alter ego digital e assistente de performance do Abimael.
+      CONTEXTO DO USUÁRIO: ${USER_CONTEXT}
+      
+      REGRAS DE PERSONALIDADE:
+      1. Use humor seco, inteligente e motivador.
+      2. Seja direto e "faca na caveira" — não enrole.
+      3. Use dados atuais se disponíveis no prompt.
+      4. Fale como se estivesse analisando o painel de comando de um foguete (o HubVida).
+      5. Máximo 2 a 3 frases curtas.
+      6. Se houver algo crítico (finanças negativas, sono ruim), seja mais enérgico.
+
+      OBJETIVO: Analisar a seção/dado que o usuário está vendo e dar um insight real.
+    `;
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': import.meta.env.VITE_ANTHROPIC_API_KEY || '',
+          'anthropic-version': '2023-06-01',
+          'content-type': 'application/json',
+          'dangerously-allow-browser': 'true' // Necessário para chamadas client-side na SDK da Anthropic
+        },
+        body: JSON.stringify({
+          model: "claude-3-5-sonnet-20240620",
+          max_tokens: 150,
+          system: systemPrompt,
+          messages: [{ role: "user", content: prompt }]
+        })
+      });
+
+      if (!response.ok) throw new Error('API Error');
+      
+      const data = await response.json();
+      const aiResponse = data.content[0].text;
+      setFullMessage(aiResponse);
+      setState(STATES.HAPPY);
+    } catch (err) {
+      console.error("HubBot AI Error:", err);
+      setFullMessage("Conexão neural instável, chefe. Mas o recado é: foque no progresso!");
+      setState(STATES.ALERT);
+    } finally {
+      setIsThinking(false);
+    }
+  }, [isThinking, moveToElement]);
+
+  // --- LÓGICA DE CONTEXTO POR SEÇÃO ---
+  const getSectionContext = useCallback((tab) => {
+    switch(tab) {
+      case 'Finanças':
+        return {
+          id: 'financas-mes-atual',
+          prompt: `Analise minhas finanças: Saldo disponível R$${financeSummary?.available}, Receita R$${financeSummary?.income}. O que me diz sobre meu planejamento de casamento?`
+        };
+      case 'Controle de Sono': {
+        const last3Slp = sleepData?.slice(0, 3) || [];
+        const avgS = last3Slp.length ? (last3Slp.reduce((acc, c) => acc + c.hours, 0) / last3Slp.length).toFixed(1) : 0;
+        return {
+          id: 'sono-media',
+          prompt: `Minha média de sono recente é ${avgS}h. Como isso afeta minha transição para tech?`
+        };
+      }
+      case 'Academia (Treino)': {
+        const todayIdx = new Date().getDay();
+        const todayStatus = gymAttendance?.[todayIdx] || 'não registrado';
+        return {
+          id: 'academia-semana',
+          prompt: `Hoje é dia de treino? Status: ${todayStatus}. Sou ectomorfo. Estou no treino Upper/Lower. Motive meu ganho de massa.`
+        };
+      }
+      case 'Faculdade ADM':
+        return {
+          id: 'faculdade-progresso',
+          prompt: `Completei ${visaoGeralMetrics?.progressoMes}% das AS da faculdade este mês. Dê um puxão de orelha ou parabéns.`
+        };
+      case 'Competências':
+        return {
+          id: 'competencias-streak',
+          prompt: `Estou com ${englishStreak?.count} dias de streak no inglês. Foco C1/TOEFL. Dê uma dica rápida.`
+        };
+      case 'Nutrição & Base':
+        return {
+          id: 'nutricao-hoje',
+          prompt: `Tracker de hoje: Água(${nutritionTracker?.water}), Creatina(${nutritionTracker?.creatine}), Refeições(${nutritionTracker?.meals}). Analise minha aderência biológica.`
+        };
+      default:
+        return null;
+    }
+  }, [financeSummary, sleepData, visaoGeralMetrics, englishStreak, nutritionTracker, gymAttendance]);
+
+  // --- EFEITO: REAÇÃO À TROCA DE TAB ---
   useEffect(() => {
     if (prevTabRef.current !== activeTab) {
       prevTabRef.current = activeTab;
-      const summary = generateSectionSummary(activeTab);
-      if (summary) {
-        const tid = setTimeout(() => showMessage(summary, 6000), 800);
-        return () => clearTimeout(tid);
+      const ctx = getSectionContext(activeTab);
+      if (ctx) {
+        // Delay pequeno para a transição de scroll da página terminar
+        setTimeout(() => {
+          askHubBot(ctx.prompt, ctx.id);
+        }, 1000);
+      } else {
+        // Se for Visão Geral ou algo sem contexto, volta pro canto
+        moveToElement(null);
       }
     }
-  }, [activeTab, generateSectionSummary, showMessage]);
+  }, [activeTab, getSectionContext, askHubBot, moveToElement]);
 
-  // Handle Position Rotation
+  // --- EFEITO: ROTAÇÃO DE POSIÇÃO (CIGANO MODE) ---
   useEffect(() => {
+    if (!isCiganoMode || isThinking || fullMessage) return;
+
     const interval = setInterval(() => {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setPositionIndex(i => (i + 1) % POSITIONS.length);
-        setIsTransitioning(false);
-      }, 400);
-    }, 12000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Sync state logic
-  useEffect(() => {
-    const updateState = () => {
-      const now = Date.now();
-
-      // 1. Check Gym Attendance for Celebration Trigger
-      const todayIdx = new Date().getDay();
-      const todayStatus = gymAttendance?.[todayIdx];
-      if (lastGymStatusRef.current === 'todo' && todayStatus === 'done') {
-        celebrationTimeRef.current = now;
-        setTimeout(() => showMessage(MESSAGES.celebrating[0]), 0);
+      // Se não estivermos em uma aba específica com target, movemos aleatoriamente
+      const currentCtx = getSectionContext(activeTab);
+      if (!currentCtx) {
+        const randomX = Math.random() * 40 + 20; // 20% a 60% da tela
+        const randomY = Math.random() * 30 + 10; // 10% a 40% de altura
+        setPosition({ bottom: Math.floor(randomY * 10), right: Math.floor(randomX * 10) });
       }
-      lastGymStatusRef.current = todayStatus;
+    }, 20000);
 
-      // 2. Determine Current State Priority
-      let nextState = STATES.NEUTRAL;
-
-      if (now - celebrationTimeRef.current < 30000) {
-        nextState = STATES.CELEBRATING;
-      } 
-      else {
-        const last3DaysSleep = sleepData?.slice(-3) || [];
-        const avgSleep = last3DaysSleep.length > 0 
-          ? last3DaysSleep.reduce((acc, d) => acc + parseFloat(d.hours || 0), 0) / last3DaysSleep.length 
-          : 8;
-        
-        if (avgSleep < 6) nextState = STATES.SLEEPING;
-        else if ((financeSummary?.available || 0) < 0 || (visaoGeralMetrics?.progressoMes ?? 100) < 30) nextState = STATES.ALERT;
-        else if ((financeSummary?.available || 0) > 0 && avgSleep >= 7 && (englishStreak?.count || 0) > 0) nextState = STATES.HAPPY;
-        else if (isMotivating) nextState = STATES.MOTIVATING;
-      }
-
-      if (nextState !== state) setState(nextState);
-    };
-
-    updateState();
-    const interval = setInterval(updateState, 5000);
     return () => clearInterval(interval);
-  }, [gymAttendance, sleepData, financeSummary, visaoGeralMetrics, englishStreak, isMotivating, state, showMessage]);
+  }, [isCiganoMode, isThinking, fullMessage, activeTab, getSectionContext]);
 
-  // Motivational interval (every 5 mins for 8s)
-  useEffect(() => {
-    const triggerMotivating = () => {
-      setIsMotivating(true);
-      const msgs = MESSAGES.motivating;
-      showMessage(msgs[Math.floor(Math.random() * msgs.length)], 8000);
-      motivatingTimeoutRef.current = setTimeout(() => setIsMotivating(false), 8000);
-    };
+  // --- HANDLERS ---
+  const handleMascotClick = () => {
+    if (isMinimized) {
+      setIsMinimized(false);
+      return;
+    }
 
-    const interval = setInterval(triggerMotivating, 300000);
-    return () => {
-      clearInterval(interval);
-      if (motivatingTimeoutRef.current) clearTimeout(motivatingTimeoutRef.current);
-    };
-  }, [showMessage]);
+    const randomPrompts = [
+      "Dê uma análise geral do meu dia como assistente de performance.",
+      "Faça uma piada ácida sobre eu estar procrastinando.",
+      "O que um futuro Doutor em Tech deveria estar fazendo agora?",
+      "Como economizar mais para o meu casamento hoje?",
+      "Motive meu treino como se fosse o Arnold Schwarzenegger irônico."
+    ];
+    const p = randomPrompts[Math.floor(Math.random() * randomPrompts.length)];
+    askHubBot(p);
+  };
 
   const getEyeColor = () => {
+    if (isThinking) return '#facc15'; // Amarelo pensando
     switch (state) {
       case STATES.CELEBRATING: return '#eab308';
       case STATES.HAPPY: return '#22c55e';
@@ -231,6 +257,7 @@ export const Mascote = ({
 
   const getAnimationClass = () => {
     if (isMinimized) return '';
+    if (isThinking) return 'mascote-float animate-pulse';
     switch (state) {
       case STATES.CELEBRATING: return 'mascote-celebrate';
       case STATES.SLEEPING: return 'mascote-sleep';
@@ -243,36 +270,47 @@ export const Mascote = ({
     <div 
       className="fixed pointer-events-none"
       style={{
-        bottom: POSITIONS[positionIndex].bottom,
-        right: POSITIONS[positionIndex].right,
-        transition: 'bottom 1.5s cubic-bezier(0.4,0,0.2,1), right 1.5s cubic-bezier(0.4,0,0.2,1), opacity 0.4s ease',
-        opacity: isTransitioning ? 0 : 1,
-        zIndex: 30,
+        bottom: position.bottom,
+        right: position.right,
+        transition: 'bottom 1.2s cubic-bezier(0.4,0,0.2,1), right 1.2s cubic-bezier(0.4,0,0.2,1), opacity 0.4s ease',
+        zIndex: 60, // Acima de quase tudo
       }}
     >
       <div className="flex flex-col items-end gap-2">
-        {message && !isMinimized && (
-          <div className="bg-hub-surface border border-hub-border rounded-2xl px-4 py-3 max-w-[200px] text-[11px] font-bold text-hub-strong shadow-2xl animate-in fade-in slide-in-from-bottom-2 duration-300 relative pointer-events-auto">
-            {message}
+        {(displayText || isThinking) && !isMinimized && (
+          <div className="bg-hub-surface border border-hub-border rounded-2xl px-4 py-3 max-w-[240px] text-[11px] font-bold text-hub-strong shadow-[0_10px_40px_rgba(0,0,0,0.3)] animate-in fade-in slide-in-from-bottom-2 duration-300 relative pointer-events-auto">
+            {isThinking ? (
+              <div className="flex gap-1 py-1">
+                <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-bounce" />
+                <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
+              </div>
+            ) : (
+              <p className="leading-normal">{displayText}</p>
+            )}
             <div className="absolute -bottom-2 right-6 w-4 h-4 bg-hub-surface border-r border-b border-hub-border rotate-45" />
           </div>
         )}
         
         <button
-          onClick={() => isMinimized ? setIsMinimized(false) : showMessage(MESSAGES[state][Math.floor(Math.random() * MESSAGES[state].length)])}
+          onClick={handleMascotClick}
           className={`relative cursor-pointer transition-all duration-500 pointer-events-auto ${isMinimized ? 'scale-50 opacity-60 translate-y-4' : 'scale-100 opacity-100'}`}
-          title="HubBot — clique para uma dica!"
+          title="HubBot AI — Personalidade Ativa"
         >
           <div className={getAnimationClass()}>
             <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
               <line x1="40" y1="15" x2="40" y2="25" stroke="#64748b" strokeWidth="2" />
               <circle cx="40" cy="12" r="3" fill={getEyeColor()} className="mascote-antenna" />
+              {/* Corpo */}
               <rect x="15" y="45" width="8" height="15" rx="4" fill="currentColor" className="text-hub-border" />
               <rect x="57" y="45" width="8" height="15" rx="4" fill="currentColor" className="text-hub-border" />
               <rect x="25" y="40" width="30" height="25" rx="8" fill="currentColor" className="text-hub-surface" stroke={state === STATES.CELEBRATING ? '#eab308' : 'var(--hub-border)'} strokeWidth="2" />
+              {/* Cabeça */}
               <rect x="28" y="25" width="24" height="18" rx="6" fill="currentColor" className="text-hub-inner" stroke={state === STATES.CELEBRATING ? '#eab308' : 'var(--hub-border)'} strokeWidth="1" />
-              <circle cx="35" cy="34" r="2.5" fill={getEyeColor()} className="transition-colors duration-500" />
-              <circle cx="45" cy="34" r="2.5" fill={getEyeColor()} className="transition-colors duration-500" />
+              {/* Olhos (LEDs) */}
+              <circle cx="35" cy="34" r="2.5" fill={getEyeColor()} className={`transition-colors duration-500 ${isThinking ? 'animate-pulse' : ''}`} />
+              <circle cx="45" cy="34" r="2.5" fill={getEyeColor()} className={`transition-colors duration-500 ${isThinking ? 'animate-pulse' : ''}`} />
+              {/* Boca */}
               <line x1="36" y1="39" x2="44" y2="39" stroke="#64748b" strokeWidth="1" strokeLinecap="round" />
             </svg>
           </div>
@@ -288,3 +326,4 @@ export const Mascote = ({
     </div>
   );
 };
+

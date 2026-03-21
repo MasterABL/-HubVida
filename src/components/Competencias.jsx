@@ -105,7 +105,7 @@ export const Competencias = ({
           </div>
 
           {/* Streak tracker */}
-          <div className="bg-hub-inner border border-hub-border rounded-xl p-4 space-y-3">
+          <div data-hubbot="competencias-streak" className="bg-hub-inner border border-hub-border rounded-xl p-4 space-y-3">
             <p className="text-[9px] font-bold text-hub-faint uppercase tracking-widest">Sequência de Prática</p>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">

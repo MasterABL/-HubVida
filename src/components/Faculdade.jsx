@@ -177,7 +177,7 @@ const Faculdade = ({
 
         {/* Acadêmico List Section */}
         <section>
-          <h2 className="text-xs font-black text-hub-faint uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+          <h2 data-hubbot="faculdade-progresso" className="text-xs font-black text-hub-faint uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
             <CheckSquare size={14} className="text-blue-500" /> Gestão Acadêmica
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

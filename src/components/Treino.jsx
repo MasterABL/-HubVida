@@ -180,7 +180,7 @@ export function Treino({ isLoaded = true, workoutProfile, setWorkoutProfile, wor
       </div>
 
       {/* Grid de Treinos */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+      <section data-hubbot="academia-semana" className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
         {workouts.map((day) => (
           <div key={day.id} className="bg-hub-surface border border-hub-border rounded-2xl flex flex-col h-full overflow-hidden shadow-xl group">
 

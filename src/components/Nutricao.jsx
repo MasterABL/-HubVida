@@ -70,7 +70,7 @@ export const Nutricao = ({ isLoaded = true, dailyTracker = { water: false, creat
       </div>
 
       {/* TRACKER DE HÁBITOS RÁPIDOS (O SEGREDO DO SUCESSO) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div data-hubbot="nutricao-hoje" className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
         <button
           onClick={() => toggleTracker('water')}

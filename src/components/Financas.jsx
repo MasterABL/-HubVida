@@ -49,7 +49,7 @@ export const Financas = ({
         <h1 className="text-2xl font-black italic tracking-wider text-hub-strong">
           ABIMAEL <span className="text-yellow-500">FINANCE</span>
         </h1>
-        <div className="bg-hub-surface border border-hub-border rounded-xl px-4 py-2 text-right shadow-lg">
+        <div data-hubbot="financas-mes-atual" className="bg-hub-surface border border-hub-border rounded-xl px-4 py-2 text-right shadow-lg">
           <p className="text-[10px] text-hub-faint uppercase font-bold tracking-wider">
             Disponível Agora
           </p>
@@ -77,7 +77,7 @@ export const Financas = ({
         ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div data-hubbot="financas-grafico" className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-hub-surface border border-hub-border rounded-xl p-6 shadow-xl relative overflow-hidden">
           <div className="relative z-10">
             <p className="text-[10px] text-hub-faint font-bold uppercase tracking-wider mb-2">

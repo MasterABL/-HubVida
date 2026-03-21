@@ -77,7 +77,7 @@ export function Sono({ sleepGoal, setSleepGoal, sleepData, setSleepData }) {
         </div>
         
         {/* Widget Meta de Sono */}
-        <div className="bg-hub-surface border border-hub-border p-4 rounded-2xl flex items-center gap-6 shadow-xl w-full md:w-auto">
+        <div data-hubbot="sono-media" className="bg-hub-surface border border-hub-border p-4 rounded-2xl flex items-center gap-6 shadow-xl w-full md:w-auto">
           {isEditingGoal ? (
              <div className="flex items-center gap-4">
                <div>
