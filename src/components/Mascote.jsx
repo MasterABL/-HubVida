@@ -32,7 +32,6 @@ export const Mascote = ({
   visaoGeralMetrics,
   nutritionTracker
 }) => {
-  console.log('[HubBot] activeTab recebido:', activeTab);
   const [state, setState] = useState(STATES.NEUTRAL);
   const [fullMessage, setFullMessage] = useState("");
   const [displayText, setDisplayText] = useState("");
@@ -195,8 +194,6 @@ export const Mascote = ({
     if (prevTabRef.current === activeTab) return;
     prevTabRef.current = activeTab;
     
-    console.log('HubBot: activeTab mudou para:', activeTab);
-    
     const ctx = getSectionContext(activeTab);
     if (!ctx) return;
     
@@ -324,4 +321,3 @@ export const Mascote = ({
     </div>
   );
 };
-

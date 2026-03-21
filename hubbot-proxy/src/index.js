@@ -1,10 +1,21 @@
 export default {
   async fetch(request, env) {
+    const origin = request.headers.get('Origin') || '';
+    const allowedOrigins = [
+      env.ALLOWED_ORIGIN,
+      'http://localhost:5173',
+      'http://localhost:5174',
+      'http://localhost:4173',
+      'http://localhost:4174',
+    ].filter(Boolean);
+
+    const isAllowed = allowedOrigins.some(o => origin.startsWith(o));
+
     // CORS preflight
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         headers: {
-          'Access-Control-Allow-Origin': env.ALLOWED_ORIGIN || '*',
+          'Access-Control-Allow-Origin': isAllowed ? origin : (env.ALLOWED_ORIGIN || '*'),
           'Access-Control-Allow-Methods': 'POST, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type',
           'Access-Control-Max-Age': '86400',
@@ -17,17 +28,8 @@ export default {
       return new Response('Method not allowed', { status: 405 });
     }
 
-    // Valida origin em produção
-    const origin = request.headers.get('Origin') || '';
-    const allowedOrigins = [
-      env.ALLOWED_ORIGIN,
-      'http://localhost:5173',
-      'http://localhost:5174',
-      'http://localhost:4173',
-      'http://localhost:4174',
-    ].filter(Boolean);
-
-    if (!allowedOrigins.some(o => origin.startsWith(o))) {
+    // Valida origin
+    if (!isAllowed) {
       return new Response('Forbidden', { status: 403 });
     }
 
