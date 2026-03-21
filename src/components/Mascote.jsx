@@ -39,6 +39,11 @@ export const Mascote = ({
   const prevTabRef = useRef(null);
   const isThinkingRef = useRef(false);
 
+  // --- NOVO SISTEMA DE ETAPAS (StepTour) ---
+  const [tourSteps, setTourSteps] = useState([]);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isTourActive, setIsTourActive] = useState(false);
+
   // --- EFEITO DE MÁQUINA DE ESCREVER ---
   useEffect(() => {
     if (!fullMessage) {
@@ -169,61 +174,171 @@ EXEMPLOS DO TOM CERTO:
     askHubBot("Diga: HubBot online!");
   }, [askHubBot]); // Adicionado askHubBot como dependência
 
-  // --- LÓGICA DE CONTEXTO POR SEÇÃO ---
-  const getSectionContext = useCallback((tab) => {
+  // --- LÓGICA DE TOUR POR ETAPAS ---
+  const buildTourSteps = useCallback((tab) => {
     switch(tab) {
-      case 'Finanças':
-        return {
-          id: 'financas-mes-atual',
-          prompt: `Analise minhas finanças: Saldo disponível R$${financeSummary?.available}, Receita R$${financeSummary?.income}. O que me diz sobre meu planejamento de casamento?`
-        };
-      case 'Controle de Sono': {
-        const last3Slp = sleepData?.slice(0, 3) || [];
-        const avgS = last3Slp.length ? (last3Slp.reduce((acc, c) => acc + c.hours, 0) / last3Slp.length).toFixed(1) : 0;
-        return {
-          id: 'sono-media',
-          prompt: `Minha média de sono recente é ${avgS}h. Como isso afeta minha transição para tech?`
-        };
+      case 'Finanças': {
+        const { available = 0, income = 0, transactions = [] } = financeSummary || {};
+        const savingsRate = income > 0 ? ((available / income) * 100).toFixed(0) : 0;
+        
+        const categorias = {};
+        transactions.forEach(t => {
+          if (t.type === 'expense') {
+            categorias[t.category] = (categorias[t.category] || 0) + Math.abs(t.amount);
+          }
+        });
+        const maioresGastos = Object.entries(categorias)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 3)
+          .map(([cat, val]) => `${cat}: R$${val.toFixed(0)}`);
+
+        return [
+          {
+            hubbotId: 'financas-mes-atual',
+            message: available < 0
+              ? `Saldo negativo de R$${Math.abs(available).toFixed(2)}. Você gastou R$${(Math.abs(available)).toFixed(2)} a mais do que recebeu este mês.`
+              : `Saldo disponível: R$${available.toFixed(2)} de R$${income.toFixed(2)} em receitas. Taxa de poupança: ${savingsRate}%.`
+          },
+          {
+            hubbotId: 'financas-grafico',
+            message: maioresGastos.length > 0
+              ? `Maiores categorias de gasto: ${maioresGastos.join(', ')}. Avalie se todas são necessárias.`
+              : `Sem transações registradas para analisar padrões de gasto.`
+          },
+          {
+            hubbotId: 'financas-mes-atual',
+            message: savingsRate < 20
+              ? `Taxa de poupança abaixo de 20%. Para construir reserva, reduza gastos variáveis primeiro — alimentação fora e lazer têm maior margem de corte.`
+              : `Poupança em ${savingsRate}%. Continue acompanhando os gastos fixos mensalmente.`
+          }
+        ];
       }
+
+      case 'Controle de Sono': {
+        const last7 = (sleepData || []).slice(0, 7);
+        const avg = last7.length > 0
+          ? (last7.reduce((a, b) => a + (Number(b.hours) || 0), 0) / last7.length).toFixed(1)
+          : null;
+        const lastNight = last7[0]?.hours || null;
+        const tendencia = last7.length >= 3
+          ? (Number(last7[0]?.hours) > Number(last7[2]?.hours) ? 'melhorando' : 'piorando')
+          : 'sem dados suficientes';
+
+        return [
+          {
+            hubbotId: 'sono-media',
+            message: avg
+              ? `Média dos últimos ${last7.length} dias: ${avg}h. Meta recomendada: 8h. ${avg < 6 ? 'Déficit crítico — prejudica recuperação muscular e cognição.' : avg < 7 ? 'Abaixo do ideal para hipertrofia e performance.' : 'Dentro do range adequado.'}`
+              : 'Sem registros de sono. Comece a registrar para análise.'
+          },
+          {
+            hubbotId: 'sono-media',
+            message: lastNight
+              ? `Última noite: ${lastNight}h. Tendência: ${tendencia}. ${lastNight < 6 ? 'Sono insuficiente reduz síntese proteica em até 18% — impacto direto no ganho de massa.' : 'Recuperação adequada para o treino.'}`
+              : 'Registre o sono de ontem para análise de tendência.'
+          }
+        ];
+      }
+
       case 'Academia (Treino)': {
         const diasTreino = {
-          2: 'Upper A — Peito e Costas (Supino, Puxada, Remada)',
-          4: 'Lower A — Quadríceps (Agachamento, Leg Press, Cadeira)',
-          5: 'Upper B — Ombros e Braços (Desenvolvimento, Rosca, Tríceps)',
-          0: 'Lower B — Glúteos e Posterior (Stiff, Leg Curl, Abdutora)'
+          2: 'Upper A — Peito e Costas',
+          4: 'Lower A — Quadríceps',
+          5: 'Upper B — Ombros e Braços',
+          0: 'Lower B — Glúteos e Posterior'
         };
         const hoje = new Date().getDay();
-        const treinoHoje = diasTreino[hoje] || 'Dia de descanso';
-        const todayStatus = gymAttendance?.[hoje] || 'não registrado';
-        const done = gymAttendance ? Object.values(gymAttendance).filter(v => v === 'treinado').length : 0;
+        const treinoHoje = diasTreino[hoje] || null;
+        const done = gymAttendance ? Object.values(gymAttendance).filter(v => v === 'treinado' || v === 'done').length : 0;
+        const missed = gymAttendance ? Object.values(gymAttendance).filter(v => v === 'missed').length : 0;
+        const todayStatus = gymAttendance?.[hoje];
 
-        return {
-          id: 'academia-semana',
-          prompt: `Dia atual: ${['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][hoje]}
-Treino de hoje: ${treinoHoje}
-Treinos feitos essa semana: ${done}/4
-Status hoje: ${todayStatus}`
-        };
+        return [
+          {
+            hubbotId: 'academia-semana',
+            message: treinoHoje
+              ? `Hoje: ${treinoHoje}. Status: ${todayStatus === 'treinado' || todayStatus === 'done' ? 'Concluído.' : todayStatus === 'missed' ? 'Falta registrada.' : 'Pendente.'}`
+              : `Hoje é dia de descanso. ${done} treinos concluídos essa semana.`
+          },
+          {
+            hubbotId: 'academia-semana',
+            message: missed > 1
+              ? `${missed} faltas essa semana. Consistência é o principal fator de hipertrofia a longo prazo — mais que volume ou intensidade.`
+              : done >= 3
+              ? `${done}/4 treinos completados. Frequência adequada para o objetivo de hipertrofia.`
+              : `${done}/4 treinos essa semana. Complete os ${4 - done} restantes para manter o estímulo muscular.`
+          }
+        ];
       }
-      case 'Faculdade ADM':
-        return {
-          id: 'faculdade-progresso',
-          prompt: `Completei ${visaoGeralMetrics?.progressoMes}% das AS da faculdade este mês. Dê um puxão de orelha ou parabéns.`
-        };
-      case 'Competências':
-        return {
-          id: 'competencias-streak',
-          prompt: `Estou com ${englishStreak?.count} dias de streak no inglês. Foco C1/TOEFL. Dê uma dica rápida.`
-        };
+
+      case 'Faculdade ADM': {
+        const { progressoMes = 0, disciplinasAprovadas = 0, totalDisciplinas = 9, asPendentes = [] } = visaoGeralMetrics || {};
+        const diasRestantes = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate() - new Date().getDate();
+
+        return [
+          {
+            hubbotId: 'faculdade-progresso',
+            message: `Progresso AS: ${progressoMes}% concluído. ${disciplinasAprovadas}/${totalDisciplinas} disciplinas aprovadas. Restam ${diasRestantes} dias no mês.`
+          },
+          {
+            hubbotId: 'faculdade-progresso',
+            message: asPendentes.length > 0
+              ? `Pendentes: ${asPendentes.slice(0, 3).join(', ')}. ${progressoMes < 50 && diasRestantes < 15 ? 'Ritmo insuficiente para concluir no prazo.' : 'Priorize por data de entrega.'}`
+              : progressoMes === 100
+              ? 'Todas as AS do mês concluídas.'
+              : 'Sem pendências registradas. Verifique se os dados estão atualizados.'
+          }
+        ];
+      }
+
+      case 'Competências': {
+        const streak = englishStreak?.count || 0;
+        const lastDate = englishStreak?.lastDate || null;
+
+        return [
+          {
+            hubbotId: 'competencias-streak',
+            message: streak === 0
+              ? 'Streak zerado. Sem consistência registrada no inglês este período.'
+              : `Streak atual: ${streak} dias consecutivos. ${streak >= 7 ? 'Consistência acima da média.' : streak >= 3 ? 'Ritmo iniciando.' : 'Streak fraco — menos de 3 dias.'}`
+          },
+          {
+            hubbotId: 'competencias-streak',
+            message: `Nível C1 em desenvolvimento. Para progressão consistente: mínimo 30 minutos diários de exposição ativa. ${lastDate ? `Última atividade: ${lastDate}.` : ''}`
+          }
+        ];
+      }
+
       case 'Nutrição & Base':
-        return {
-          id: 'nutricao-hoje',
-          prompt: `Tracker de hoje: Água(${nutritionTracker?.water}), Creatina(${nutritionTracker?.creatine}), Refeições(${nutritionTracker?.meals}). Analise minha aderência biológica.`
-        };
+        return [
+          {
+            hubbotId: 'nutricao-hoje',
+            message: `Tracker de hoje: Água(${nutritionTracker?.water || 0}), Creatina(${nutritionTracker?.creatine || 0}), Refeições(${nutritionTracker?.meals || 0}). Analise sua aderência biológica no painel.`
+          }
+        ];
+
       default:
-        return null;
+        return [];
     }
-  }, [financeSummary, sleepData, visaoGeralMetrics, englishStreak, nutritionTracker, gymAttendance]);
+  }, [financeSummary, sleepData, visaoGeralMetrics, englishStreak, gymAttendance, nutritionTracker]);
+
+  const executeTourStep = useCallback((step) => {
+    if (!step) return;
+    if (step.hubbotId) moveToElement(step.hubbotId);
+    setFullMessage(step.message);
+  }, [moveToElement]);
+
+  const startSectionTour = useCallback((tab) => {
+    const steps = buildTourSteps(tab);
+    if (!steps || steps.length === 0) {
+      setIsTourActive(false);
+      return;
+    };
+    setTourSteps(steps);
+    setCurrentStep(0);
+    setIsTourActive(true);
+    setTimeout(() => executeTourStep(steps[0]), 800);
+  }, [buildTourSteps, executeTourStep]);
 
   // --- EFEITO: REAÇÃO À TROCA DE TAB ---
   useEffect(() => {
@@ -231,23 +346,17 @@ Status hoje: ${todayStatus}`
     if (prevTabRef.current === activeTab) return;
     prevTabRef.current = activeTab;
     
-    const ctx = getSectionContext(activeTab);
-    if (!ctx) return;
-    
-    setTimeout(() => {
-      if (ctx.id) moveToElement(ctx.id);
-      askHubBot(ctx.prompt);
-    }, 800);
-  }, [activeTab, getSectionContext, askHubBot, moveToElement]);
+    startSectionTour(activeTab);
+  }, [activeTab, startSectionTour]);
 
   // --- EFEITO: ROTAÇÃO DE POSIÇÃO (CIGANO MODE) ---
   useEffect(() => {
     if (!isCiganoMode || isThinking || fullMessage) return;
 
     const interval = setInterval(() => {
-      // Se não estivermos em uma aba específica com target, movemos aleatoriamente
-      const currentCtx = getSectionContext(activeTab);
-      if (!currentCtx) {
+      // Se não houver tour para a seção atual, movemos aleatoriamente
+      const steps = buildTourSteps(activeTab);
+      if (steps.length === 0) {
         const randomX = Math.random() * 40 + 20; // 20% a 60% da tela
         const randomY = Math.random() * 30 + 10; // 10% a 40% de altura
         setPosition({ bottom: Math.floor(randomY * 10), right: Math.floor(randomX * 10) });
@@ -255,7 +364,7 @@ Status hoje: ${todayStatus}`
     }, 20000);
 
     return () => clearInterval(interval);
-  }, [isCiganoMode, isThinking, fullMessage, activeTab, getSectionContext]);
+  }, [isCiganoMode, isThinking, fullMessage, activeTab, buildTourSteps]);
 
   // --- HANDLERS ---
   const handleMascotClick = () => {
@@ -264,15 +373,26 @@ Status hoje: ${todayStatus}`
       return;
     }
 
-    const randomPrompts = [
-      "Dê uma análise geral do meu dia como assistente de performance.",
-      "Faça uma piada ácida sobre eu estar procrastinando.",
-      "O que um futuro Doutor em Tech deveria estar fazendo agora?",
-      "Como economizar mais para o meu casamento hoje?",
-      "Motive meu treino como se fosse o Arnold Schwarzenegger irônico."
-    ];
-    const p = randomPrompts[Math.floor(Math.random() * randomPrompts.length)];
-    askHubBot(p);
+    if (isTourActive && currentStep < tourSteps.length - 1) {
+      const nextStep = currentStep + 1;
+      setCurrentStep(nextStep);
+      executeTourStep(tourSteps[nextStep]);
+    } else if (isTourActive && currentStep === tourSteps.length - 1) {
+      setIsTourActive(false);
+      setTourSteps([]);
+      setFullMessage("Análise de seção completa. O que mais quer ver?");
+    } else {
+      // tour não ativo — frase aleatória via AI
+      const randomQuestions = [
+        "Dê uma análise geral do meu dia como assistente de performance.",
+        "Faça uma piada ácida sobre eu estar procrastinando.",
+        "Dê uma dica de produtividade focada em ADM.",
+        "Motive meu treino como se fosse um coach sério.",
+        "O que um futuro profissional de tech deveria estar fazendo agora?"
+      ];
+      const p = randomQuestions[Math.floor(Math.random() * randomQuestions.length)];
+      askHubBot(p);
+    }
   };
 
   const getEyeColor = () => {
@@ -318,7 +438,26 @@ Status hoje: ${todayStatus}`
                 <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
               </div>
             ) : (
-              <p className="leading-normal">{displayText}</p>
+              <div className="flex flex-col gap-2">
+                <p className="leading-normal">{displayText}</p>
+                {isTourActive && tourSteps.length > 1 && (
+                  <div className="flex flex-col gap-1.5 pt-1 border-t border-hub-border/50">
+                    <div className="flex gap-1 justify-center">
+                      {tourSteps.map((_, i) => (
+                        <div
+                          key={i}
+                          className={`w-1 h-1 rounded-full transition-all ${
+                            i === currentStep ? 'bg-indigo-400 scale-125' : 'bg-hub-border'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <div className="text-[8px] text-hub-faint text-center uppercase tracking-widest font-black">
+                      Etapa {currentStep + 1}/{tourSteps.length} · Clique no robô
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
             <div className="absolute -bottom-2 right-6 w-4 h-4 bg-hub-surface border-r border-b border-hub-border rotate-45" />
           </div>
