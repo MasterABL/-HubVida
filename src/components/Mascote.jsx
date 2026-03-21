@@ -32,6 +32,7 @@ export const Mascote = ({
   visaoGeralMetrics,
   nutritionTracker
 }) => {
+  console.log('[HubBot] activeTab recebido:', activeTab);
   const [state, setState] = useState(STATES.NEUTRAL);
   const [fullMessage, setFullMessage] = useState("");
   const [displayText, setDisplayText] = useState("");
@@ -41,7 +42,7 @@ export const Mascote = ({
   const [isCiganoMode] = useState(true); // Se true, muda de posição sozinho
 
   const typingTimeoutRef = useRef(null);
-  const prevTabRef = useRef(activeTab);
+  const prevTabRef = useRef(null);
 
   // --- EFEITO DE MÁQUINA DE ESCREVER ---
   useEffect(() => {

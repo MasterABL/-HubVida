@@ -399,6 +399,8 @@ export default function App() {
   const [activeTab, setActiveTab] = useState(() => localStorage.getItem('hubvida_activeTab') || 'Visão Geral');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  console.log('[App] activeTab atual:', activeTab);
+
   useEffect(() => {
     localStorage.setItem('hubvida_activeTab', activeTab);
   }, [activeTab]);
