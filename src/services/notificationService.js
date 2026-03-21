@@ -1,10 +1,19 @@
 import { supabase } from '../supabase';
 
+let _instance = null;
+
 class NotificationService {
   constructor() {
+    if (_instance) return _instance;
+    _instance = this;
     this.permission = typeof Notification !== 'undefined' ? Notification.permission : 'default';
     this.settings = null;
     this.listeners = [];
+  }
+
+  static getInstance() {
+    if (!_instance) _instance = new NotificationService();
+    return _instance;
   }
 
   on(callback) {
@@ -430,4 +439,4 @@ class NotificationService {
   }
 }
 
-export const notificationService = new NotificationService();
+export const notificationService = NotificationService.getInstance();

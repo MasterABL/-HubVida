@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { HUBBOT_PROXY_URL } from '../config/hubbot';
 
 const STATES = {
   CELEBRATING: 'celebrating',
@@ -295,7 +296,7 @@ export const Mascote = ({
     const userContext = `Seção atual: ${activeTab}. Dê um comentário rápido sobre isso.`;
 
     console.log('[HubBot] Chamando Worker...');
-    const PROXY_URL = 'https://hubbot-proxy.abimaelbalbino12.workers.dev';
+    const PROXY_URL = HUBBOT_PROXY_URL;
 
     try {
       const bodyData = {

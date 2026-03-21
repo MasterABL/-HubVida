@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { HUBBOT_PROXY_URL } from '../config/hubbot';
 
 export const HubChat = ({ 
   financeSummary, 
@@ -14,7 +15,7 @@ export const HubChat = ({
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef(null);
 
-  const PROXY_URL = 'https://hubbot-proxy.abimaelbalbino12.workers.dev';
+  const PROXY_URL = HUBBOT_PROXY_URL;
 
   const chatSystemPrompt = `Você é o HubBot, assistente pessoal inteligente do Abimael.
 

@@ -440,7 +440,14 @@ export default function App() {
         .select('*')
         .eq('user_id', session.user.id);
 
-      if (error) throw error;
+      if (error) {
+        // Tratar 404 (tabela não encontrada) silenciosamente
+        if (error.code === '42P01' || error.status === 404) {
+          setStudyProgress([]);
+          return;
+        }
+        throw error;
+      }
       setStudyProgress(data || []);
     } catch (err) {
       console.error('Error fetching study progress:', err);
@@ -466,7 +473,10 @@ export default function App() {
           ultima_sessao: new Date().toISOString()
         }, { onConflict: 'user_id,disciplina' });
 
-      if (error) throw error;
+      if (error) {
+        if (error.code === '42P01' || error.status === 404) return;
+        throw error;
+      }
       
       // Update local state
       setStudyProgress(prev => {
