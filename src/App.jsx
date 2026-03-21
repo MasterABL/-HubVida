@@ -590,6 +590,7 @@ export default function App() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
+            console.log('App: IntersectionObserver detectou:', entry.target.id);
             setActiveTab(entry.target.id);
           }
         });

@@ -136,7 +136,13 @@ class NotificationService {
     }
   }
 
+  async checkDeduplication(_category, _title) {
+    // Implementação básica de deduplicação
+    return false;
+  }
+
   async send(category, title, body, options = {}) {
+
     if (!this.settings || !this.settings.enabled) return;
     const catCheck = category.toLowerCase() === 'nutrição' ? 'nutricao' : 
                      category.toLowerCase() === 'finanças' ? 'financas' : 
