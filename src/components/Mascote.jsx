@@ -125,7 +125,7 @@ export const Mascote = ({
       if (!response.ok) throw new Error('API Error');
       
       const data = await response.json();
-      const aiResponse = data.content[0].text;
+      const aiResponse = data.choices[0].message.content;
       setFullMessage(aiResponse);
       setState(STATES.HAPPY);
     } catch (err) {

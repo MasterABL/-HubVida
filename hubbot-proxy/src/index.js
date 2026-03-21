@@ -34,9 +34,9 @@ export default {
     }
 
     // Valida que a secret existe
-    if (!env.ANTHROPIC_API_KEY) {
+    if (!env.GROQ_API_KEY) {
       return new Response(
-        JSON.stringify({ error: 'API key not configured' }),
+        JSON.stringify({ error: 'Groq API key not configured' }),
         { status: 500, headers: { 'Content-Type': 'application/json' } }
       );
     }
@@ -53,36 +53,35 @@ export default {
 
     // Sanitizar — só permite campos esperados, força modelo e limita tokens
     const safeBody = {
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: Math.min(body.max_tokens || 300, 500), // máximo 500 tokens
-      system: typeof body.system === 'string' ? body.system.slice(0, 3000) : '',
-      messages: Array.isArray(body.messages)
-        ? body.messages.slice(0, 10).map(m => ({
-            role: m.role === 'assistant' ? 'assistant' : 'user',
-            content: typeof m.content === 'string' ? m.content.slice(0, 2000) : '',
-          }))
-        : [],
+      model: 'llama-3.1-8b-instant',
+      max_tokens: 300,
+      messages: [
+        { role: 'system', content: typeof body.system === 'string' ? body.system.slice(0, 3000) : '' },
+        ...(Array.isArray(body.messages) ? body.messages.slice(0, 10).map(m => ({
+          role: m.role === 'assistant' ? 'assistant' : 'user',
+          content: typeof m.content === 'string' ? m.content.slice(0, 2000) : ''
+        })) : [])
+      ]
     };
     
     console.log('[Worker] Body recebido:', JSON.stringify(safeBody));
 
-    // Chamar API Anthropic
-    const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
+    // Chamar API Groq
+    const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
+        'Authorization': `Bearer ${env.GROQ_API_KEY}`,
       },
       body: JSON.stringify(safeBody),
     });
-
-    const data = await anthropicRes.json();
-    console.log('[Worker] Status Anthropic:', anthropicRes.status);
-    console.log('[Worker] Resposta Anthropic:', JSON.stringify(data));
+    
+    const data = await groqRes.json();
+    console.log('[Worker] Status Groq:', groqRes.status);
+    console.log('[Worker] Resposta Groq:', JSON.stringify(data));
 
     return new Response(JSON.stringify(data), {
-      status: anthropicRes.status,
+      status: groqRes.status,
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': origin,
