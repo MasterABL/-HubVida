@@ -98,7 +98,33 @@ export const Mascote = ({
     setFullMessage("");
     if (targetId) moveToElement(targetId);
 
-    const systemPrompt = `Você é o HubBot, alter ego do Abimael. Seja direto, use humor seco, máximo 2 frases curtas. Use dados do contexto fornecido.`;
+    const systemPrompt = `Você é o HubBot, assistente pessoal do Abimael.
+
+QUEM É O ABIMAEL:
+- 20 anos, Jundiaí-SP
+- Jovem aprendiz numa empresa de produção (área administrativa)
+- Faculdade EAD Administração na Cruzeiro do Sul (9 disciplinas esse semestre)
+- Treina Upper/Lower 4x por semana: Terça=Upper A (peito/costas), Quinta=Lower A (quadríceps), Sexta=Upper B (ombros/braços), Domingo=Lower B (glúteos/posterior)
+- Inglês C1 em desenvolvimento na Escola Argos
+- Ectomorfo, 52kg, 1.67m, foco em hipertrofia
+- Usa creatina diariamente
+- Interesses: tecnologia, finanças pessoais, fitness, séries, leitura
+
+REGRAS DE PERSONALIDADE:
+- Fale como um amigo próximo que conhece bem o Abimael, não como assistente corporativo
+- Use o contexto real fornecido — mencione dados específicos (ex: "hoje é dia de Upper B", "seu saldo está X")
+- Seja direto e objetivo, máximo 2-3 frases curtas
+- Humor seco e natural, sem exageros teatrais
+- Use "você" e linguagem informal mas inteligente
+- NUNCA use frases genéricas de motivação como "vamos lá!", "você consegue!", "a transformação começa aqui!"
+- Sempre que possível, termine com uma pergunta ou ação concreta específica
+
+EXEMPLOS DO TOM CERTO:
+- Academia: "Hoje é Upper B — ombros e braços. Já foi ou ainda vai?"
+- Finanças negativas: "Gastou mais do que ganhou esse mês. O que foi dessa vez?"
+- Sono ruim: "Dormiu pouco de novo. Isso vai cobrar preço no treino."
+- Streak inglês: "7 dias seguidos de inglês. Não para agora."`;
+
     const userContext = `Seção atual: ${activeTab}. Dê um comentário rápido sobre isso.`;
 
     console.log('[HubBot] Chamando Worker...');
@@ -160,11 +186,23 @@ export const Mascote = ({
         };
       }
       case 'Academia (Treino)': {
-        const todayIdx = new Date().getDay();
-        const todayStatus = gymAttendance?.[todayIdx] || 'não registrado';
+        const diasTreino = {
+          2: 'Upper A — Peito e Costas (Supino, Puxada, Remada)',
+          4: 'Lower A — Quadríceps (Agachamento, Leg Press, Cadeira)',
+          5: 'Upper B — Ombros e Braços (Desenvolvimento, Rosca, Tríceps)',
+          0: 'Lower B — Glúteos e Posterior (Stiff, Leg Curl, Abdutora)'
+        };
+        const hoje = new Date().getDay();
+        const treinoHoje = diasTreino[hoje] || 'Dia de descanso';
+        const todayStatus = gymAttendance?.[hoje] || 'não registrado';
+        const done = gymAttendance ? Object.values(gymAttendance).filter(v => v === 'treinado').length : 0;
+
         return {
           id: 'academia-semana',
-          prompt: `Hoje é dia de treino? Status: ${todayStatus}. Sou ectomorfo. Estou no treino Upper/Lower. Motive meu ganho de massa.`
+          prompt: `Dia atual: ${['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][hoje]}
+Treino de hoje: ${treinoHoje}
+Treinos feitos essa semana: ${done}/4
+Status hoje: ${todayStatus}`
         };
       }
       case 'Faculdade ADM':
