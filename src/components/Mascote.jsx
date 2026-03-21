@@ -68,85 +68,107 @@ EXEMPLOS DO TOM CERTO:
 const RobotSVG = ({ estado }) => {
   const c = ROBOT_CORES[estado] || ROBOT_CORES.neutral;
 
+  // Determinar classe de animação principal do corpo
+  const mainAnimClass = `anim-${estado}`;
+
   return (
-    <svg width="80" height="90" viewBox="0 0 80 90" xmlns="http://www.w3.org/2000/svg">
-      {/* Antena */}
-      <line x1="40" y1="8" x2="40" y2="18" stroke={c.borda} strokeWidth="2">
-        {estado === 'thinking' && (
-          <animateTransform attributeName="transform" type="rotate" from="0 40 18" to="360 40 18" dur="1s" repeatCount="indefinite" />
+    <div className={mainAnimClass}>
+      <svg width="80" height="90" viewBox="0 0 80 90" xmlns="http://www.w3.org/2000/svg" style={{ overflow: 'visible' }}>
+        {/* Antena */}
+        <line x1="40" y1="8" x2="40" y2="18" stroke={c.borda} strokeWidth="2">
+          {estado === 'thinking' && (
+            <animateTransform attributeName="transform" type="rotate" from="0 40 18" to="360 40 18" dur="1s" repeatCount="indefinite" />
+          )}
+        </line>
+        <circle cx="40" cy="6" r="4" fill={c.borda}>
+          <animate attributeName="r" values="3;5;3" dur="1.5s" repeatCount="indefinite"/>
+        </circle>
+
+        {/* EFEITOS ESPECIAIS: ZZZ (Sleeping) */}
+        {estado === 'sleeping' && (
+          <g className="anim-zzz-float">
+            <text x="55" y="10" fontSize="12" fill={c.olhos} fontWeight="bold">Z</text>
+            <text x="65" y="0" fontSize="8" fill={c.olhos} opacity="0.6">Z</text>
+          </g>
         )}
-      </line>
-      <circle cx="40" cy="6" r="4" fill={c.borda} className={estado !== 'thinking' ? 'mascote-antenna' : ''}>
-        <animate attributeName="r" values="3;5;3" dur="1.5s" repeatCount="indefinite"/>
-      </circle>
 
-      {/* Cabeça */}
-      <rect x="18" y="18" width="44" height="32" rx="8" fill={c.corpo} stroke={c.borda} strokeWidth="1.5"/>
+        {/* EFEITOS ESPECIAIS: Suor (Worried) */}
+        {estado === 'worried' && (
+          <path d="M58 20 Q60 25 58 30" stroke="#60a5fa" strokeWidth="2" fill="none" className="anim-sweat-drop" />
+        )}
 
-      {/* Olhos — variam por estado */}
-      {estado === 'happy' && (
-        <>
-          <path d="M27 32 Q30 28 33 32" stroke={c.olhos} strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-          <path d="M47 32 Q50 28 53 32" stroke={c.olhos} strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-        </>
-      )}
-      {estado === 'sad' && (
-        <>
-          <path d="M27 30 Q30 34 33 30" stroke={c.olhos} strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-          <path d="M47 30 Q50 34 53 30" stroke={c.olhos} strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-        </>
-      )}
-      {estado === 'worried' && (
-        <>
-          <ellipse cx="30" cy="31" rx="4" ry="3" fill={c.olhos}/>
-          <ellipse cx="50" cy="31" rx="4" ry="3" fill={c.olhos}/>
-          <line x1="26" y1="27" x2="34" y2="29" stroke={c.olhos} strokeWidth="1.5"/>
-          <line x1="46" y1="29" x2="54" y2="27" stroke={c.olhos} strokeWidth="1.5"/>
-        </>
-      )}
-      {estado === 'excited' && (
-        <>
-          <text x="24" y="35" fontSize="12" fill={c.olhos}>★</text>
-          <text x="44" y="35" fontSize="12" fill={c.olhos}>★</text>
-        </>
-      )}
-      {estado === 'sleeping' && (
-        <>
-          <line x1="26" y1="31" x2="34" y2="31" stroke={c.olhos} strokeWidth="2.5" strokeLinecap="round"/>
-          <line x1="46" y1="31" x2="54" y2="31" stroke={c.olhos} strokeWidth="2.5" strokeLinecap="round"/>
-          <text x="55" y="22" fontSize="10" fill={c.olhos} opacity="0.7">z</text>
-          <text x="60" y="16" fontSize="8" fill={c.olhos} opacity="0.5">z</text>
-        </>
-      )}
-      {(estado === 'thinking' || estado === 'neutral') && (
-        <>
-          <circle cx="30" cy="31" r="4" fill={c.olhos} className={estado === 'thinking' ? 'mascote-spinning' : ''} style={{ transformOrigin: '30px 31px' }} />
-          <circle cx="50" cy="31" r="4" fill={c.olhos} className={estado === 'thinking' ? 'mascote-spinning' : ''} style={{ transformOrigin: '50px 31px' }} />
-        </>
-      )}
+        {/* Cabeça */}
+        <rect x="18" y="18" width="44" height="32" rx="8" fill={c.corpo} stroke={c.borda} strokeWidth="1.5"/>
 
-      {/* Boca */}
-      {estado === 'happy' || estado === 'excited' ? (
-        <path d="M32 42 Q40 48 48 42" stroke={c.borda} strokeWidth="2" fill="none" strokeLinecap="round"/>
-      ) : estado === 'sad' || estado === 'sleeping' ? (
-        <path d="M32 46 Q40 42 48 46" stroke={c.borda} strokeWidth="2" fill="none" strokeLinecap="round"/>
-      ) : (
-        <line x1="32" y1="44" x2="48" y2="44" stroke={c.borda} strokeWidth="2" strokeLinecap="round"/>
-      )}
+        {/* Olhos — variam por estado */}
+        {estado === 'happy' && (
+          <>
+            <path d="M27 32 Q30 28 33 32" stroke={c.olhos} strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+            <path d="M47 32 Q50 28 53 32" stroke={c.olhos} strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+          </>
+        )}
+        {estado === 'sad' && (
+          <>
+            <path d="M27 30 Q30 34 33 30" stroke={c.olhos} strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+            <path d="M47 30 Q50 34 53 30" stroke={c.olhos} strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+          </>
+        )}
+        {estado === 'worried' && (
+          <>
+            <ellipse cx="30" cy="31" rx="4" ry="3" fill={c.olhos}/>
+            <ellipse cx="50" cy="31" rx="4" ry="3" fill={c.olhos}/>
+            <line x1="26" y1="27" x2="34" y2="29" stroke={c.olhos} strokeWidth="1.5"/>
+            <line x1="46" y1="29" x2="54" y2="27" stroke={c.olhos} strokeWidth="1.5"/>
+          </>
+        )}
+        {estado === 'excited' && (
+          <g className="anim-star-pulse">
+            <text x="24" y="36" fontSize="14" fill={c.olhos}>★</text>
+            <text x="44" y="36" fontSize="14" fill={c.olhos}>★</text>
+          </g>
+        )}
+        {estado === 'sleeping' && (
+          <>
+            <line x1="26" y1="31" x2="34" y2="31" stroke={c.olhos} strokeWidth="2.5" strokeLinecap="round"/>
+            <line x1="46" y1="31" x2="54" y2="31" stroke={c.olhos} strokeWidth="2.5" strokeLinecap="round"/>
+          </>
+        )}
+        {(estado === 'thinking' || estado === 'neutral') && (
+          <>
+            <circle cx="30" cy="31" r="4" fill={c.olhos} />
+            <circle cx="50" cy="31" r="4" fill={c.olhos} />
+          </>
+        )}
 
-      {/* Corpo */}
-      <rect x="22" y="52" width="36" height="28" rx="6" fill={c.corpo} stroke={c.borda} strokeWidth="1.5"/>
+        {/* Boca */}
+        {estado === 'happy' || estado === 'excited' ? (
+          <path d="M32 42 Q40 48 48 42" stroke={c.borda} strokeWidth="2" fill="none" strokeLinecap="round"/>
+        ) : estado === 'sad' || estado === 'sleeping' ? (
+          <path d="M32 46 Q40 42 48 46" stroke={c.borda} strokeWidth="2" fill="none" strokeLinecap="round"/>
+        ) : (
+          <line x1="32" y1="44" x2="48" y2="44" stroke={c.borda} strokeWidth="2" strokeLinecap="round"/>
+        )}
 
-      {/* Detalhe no peito */}
-      <rect x="30" y="58" width="20" height="12" rx="3" fill={c.borda} opacity="0.2"/>
-      <circle cx="40" cy="64" r="3" fill={c.borda} opacity="0.6"/>
+        {/* Corpo */}
+        <rect x="22" y="52" width="36" height="28" rx="6" fill={c.corpo} stroke={c.borda} strokeWidth="1.5"/>
 
-      {/* Bracinhos */}
-      <rect x="8" y="54" width="12" height="8" rx="4" fill={c.corpo} stroke={c.borda} strokeWidth="1.5"
-        style={estado === 'excited' ? {transform: 'rotate(-30deg)', transformOrigin: '14px 54px'} : {}}/>
-      <rect x="60" y="54" width="12" height="8" rx="4" fill={c.corpo} stroke={c.borda} strokeWidth="1.5"
-        style={estado === 'excited' ? {transform: 'rotate(30deg)', transformOrigin: '66px 54px'} : {}}/>
-    </svg>
+        {/* Detalhe no peito */}
+        <rect x="30" y="58" width="20" height="12" rx="3" fill={c.borda} opacity="0.2"/>
+        <circle cx="40" cy="64" r="3" fill={c.borda} opacity="0.6"/>
+
+        {/* Bracinhos */}
+        <rect 
+          x="8" y="54" width="12" height="8" rx="4" fill={c.corpo} stroke={c.borda} strokeWidth="1.5"
+          className={estado === 'excited' ? 'anim-arms-up' : ''}
+          style={estado === 'excited' ? { transformOrigin: '20px 58px' } : {}}
+        />
+        <rect 
+          x="60" y="54" width="12" height="8" rx="4" fill={c.corpo} stroke={c.borda} strokeWidth="1.5"
+          className={estado === 'excited' ? 'anim-arms-up' : ''}
+          style={estado === 'excited' ? { transformOrigin: '60px 58px' } : {}}
+        />
+      </svg>
+    </div>
   );
 };
 
@@ -193,15 +215,25 @@ export const Mascote = ({
     }
 
     const rect = el.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-    const viewportWidth = window.innerWidth;
+    const mascoteWidth = 90;
+    const mascoteHeight = 100;
+    const spaceRight = window.innerWidth - rect.right;
 
-    const targetBottom = viewportHeight - rect.bottom - 20;
-    const targetRight = viewportWidth - rect.right - 80;
+    let targetRight, targetBottom;
+
+    if (spaceRight > mascoteWidth + 20) {
+      // Cabe à direita
+      targetRight = window.innerWidth - rect.right - mascoteWidth - 10;
+      targetBottom = window.innerHeight - rect.bottom - mascoteHeight/2;
+    } else {
+      // Vai para baixo do elemento
+      targetRight = window.innerWidth - rect.right - mascoteWidth/2;
+      targetBottom = window.innerHeight - rect.bottom - mascoteHeight - 10;
+    }
 
     setPosition({ 
-      bottom: Math.max(96, targetBottom), 
-      right: Math.max(24, targetRight) 
+      bottom: Math.max(80, Math.min(targetBottom, window.innerHeight - 150)), 
+      right: Math.max(8, Math.min(targetRight, window.innerWidth - 100)) 
     });
 
     el.classList.add('hubbot-target-glow');
@@ -514,15 +546,7 @@ export const Mascote = ({
 
   const getAnimationClass = () => {
     if (isMinimized) return '';
-    if (isThinking) return 'mascote-float animate-pulse';
-    switch (state) {
-      case 'excited': return 'mascote-jump';
-      case 'sleeping': return 'mascote-sleep';
-      case 'sad': return 'mascote-heavy';
-      case 'worried': return 'mascote-shake';
-      case 'thinking': return 'mascote-float';
-      default: return 'mascote-float';
-    }
+    return `anim-${state}`;
   };
 
   return (
