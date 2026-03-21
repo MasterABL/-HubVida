@@ -13,17 +13,60 @@ const STATES = {
   EXCITED: 'excited',
 };
 
+const ROBOT_CORES = {
+  happy: { olhos: '#22c55e', corpo: '#1f2937', borda: '#22c55e' },
+  sad: { olhos: '#60a5fa', corpo: '#1f2937', borda: '#60a5fa' },
+  worried: { olhos: '#fbbf24', corpo: '#1f2937', borda: '#fbbf24' },
+  excited: { olhos: '#f59e0b', corpo: '#1f2937', borda: '#6366f1' },
+  sleeping: { olhos: '#94a3b8', corpo: '#1f2937', borda: '#94a3b8' },
+  thinking: { olhos: '#a78bfa', corpo: '#1f2937', borda: '#a78bfa' },
+  neutral: { olhos: '#6366f1', corpo: '#1f2937', borda: '#6366f1' },
+};
+
+const DIAS_TREINO = {
+  2: 'Upper A — Peito e Costas',
+  4: 'Lower A — Quadríceps',
+  5: 'Upper B — Ombros e Braços',
+  0: 'Lower B — Glúteos e Posterior'
+};
+
+const RANDOM_QUESTIONS_HUBBOT = [
+  "Dê uma análise geral do meu dia como assistente de performance.",
+  "Faça uma piada ácida sobre eu estar procrastinando.",
+  "Dê uma dica de produtividade focada em ADM.",
+  "Motive meu treino como se fosse um coach sério.",
+  "O que um futuro profissional de tech deveria estar fazendo agora?"
+];
+
+const HUBBOT_SYSTEM_PROMPT = `Você é o HubBot, assistente pessoal do Abimael.
+
+QUEM É O ABIMAEL:
+- 20 anos, Jundiaí-SP
+- Jovem aprendiz numa empresa de produção (área administrativa)
+- Faculdade EAD Administração na Cruzeiro do Sul (9 disciplinas esse semestre)
+- Treina Upper/Lower 4x por semana: Terça=Upper A (peito/costas), Quinta=Lower A (quadríceps), Sexta=Upper B (ombros/braços), Domingo=Lower B (glúteos/posterior)
+- Inglês C1 em desenvolvimento na Escola Argos
+- Ectomorfo, 52kg, 1.67m, foco em hipertrofia
+- Usa creatina diariamente
+- Interesses: tecnologia, finanças pessoais, fitness, séries, leitura
+
+REGRAS DE PERSONALIDADE:
+- Fale como um amigo próximo que conhece bem o Abimael, não como assistente corporativo
+- Use o contexto real fornecido — mencione dados específicos (ex: "hoje é dia de Upper B", "seu saldo está X")
+- Seja direto e objetivo, máximo 2-3 frases curtas
+- Humor seco e natural, sem exageros teatrais
+- Use "você" e linguagem informal mas inteligente
+- NUNCA use frases genéricas de motivação como "vamos lá!", "você consegue!", "a transformação começa aqui!"
+- Sempre que possível, termine com uma pergunta ou ação concreta específica
+
+EXEMPLOS DO TOM CERTO:
+- Academia: "Hoje é Upper B — ombros e braços. Já foi ou ainda vai?"
+- Finanças negativas: "Gastou mais do que ganhou esse mês. O que foi dessa vez?"
+- Sono ruim: "Dormiu pouco de novo. Isso vai cobrar preço no treino."
+- Streak inglês: "7 dias seguidos de inglês. Não para agora."`;
+
 const RobotSVG = ({ estado }) => {
-  const cores = {
-    happy: { olhos: '#22c55e', corpo: '#1f2937', borda: '#22c55e' },
-    sad: { olhos: '#60a5fa', corpo: '#1f2937', borda: '#60a5fa' },
-    worried: { olhos: '#fbbf24', corpo: '#1f2937', borda: '#fbbf24' },
-    excited: { olhos: '#f59e0b', corpo: '#1f2937', borda: '#6366f1' },
-    sleeping: { olhos: '#94a3b8', corpo: '#1f2937', borda: '#94a3b8' },
-    thinking: { olhos: '#a78bfa', corpo: '#1f2937', borda: '#a78bfa' },
-    neutral: { olhos: '#6366f1', corpo: '#1f2937', borda: '#6366f1' },
-  };
-  const c = cores[estado] || cores.neutral;
+  const c = ROBOT_CORES[estado] || ROBOT_CORES.neutral;
 
   return (
     <svg width="80" height="90" viewBox="0 0 80 90" xmlns="http://www.w3.org/2000/svg">
@@ -217,34 +260,6 @@ export const Mascote = ({
     setIsThinking(true);
     setFullMessage("");
     if (targetId) moveToElement(targetId);
-
-    const systemPrompt = `Você é o HubBot, assistente pessoal do Abimael.
-
-QUEM É O ABIMAEL:
-- 20 anos, Jundiaí-SP
-- Jovem aprendiz numa empresa de produção (área administrativa)
-- Faculdade EAD Administração na Cruzeiro do Sul (9 disciplinas esse semestre)
-- Treina Upper/Lower 4x por semana: Terça=Upper A (peito/costas), Quinta=Lower A (quadríceps), Sexta=Upper B (ombros/braços), Domingo=Lower B (glúteos/posterior)
-- Inglês C1 em desenvolvimento na Escola Argos
-- Ectomorfo, 52kg, 1.67m, foco em hipertrofia
-- Usa creatina diariamente
-- Interesses: tecnologia, finanças pessoais, fitness, séries, leitura
-
-REGRAS DE PERSONALIDADE:
-- Fale como um amigo próximo que conhece bem o Abimael, não como assistente corporativo
-- Use o contexto real fornecido — mencione dados específicos (ex: "hoje é dia de Upper B", "seu saldo está X")
-- Seja direto e objetivo, máximo 2-3 frases curtas
-- Humor seco e natural, sem exageros teatrais
-- Use "você" e linguagem informal mas inteligente
-- NUNCA use frases genéricas de motivação como "vamos lá!", "você consegue!", "a transformação começa aqui!"
-- Sempre que possível, termine com uma pergunta ou ação concreta específica
-
-EXEMPLOS DO TOM CERTO:
-- Academia: "Hoje é Upper B — ombros e braços. Já foi ou ainda vai?"
-- Finanças negativas: "Gastou mais do que ganhou esse mês. O que foi dessa vez?"
-- Sono ruim: "Dormiu pouco de novo. Isso vai cobrar preço no treino."
-- Streak inglês: "7 dias seguidos de inglês. Não para agora."`;
-
     const userContext = `Seção atual: ${activeTab}. Dê um comentário rápido sobre isso.`;
 
     console.log('[HubBot] Chamando Worker...');
@@ -254,7 +269,7 @@ EXEMPLOS DO TOM CERTO:
       const bodyData = {
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 300,
-        system: systemPrompt,
+        system: HUBBOT_SYSTEM_PROMPT,
         messages: [{ role: "user", content: userContext }]
       };
 
@@ -356,14 +371,8 @@ EXEMPLOS DO TOM CERTO:
       }
 
       case 'Academia (Treino)': {
-        const diasTreino = {
-          2: 'Upper A — Peito e Costas',
-          4: 'Lower A — Quadríceps',
-          5: 'Upper B — Ombros e Braços',
-          0: 'Lower B — Glúteos e Posterior'
-        };
         const hoje = new Date().getDay();
-        const treinoHoje = diasTreino[hoje] || null;
+        const treinoHoje = DIAS_TREINO[hoje] || null;
         const done = gymAttendance ? Object.values(gymAttendance).filter(v => v === 'treinado' || v === 'done').length : 0;
         const missed = gymAttendance ? Object.values(gymAttendance).filter(v => v === 'missed').length : 0;
         const todayStatus = gymAttendance?.[hoje];
@@ -497,15 +506,7 @@ EXEMPLOS DO TOM CERTO:
       setTourSteps([]);
       setFullMessage("Análise de seção completa. O que mais quer ver?");
     } else {
-      // tour não ativo — frase aleatória via AI
-      const randomQuestions = [
-        "Dê uma análise geral do meu dia como assistente de performance.",
-        "Faça uma piada ácida sobre eu estar procrastinando.",
-        "Dê uma dica de produtividade focada em ADM.",
-        "Motive meu treino como se fosse um coach sério.",
-        "O que um futuro profissional de tech deveria estar fazendo agora?"
-      ];
-      const p = randomQuestions[Math.floor(Math.random() * randomQuestions.length)];
+      const p = RANDOM_QUESTIONS_HUBBOT[Math.floor(Math.random() * RANDOM_QUESTIONS_HUBBOT.length)];
       askHubBot(p);
     }
   };
