@@ -43,6 +43,7 @@ import { ScrollReveal } from './components/ScrollReveal';
 import { supabase } from './supabase';
 import { Haircare } from './components/Haircare';
 import { Mascote } from './components/Mascote';
+import { HubChat } from './components/HubChat';
 
 import { InstallPWA } from './components/InstallPWA';
 import { Changelog } from './components/Changelog';
@@ -1521,6 +1522,17 @@ export default function App() {
               financeSummary={financeSummary}
               visaoGeralMetrics={visaoGeralMetrics}
               nutritionTracker={nutritionTracker}
+            />
+          )}
+
+          {session && (
+            <HubChat 
+              financeSummary={financeSummary}
+              sleepData={sleepData}
+              gymAttendance={gymAttendance}
+              englishStreak={englishStreak}
+              nutritionTracker={nutritionTracker}
+              visaoGeralMetrics={visaoGeralMetrics}
             />
           )}
         </div>
