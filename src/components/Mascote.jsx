@@ -191,7 +191,6 @@ export const Mascote = ({
   // --- EFEITO: REAÇÃO À TROCA DE TAB ---
   useEffect(() => {
     if (prevTabRef.current !== activeTab) {
-      console.log('HubBot: activeTab mudou para:', activeTab);
       prevTabRef.current = activeTab;
       const ctx = getSectionContext(activeTab);
       if (ctx) {
