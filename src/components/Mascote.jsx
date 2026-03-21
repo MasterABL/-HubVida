@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { HUBBOT_PROXY_URL } from '../config/hubbot';
 
 const STATES = {
   CELEBRATING: 'celebrating',
@@ -116,17 +117,13 @@ export const Mascote = ({
     `;
 
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const response = await fetch(HUBBOT_PROXY_URL, {
         method: 'POST',
         headers: {
-          'x-api-key': import.meta.env.VITE_ANTHROPIC_API_KEY || '',
-          'anthropic-version': '2023-06-01',
-          'content-type': 'application/json',
-          'dangerously-allow-browser': 'true' // Necessário para chamadas client-side na SDK da Anthropic
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          model: "claude-3-5-sonnet-20240620",
-          max_tokens: 150,
+          max_tokens: 300,
           system: systemPrompt,
           messages: [{ role: "user", content: prompt }]
         })
