@@ -42,6 +42,7 @@ import { SplashScreen } from './components/SplashScreen';
 import { ScrollReveal } from './components/ScrollReveal';
 import { supabase } from './supabase';
 import { Haircare } from './components/Haircare';
+import { Mascote } from './components/Mascote';
 
 import { InstallPWA } from './components/InstallPWA';
 import { Changelog } from './components/Changelog';
@@ -1511,6 +1512,15 @@ export default function App() {
           <ToastContainer service={notificationService} />
           <PermissionModal service={notificationService} />
           <InstallPWA />
+          {session && (
+            <Mascote
+              gymAttendance={gymAttendance}
+              englishStreak={englishStreak}
+              sleepData={sleepData}
+              financeSummary={financeSummary}
+              visaoGeralMetrics={visaoGeralMetrics}
+            />
+          )}
         </div>
       )}
     </>
