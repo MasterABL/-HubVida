@@ -124,10 +124,49 @@ export const Mascote = ({
   visaoGeralMetrics,
   nutritionTracker
 }) => {
+  // 1. Estados
   const [state, setState] = useState(STATES.NEUTRAL);
+  const [fullMessage, setFullMessage] = useState("");
+  const [displayText, setDisplayText] = useState("");
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [isThinking, setIsThinking] = useState(false);
+  const [position, setPosition] = useState({ bottom: 96, right: 24 });
+  const [isCiganoMode] = useState(true);
+  const [tourSteps, setTourSteps] = useState([]);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isTourActive, setIsTourActive] = useState(false);
+
+  // 2. Refs
+  const typingTimeoutRef = useRef(null);
+  const prevTabRef = useRef(null);
+  const isThinkingRef = useRef(false);
+
+  // 3. Helpers
+  const moveToElement = useCallback((dataId) => {
+    const el = document.querySelector(`[data-hubbot="${dataId}"]`);
+    if (!el) {
+      setPosition({ bottom: 96, right: 24 });
+      return;
+    }
+
+    const rect = el.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
+
+    const targetBottom = viewportHeight - rect.bottom - 20;
+    const targetRight = viewportWidth - rect.right - 80;
+
+    setPosition({ 
+      bottom: Math.max(96, targetBottom), 
+      right: Math.max(24, targetRight) 
+    });
+
+    el.classList.add('hubbot-target-glow');
+    setTimeout(() => el.classList.remove('hubbot-target-glow'), 5000);
+  }, [setPosition]);
 
   const calcularEstado = useCallback(() => {
-    const sleepAvg = sleepData?.slice(0,3).reduce((a,b) => a + Number(b.hours||0), 0) / Math.min(sleepData?.length||1, 3);
+    const sleepAvg = (sleepData || []).slice(0,3).reduce((a,b) => a + Number(b.hours||0), 0) / Math.min(sleepData?.length||1, 3);
     const saldoNegativo = financeSummary?.available < 0;
     const treinosFeitos = gymAttendance ? Object.values(gymAttendance).filter(v=> v==='treinado' || v==='done').length : 0;
     const hoje = new Date().getDay();
@@ -142,26 +181,6 @@ export const Mascote = ({
     if (sleepAvg >= 7 && !saldoNegativo && treinosFeitos >= 1) return 'happy';
     return 'neutral';
   }, [sleepData, financeSummary, gymAttendance, englishStreak, isThinking]);
-
-  useEffect(() => {
-    setState(calcularEstado());
-  }, [calcularEstado]);
-
-  const [fullMessage, setFullMessage] = useState("");
-  const [displayText, setDisplayText] = useState("");
-  const [isMinimized, setIsMinimized] = useState(false);
-  const [isThinking, setIsThinking] = useState(false);
-  const [position, setPosition] = useState({ bottom: 96, right: 24 });
-  const [isCiganoMode] = useState(true); // Se true, muda de posição sozinho
-
-  const typingTimeoutRef = useRef(null);
-  const prevTabRef = useRef(null);
-  const isThinkingRef = useRef(false);
-
-  // --- NOVO SISTEMA DE ETAPAS (StepTour) ---
-  const [tourSteps, setTourSteps] = useState([]);
-  const [currentStep, setCurrentStep] = useState(0);
-  const [isTourActive, setIsTourActive] = useState(false);
 
   // --- EFEITO DE MÁQUINA DE ESCREVER ---
   useEffect(() => {
@@ -186,32 +205,9 @@ export const Mascote = ({
     return () => clearInterval(typingTimeoutRef.current);
   }, [fullMessage]);
 
-  // --- MOVIMENTO ATÉ ELEMENTO ---
-  const moveToElement = useCallback((dataId) => {
-    const el = document.querySelector(`[data-hubbot="${dataId}"]`);
-    if (!el) {
-      // Volta para a posição padrão se não achar
-      setPosition({ bottom: 96, right: 24 });
-      return;
-    }
-
-    const rect = el.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-    const viewportWidth = window.innerWidth;
-
-    // Calcula posição aproximada (perto do elemento, mas não em cima)
-    const targetBottom = viewportHeight - rect.bottom - 20;
-    const targetRight = viewportWidth - rect.right - 80;
-
-    setPosition({ 
-      bottom: Math.max(96, targetBottom), 
-      right: Math.max(24, targetRight) 
-    });
-
-    // Efeito de Glow temporário no elemento
-    el.classList.add('hubbot-target-glow');
-    setTimeout(() => el.classList.remove('hubbot-target-glow'), 5000);
-  }, []);
+  useEffect(() => {
+    setState(calcularEstado());
+  }, [calcularEstado]);
 
   // --- INTEGRAÇÃO COM GROQ API (LLAMA 3.1) ---
   const askHubBot = useCallback(async (prompt, targetId = null) => {
@@ -286,7 +282,7 @@ EXEMPLOS DO TOM CERTO:
       isThinkingRef.current = false;
       setIsThinking(false);
     }
-  }, [moveToElement, activeTab]);
+  }, [moveToElement, activeTab, setIsThinking, setFullMessage, setState]);
 
   // --- EFEITO: BOOT INICIAL ---
   useEffect(() => {
@@ -553,7 +549,7 @@ EXEMPLOS DO TOM CERTO:
                 {isTourActive && tourSteps.length > 1 && (
                   <div className="flex flex-col gap-1.5 pt-1 border-t border-hub-border/50">
                     <div className="flex gap-1 justify-center">
-                      {tourSteps.map((_, i) => (
+                      {tourSteps.map((s, i) => (
                         <div
                           key={i}
                           className={`w-1 h-1 rounded-full transition-all ${
