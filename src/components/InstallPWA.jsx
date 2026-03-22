@@ -46,7 +46,7 @@ export function InstallPWA() {
                             📲 Instalar HubVida
                         </p>
                         <p className="text-sm text-hub-muted mt-1">
-                            Instale para receber notificações nativas e ter acesso rápido.
+                            Instale para ter acesso rápido e uma experiência nativa.
                         </p>
                     </div>
                     <button 

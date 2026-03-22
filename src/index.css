@@ -373,15 +373,7 @@ body,
     pointer-events: none !important;
   }
 
-  /* Toast positioning above Bottom Nav on Mobile */
-  .toast-container {
-    bottom: 85px !important;
-    right: 16px !important;
-    left: 16px !important;
-    width: auto !important;
-    max-width: 100vw !important;
-    align-items: center !important;
-  }
+
 }
 
 /* Scrollbar Utility fallback */
@@ -393,50 +385,17 @@ body,
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-
 /* =========================================================
-   NOTIFICATION & PWA ANIMATIONS
+   PWA ANIMATIONS
    ========================================================= */
-
-@keyframes slideInRight {
-  from { transform: translateX(110%); }
-  to { transform: translateX(0); }
-}
 
 @keyframes slideInUp {
   from { transform: translate(-50%, 110%); }
   to { transform: translate(-50%, 0); }
 }
 
-@keyframes progressBar {
-  from { width: 100%; }
-  to { width: 0%; }
-}
-
-.animate-slide-in-right {
-  animation: slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
 .animate-slide-in-up {
   animation: slideInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.animate-progress-bar {
-  animation: progressBar 5s linear forwards;
-}
-
-/* Custom Scrollbar for Notification Center & Sidebar */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {

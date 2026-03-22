@@ -21,7 +21,6 @@ import {
   Lightbulb,
   Scissors,
   Activity,
-  Settings,
 } from 'lucide-react';
 
 import { VisaoGeral } from './components/VisaoGeral';
@@ -49,11 +48,7 @@ import { InstallPWA } from './components/InstallPWA';
 import { Changelog } from './components/Changelog';
 import { Onboarding } from './components/Onboarding';
 import { KeyboardShortcuts } from './components/KeyboardShortcuts';
-import { notificationService } from './services/notificationService';
-import { ToastContainer } from './components/notifications/ToastContainer';
-import { NotificationCenter } from './components/notifications/NotificationCenter';
-import { NotificationSettings } from './components/notifications/NotificationSettings';
-import { PermissionModal } from './components/notifications/PermissionModal';
+
 
 // --- CONFIGURAÇÕES INICIAIS E DADOS MOCKADOS ---
 const INITIAL_HARD_SKILLS = [
@@ -490,7 +485,7 @@ export default function App() {
         return [...prev, newItem];
       });
 
-      notificationService.send('Faculdade', `Quiz ${disciplina.toUpperCase()} concluído! Você acertou ${score}/${total} ✅`);
+
     } catch (err) {
       console.error('Erro ao salvar progresso de estudo:', err);
     }
@@ -685,70 +680,9 @@ export default function App() {
     return { income, expense, prevMonthBalance, available };
   }, [currentMonthFinances, activeMonth]);
 
-  // --- NOTIFICATION SYSTEM LOGIC ---
-  useEffect(() => {
-    if (session?.user) {
-      notificationService.init(session.user);
-      notificationService.startChecking(() => ({
-        faculdadeData,
-        provas,
-        gymAttendance,
-        financeSummary,
-        sleepData,
-        nutritionTracker,
-        haircareHistory: haircareDateDone ? [{ date: haircareDateDone }] : []
-      }));
-    }
-    return () => notificationService.stopChecking();
-  }, [session, faculdadeData, provas, gymAttendance, financeSummary, sleepData, nutritionTracker, haircareDateDone]);
 
-  // Handle complex notification triggers
-  useEffect(() => {
-    const checkTraining = () => {
-      // Check if any training was marked as done today
-      // In this app, gymAttendance stores 'pending' or 'done' for days 0-6
-      const day = new Date().getDay();
-      let status = 'pending';
-      if (day === 0) status = gymAttendance[0];
-      else if (day === 1) status = gymAttendance[1];
-      else if (day === 2) status = gymAttendance[2];
-      else if (day === 3) status = gymAttendance[3];
-      else if (day === 4) status = gymAttendance[4];
-      else if (day === 5) status = gymAttendance[5];
-      else if (day === 6) status = gymAttendance[6];
 
-      if (status !== 'done') {
-        notificationService.send('Academia', '👀 Registro de Treino', 'Você foi treinar hoje? Não esqueça de registrar!');
-      }
-    };
 
-    const checkHaircare = () => {
-      // haircareStatus and message are already calculated in App.jsx scope
-      if (isWashDay) {
-        notificationService.send('Haircare', '💇 Dia de Procedimento', `Hoje é dia de ${haircareStatus}! Não esquece.`);
-      }
-    };
-
-    const checkFinanceLimit = () => {
-      if (financeSummary.income > 0) {
-        const usage = (financeSummary.expense / financeSummary.income) * 100;
-        if (usage >= 80) {
-          notificationService.send('Financas', '⚠️ Gasto Alto', 'Atenção! Você já usou 80% da sua receita este mês.');
-        }
-      }
-    };
-
-    window.addEventListener('hubvida_check_training_reg', checkTraining);
-    window.addEventListener('hubvida_check_haircare', checkHaircare);
-    
-    // Check finance limit whenever finances change or month changes
-    checkFinanceLimit();
-
-    return () => {
-      window.removeEventListener('hubvida_check_training_reg', checkTraining);
-      window.removeEventListener('hubvida_check_haircare', checkHaircare);
-    };
-  }, [gymAttendance, financeSummary, isWashDay, haircareStatus]);
 
   // Listener de eventos de sync
   useEffect(() => {
@@ -1068,20 +1002,7 @@ export default function App() {
               )}
             </div>
 
-            <div className="px-6 mb-4 flex items-center justify-between">
-              <NotificationCenter user={session?.user} />
-              <button
-                 onClick={() => {
-                   const element = document.getElementById('Configurações');
-                   if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                   setIsMobileMenuOpen(false);
-                 }}
-                 className="p-2 text-hub-muted hover:text-hub-strong transition-colors rounded-full hover:bg-white/10"
-                 title="Configurações de Notificação"
-              >
-                <Settings size={20} />
-              </button>
-            </div>
+
 
             <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
               {/* Visão Geral (Standalone) */}
@@ -1264,15 +1185,9 @@ export default function App() {
                   </button>
                   <div className="w-8 h-8 bg-yellow-400 rounded-md flex items-center justify-center font-black text-black">H</div>
                </div>
-               <NotificationCenter user={session?.user} />
             </header>
 
-            {/* HEADER DESKTOP (Caso prefira flutuante ou fixo no topo do main) */}
-            <div className="hidden md:flex justify-end p-6 fixed top-0 right-0 z-40 pointer-events-none">
-               <div className="pointer-events-auto bg-hub-surface/50 backdrop-blur-md rounded-full border border-hub-border p-1 shadow-lg">
-                  <NotificationCenter user={session?.user} />
-               </div>
-            </div>
+
 
             <div className="max-w-6xl mx-auto w-full px-0">
 
@@ -1467,13 +1382,7 @@ export default function App() {
                   </ScrollReveal>
                 </div>
 
-                <div id="Configurações" className="scroll-mt-24 module-section">
-                  <ScrollReveal delay={50}>
-                    <div className="px-4">
-                      <NotificationSettings service={notificationService} />
-                    </div>
-                  </ScrollReveal>
-                </div>
+
 
               </div>
             </div>
@@ -1519,10 +1428,7 @@ export default function App() {
             />
           )}
 
-          {/* Notification System Globals */}
-          <ToastContainer service={notificationService} />
-          <PermissionModal service={notificationService} />
-          <InstallPWA />
+
           {session && (
             <Mascote
               activeTab={activeTab}

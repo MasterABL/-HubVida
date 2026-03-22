@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Target, Clock, Timer, CheckCircle, BookOpen, Dumbbell, Flame, Info } from 'lucide-react';
 import { Skeleton } from './Skeleton';
 
@@ -7,19 +7,9 @@ export function Treino({ isLoaded = true, workoutProfile, setWorkoutProfile, wor
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [tempProfile, setTempProfile] = useState({ peso: '', altura: '' });
 
-  // Toast Notification
-  const [showToast, setShowToast] = useState(false);
 
-  useEffect(() => {
-    const handler = (e) => {
-      if (e.detail === 'saved') {
-        setShowToast(true);
-        setTimeout(() => setShowToast(false), 3000);
-      }
-    };
-    window.addEventListener('hubvida_sync', handler);
-    return () => window.removeEventListener('hubvida_sync', handler);
-  }, []);
+
+
 
   const handleEditProfile = () => {
     setTempProfile({ peso: workoutProfile.peso, altura: workoutProfile.altura });
@@ -104,13 +94,7 @@ export function Treino({ isLoaded = true, workoutProfile, setWorkoutProfile, wor
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
-      {/* Toast Notification (Salvo com sucesso) */}
-      <div className={`fixed bottom-4 right-4 transform transition-all duration-300 z-50 ${showToast ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
-        <div className="bg-emerald-500/90 backdrop-blur-sm text-white px-4 py-3 rounded-xl shadow-lg shadow-emerald-500/20 border border-emerald-400/50 flex items-center gap-3">
-          <CheckCircle className="w-5 h-5" />
-          <span className="text-sm font-bold uppercase tracking-wider">Carga salva na nuvem!</span>
-        </div>
-      </div>
+
 
       {/* Cabeçalho do Dashboard */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
