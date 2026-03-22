@@ -475,7 +475,7 @@ export const VisaoGeral = ({
             <Target className="w-4 h-4 text-emerald-500" />
             <h3 className="text-xs font-bold text-hub-faint uppercase tracking-widest">Evolução de Peso (kg)</h3>
           </div>
-          <div className="flex-1 w-full relative">
+          <div className="flex-1 w-full h-64 relative">
             {/* Como não temos histórico real salvo no app ainda, vamos criar um mock trend que leva ao peso atual */}
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={[
@@ -503,7 +503,7 @@ export const VisaoGeral = ({
             <Dumbbell className="w-4 h-4 text-rose-500" />
             <h3 className="text-xs font-bold text-hub-faint uppercase tracking-widest">Frequência Academia</h3>
           </div>
-          <div className="flex-1 w-full relative">
+          <div className="flex-1 w-full h-64 relative">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={[
                 { name: 'Dom', status: gymAttendance?.[0] === 'done' ? 1 : 0 },
@@ -545,7 +545,7 @@ export const VisaoGeral = ({
             <Moon className="w-4 h-4 text-emerald-500" />
             <h3 className="text-xs font-bold text-hub-faint uppercase tracking-widest">Padrão de Sono (h)</h3>
           </div>
-          <div className="flex-1 w-full relative">
+          <div className="flex-1 w-full h-64 relative">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={[
                 { name: 'Dom', horas: parseFloat(sleepData?.[0]?.hours || 0) },

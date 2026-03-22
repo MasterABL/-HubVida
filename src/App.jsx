@@ -432,7 +432,7 @@ export default function App() {
     try {
       const { data, error } = await supabase
         .from('study_progress')
-        .select('*')
+        .select('user_id,disciplina,quiz_score,quiz_total,ultima_sessao')
         .eq('user_id', session.user.id);
 
       if (error) {
