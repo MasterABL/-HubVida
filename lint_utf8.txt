@@ -1,0 +1,21 @@
+﻿
+C:\Users\Abimael Balbino\OneDrive\Documentos - Gerais\HubVida\c623d82402d37845b4960a181ed38e1a-6e09c0df25143a744d990e592aecee14a24a1117\App.jsx
+   308:6    warning  React Hook useEffect has missing dependencies: 'faculdadeData' and 'setFaculdadeData'. Either include them or remove the dependency array                 react-hooks/exhaustive-deps
+   330:7    warning  React Hook useMemo has missing dependencies: 'calculateCategoryAvg' and 'calculateSoftSkillProgress'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+   622:17   warning  'isFailed' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                       no-unused-vars
+   998:339  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                           react/no-unescaped-entities
+   998:356  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                           react/no-unescaped-entities
+  1007:314  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                           react/no-unescaped-entities
+  1007:320  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                           react/no-unescaped-entities
+  1109:66   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                           react/no-unescaped-entities
+  1109:102  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                           react/no-unescaped-entities
+
+C:\Users\Abimael Balbino\OneDrive\Documentos - Gerais\HubVida\src\components\HubChat.jsx
+  92:14  warning  'err' is defined but never used  no-unused-vars
+
+C:\Users\Abimael Balbino\OneDrive\Documentos - Gerais\HubVida\tmp\check_db.js
+   6:17  warning  'settingsData' is assigned a value but never used. Allowed unused vars must match /^_/u  no-unused-vars
+  17:17  warning  'historyData' is assigned a value but never used. Allowed unused vars must match /^_/u   no-unused-vars
+
+Ô£û 12 problems (6 errors, 6 warnings)
+
