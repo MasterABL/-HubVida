@@ -19,7 +19,7 @@ export const DisciplineDetail = ({ discipline, session, onBack }) => {
   ];
 
   return (
-    <div className="w-full flex flex-col h-full bg-hub-base space-y-4 animate-slide-in-up">
+    <div className="w-full space-y-6 animate-slide-in-up">
       {/* Header */}
       <div className="bg-hub-surface border border-hub-border rounded-2xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
@@ -50,7 +50,7 @@ export const DisciplineDetail = ({ discipline, session, onBack }) => {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="bg-hub-surface border border-hub-border rounded-2xl p-2 flex overflow-x-auto no-scrollbar gap-2 shadow-sm">
+      <div className="w-full bg-hub-surface border border-hub-border rounded-2xl p-2 flex overflow-x-auto no-scrollbar gap-2 shadow-sm">
         {tabs.map(tab => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -58,7 +58,7 @@ export const DisciplineDetail = ({ discipline, session, onBack }) => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition-all flex-1 justify-center ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition-all shrink-0 sm:flex-1 justify-center ${
                 isActive 
                   ? 'bg-hub-inner text-white shadow-sm ring-1 ring-white/10' 
                   : 'text-hub-muted hover:text-hub-strong hover:bg-hub-hover'
@@ -72,7 +72,7 @@ export const DisciplineDetail = ({ discipline, session, onBack }) => {
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 bg-hub-surface border border-hub-border rounded-2xl p-6 shadow-sm min-h-[500px]">
+      <div className="w-full bg-hub-surface border border-hub-border rounded-2xl p-4 md:p-6 shadow-sm min-h-[500px]">
         {activeTab === 'content' && <ContentTab discipline={discipline} session={session} />}
         {activeTab === 'progress' && <ProgressTab discipline={discipline} session={session} />}
         {activeTab === 'notes' && <FreeNotesTab discipline={discipline} session={session} />}
