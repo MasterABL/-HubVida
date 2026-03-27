@@ -25,9 +25,7 @@ import {
 
 import { VisaoGeral } from './components/VisaoGeral';
 import { Competencias } from './components/Competencias';
-import Faculdade from './components/Faculdade';
-import StudyPanel from './components/faculdade/StudyPanel';
-import { STUDY_CONTENT } from './data/studyContent';
+import { FaculdadeV2 } from './components/FaculdadeV2';
 import { Financas } from './components/Financas';
 import { Producao } from './components/Producao';
 import { Roadmap } from './components/Roadmap';
@@ -207,18 +205,6 @@ const ROUTINE_DATA = {
     ],
   },
 };
-
-const INITIAL_FACULDADE = [
-  { id: 1, name: 'GESTÃO DE MARKETING', checks: { as1: false, as2: false, as3: false, as4: false }, notas: { as: '', a1: '' }, notes: '' },
-  { id: 2, name: 'LÍNGUA BRASILEIRA DE SINAIS', checks: { as1: false, as2: false, as3: false, as4: false }, notas: { as: '', a1: '' }, notes: '' },
-  { id: 3, name: 'ORGANIZAÇÃO, SISTEMAS E MÉTODOS', checks: { as1: false, as2: false, as3: false, as4: false }, notas: { as: '', a1: '' }, notes: '' },
-  { id: 4, name: 'PROBABILIDADE E ESTATÍSTICA', checks: { as1: false, as2: false, as3: false, as4: false }, notas: { as: '', a1: '' }, notes: '' },
-  { id: 5, name: 'MODELOS INOVADORES EM NEGÓCIOS', checks: { as1: false, as2: false, as3: false, as4: false }, notas: { as: '', a1: '' }, notes: '' },
-  { id: 6, name: 'PROJETO MULTIDISCIPLINAR EM ADMINISTRAÇÃO II', checks: { as1: false, as2: false, as3: false, as4: false }, notas: { as: '', a1: '' }, notes: '' },
-  { id: 7, name: 'PLANO DE ACOMPANHAMENTO DE CARREIRA EM ADMINISTRAÇÃO II', checks: { as1: false, as2: false, as3: false, as4: false }, notas: { as: '', a1: '' }, notes: '' },
-  { id: 8, name: 'AVALIAÇÃO INTEGRADA DE COMPETÊNCIAS EM ADMINISTRAÇÃO II', checks: { as1: false, as2: false, as3: false, as4: false }, notas: { as: '', a1: '' }, notes: '' },
-  { id: 9, name: 'ATIVIDADES DE EXTENSÃO', checks: { as1: false, as2: false, as3: false, as4: false }, notas: { as: '', a1: '' }, notes: '' },
-];
 
 const INITIAL_WORKOUT_PROFILE = {
   peso: 52,
@@ -406,7 +392,6 @@ export default function App() {
   const [productions, setProductions] = useSupabaseStorage('hubvida_productions', INITIAL_PRODUCTIONS);
   const [ideas, setIdeas] = useSupabaseStorage('hubvida_ideas', INITIAL_IDEAS);
   const [routinesData, setRoutinesData, isRotinaLoaded] = useSupabaseStorage('hubvida_routines_v2', ROUTINE_DATA);
-  const [faculdadeData, setFaculdadeData, isFaculdadeLoaded] = useSupabaseStorage('hubvida_faculdadeData', INITIAL_FACULDADE);
   const [avisosPortal, setAvisosPortal] = useSupabaseStorage(
     'hubvida_avisos',
     'Fique atento aos prazos de submissão da AS-I no portal da Cruzeiro do Sul.'
@@ -422,73 +407,7 @@ export default function App() {
   const [sleepGoal, setSleepGoal] = useSupabaseStorage('hubvida_sleep_goal', 8);
   const [sleepData, setSleepData] = useSupabaseStorage('hubvida_sleep_data', []);
 
-  // -- ESTADOS DE ESTUDO (PROGRESSO) --
-  const [studyProgress, setStudyProgress] = useState([]);
-  const [isStudyProgressLoaded, setIsStudyProgressLoaded] = useState(false);
-
-  const fetchStudyProgress = useCallback(async () => {
-    if (!session?.user?.id) return;
-    try {
-      const { data, error } = await supabase
-        .from('study_progress')
-        .select('user_id,disciplina,quiz_score,quiz_total,ultima_sessao')
-        .eq('user_id', session.user.id);
-
-      if (error) {
-        // Tratar 404 (tabela não encontrada) silenciosamente
-        if (error.code === '42P01' || error.status === 404) {
-          setStudyProgress([]);
-          return;
-        }
-        throw error;
-      }
-      setStudyProgress(data || []);
-    } catch (err) {
-      console.error('Error fetching study progress:', err);
-    } finally {
-      setIsStudyProgressLoaded(true);
-    }
-  }, [session?.user?.id]);
-
-  useEffect(() => {
-    fetchStudyProgress();
-  }, [fetchStudyProgress]);
-
-  const updateStudyProgress = async (disciplina, score, total) => {
-    if (!session?.user?.id) return;
-    try {
-      const { error } = await supabase
-        .from('study_progress')
-        .upsert({
-          user_id: session.user.id,
-          disciplina,
-          quiz_score: score,
-          quiz_total: total,
-          ultima_sessao: new Date().toISOString()
-        }, { onConflict: 'user_id,disciplina' });
-
-      if (error) {
-        if (error.code === '42P01' || error.status === 404) return;
-        throw error;
-      }
-      
-      // Update local state
-      setStudyProgress(prev => {
-        const index = prev.findIndex(p => p.disciplina === disciplina);
-        const newItem = { disciplina, quiz_score: score, quiz_total: total, ultima_sessao: new Date().toISOString() };
-        if (index >= 0) {
-          const newArr = [...prev];
-          newArr[index] = { ...newArr[index], ...newItem };
-          return newArr;
-        }
-        return [...prev, newItem];
-      });
-
-
-    } catch (err) {
-      console.error('Erro ao salvar progresso de estudo:', err);
-    }
-  };
+  // -- ESTADOS DE SONO --
 
   const [englishStreak, setEnglishStreak] = useSupabaseStorage('hubvida_english_streak', {
     count: 0,
@@ -569,8 +488,6 @@ export default function App() {
   const [activeRoadmapTab, setActiveRoadmapTab] = useState('Visão Geral');
   const [expandedYear, setExpandedYear] = useState('Ano 3');
   const [newCr, setNewCr] = useState({ disciplina: '', nota: '', creditos: '4' });
-  const [expandedSubject, setExpandedSubject] = useState(null);
-  const [studyPanelDiscipline, setStudyPanelDiscipline] = useState(null);
   const [syncStatus, setSyncStatus] = useState(null); // null | 'saving' | 'saved' | 'error'
   // -- TEMA CLARO/ESCURO --
   const [theme, setTheme] = useState(() => localStorage.getItem('hubvida_theme') || 'dark');
@@ -630,7 +547,6 @@ export default function App() {
       setSession(session);
 
       if (session) {
-        fetchStudyProgress();
         // Verifica onboarding
         const hasSeenTour = localStorage.getItem('@hubvida/hasSeenTour');
         if (!hasSeenTour) {
@@ -640,7 +556,7 @@ export default function App() {
     });
 
     return () => subscription.unsubscribe();
-  }, [fetchStudyProgress]);
+  }, []);
 
   const handleCloseTour = () => {
     setShowTour(false);
@@ -903,62 +819,17 @@ export default function App() {
       return prev;
     });
   };
-
-  const handleUpdateFaculdade = (id, field, subfield, value) => {
-    setFaculdadeData((prev) =>
-      prev.map((d) => {
-        if (d.id !== id) return d;
-        
-        if (field === 'notas') {
-          return {
-            ...d,
-            notas: {
-              ...d.notas,
-              [subfield]: value
-            }
-          };
-        } else if (field === 'checks') {
-          const newChecks = { ...d.checks, [subfield]: value };
-          return { ...d, checks: newChecks };
-        } else if (field === 'expandido') {
-          return { ...d, expandido: value };
-        } else if (field === 'status') {
-          return { ...d, status: value };
-        } else if (field === 'notes') {
-          return { ...d, notes: value };
-        }
-        
-        return d;
-      })
-    );
-  };
-
   const calculateFinalGrade = (as, a1) => {
     if (!as || !a1) return null;
     return (Number(as) * 0.4 + Number(a1) * 0.6).toFixed(1);
   };
 
   const visaoGeralMetrics = useMemo(() => {
-    let checkedAS = 0;
-    let approvedSubjects = 0;
-    const totalAS = faculdadeData.length * 4;
-
-    faculdadeData.forEach((d) => {
-      if (d.checks.as1) checkedAS++;
-      if (d.checks.as2) checkedAS++;
-      if (d.checks.as3) checkedAS++;
-      if (d.checks.as4) checkedAS++;
-
-      const grade = calculateFinalGrade(d.notas.as, d.notas.a1);
-      if (grade && Number(grade) >= 7) approvedSubjects++;
-    });
-
     return {
-      progressoMes: totalAS > 0 ? Math.round((checkedAS / totalAS) * 100) : 0,
-      disciplinasAprovadas: approvedSubjects,
-      totalDisciplinas: faculdadeData.length,
+      progressoMes: 0,
+      totalDisciplinas: 0,
     };
-  }, [faculdadeData]);
+  }, []);
 
   // Use the merged components logic in return
   return (
@@ -1027,7 +898,7 @@ export default function App() {
                   name: 'Estudos',
                   icon: GraduationCap,
                   items: [
-                    { name: 'Faculdade ADM', icon: Library },
+                    { name: 'Faculdade', icon: Library },
                     { name: 'Ph.D. Roadmap', icon: GraduationCap },
                     { name: 'Produção Acadêmica', icon: FileText },
                   ]
@@ -1220,19 +1091,9 @@ export default function App() {
                   </ScrollReveal>
                 </div>
 
-                <div id="Faculdade ADM" className="scroll-mt-24 module-section">
+                <div id="Faculdade" className="scroll-mt-24 module-section">
                   <ScrollReveal delay={50}>
-                    <Faculdade
-                      isLoaded={isFaculdadeLoaded && isStudyProgressLoaded}
-                      faculdadeData={faculdadeData}
-                      studyProgress={studyProgress}
-                      updateStudyProgress={updateStudyProgress}
-                      expandedSubject={expandedSubject}
-                      setExpandedSubject={setExpandedSubject}
-                      handleUpdateFaculdade={handleUpdateFaculdade}
-                      calculateFinalGrade={calculateFinalGrade}
-                      onOpenStudyPanel={setStudyPanelDiscipline}
-                    />
+                    <FaculdadeV2 session={session} />
                   </ScrollReveal>
                 </div>
 
@@ -1415,17 +1276,7 @@ export default function App() {
             })}
           </nav>
           
-          {/* StudyPanel Portal — rendered above main scroll so fixed inset-0 works */}
-          {studyPanelDiscipline && (
-            <StudyPanel
-              discipline={{ name: studyPanelDiscipline.label }}
-              content={STUDY_CONTENT[studyPanelDiscipline.key] || { title: studyPanelDiscipline.label, sections: [], quiz: [] }}
-              onBack={() => setStudyPanelDiscipline(null)}
-              onSaveProgress={(score, total) => {
-                updateStudyProgress(studyPanelDiscipline.key, score, total);
-              }}
-            />
-          )}
+
         </div>
       )}
     </>
