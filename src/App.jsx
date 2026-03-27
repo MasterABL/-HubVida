@@ -819,10 +819,7 @@ export default function App() {
       return prev;
     });
   };
-  const calculateFinalGrade = (as, a1) => {
-    if (!as || !a1) return null;
-    return (Number(as) * 0.4 + Number(a1) * 0.6).toFixed(1);
-  };
+
 
   const visaoGeralMetrics = useMemo(() => {
     return {
