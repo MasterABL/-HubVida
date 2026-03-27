@@ -1043,7 +1043,7 @@ export default function App() {
             </div>
           </aside>
 
-          <main className="flex-1 flex flex-col md:ml-64">
+          <main className="flex-1 flex flex-col min-w-0 max-w-full md:ml-64">
             {/* NOVO HEADER GLOBAL COM SINO */}
             <header className="sticky top-0 z-40 w-full bg-hub-surface/80 backdrop-blur-xl border-b border-hub-border px-6 py-4 flex justify-between items-center md:hidden">
                <div className="flex items-center gap-3">
