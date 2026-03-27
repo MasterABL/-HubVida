@@ -29,7 +29,7 @@ export const PomodoroTab = ({ discipline, session }) => {
         .from('pomodoro_sessions')
         .select('*')
         .eq('discipline_id', discipline.id)
-        .eq('user_id', session.id)
+        .eq('user_id', session.user.id)
         .order('completed_at', { ascending: false })
         .limit(10);
       
@@ -53,7 +53,7 @@ export const PomodoroTab = ({ discipline, session }) => {
       const { data, error } = await supabase
         .from('pomodoro_sessions')
         .insert({
-          user_id: session.id,
+          user_id: session.user.id,
           discipline_id: discipline.id,
           topic_id: selectedTopicId || null,
           duration_minutes: duration

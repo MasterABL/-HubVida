@@ -43,7 +43,7 @@ export const ProgressTab = ({ discipline, session }) => {
         .from('as_items')
         .insert({
           discipline_id: discipline.id,
-          user_id: session.id,
+          user_id: session.user.id,
           title: newItemTitle,
           due_date: newItemDate || null
         })

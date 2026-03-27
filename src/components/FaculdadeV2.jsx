@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
 import { Loader2, Plus, BookOpen, Presentation, CheckCircle2, Search, X } from 'lucide-react';
 import { DisciplineDetail } from './faculdade/DisciplineDetail';
+import { faculdadeSeedData } from '../data/faculdadeSeed';
 
 export const FaculdadeV2 = ({ session }) => {
   const [disciplines, setDisciplines] = useState([]);
@@ -25,7 +26,7 @@ export const FaculdadeV2 = ({ session }) => {
       const { data, error } = await supabase
         .from('disciplines')
         .select('*')
-        .eq('user_id', session.id)
+        .eq('user_id', session.user.id)
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -54,7 +55,7 @@ export const FaculdadeV2 = ({ session }) => {
   const seedInitialDiscipline = async () => {
     try {
       const { data: dData, error: dErr } = await supabase.from('disciplines').insert({
-        user_id: session.id,
+        user_id: session.user.id,
         name: 'Modelos Inovadores em Negócios',
         description: 'Tópicos essenciais para estruturação e validação de modelos de negócios escaláveis.',
         color: '#8b5cf6',
@@ -63,24 +64,28 @@ export const FaculdadeV2 = ({ session }) => {
 
       if (dErr) throw dErr;
 
-      const topics = [
-        { title: 'Introdução aos Modelos de Negócios', order_index: 1 },
-        { title: 'Segmentos de Clientes e Oferta de Valor', order_index: 2 },
-        { title: 'Tipos de Segmento e Mercado de Massa', order_index: 3 },
-        { title: 'Canais e Relacionamento', order_index: 4 },
-        { title: 'Fontes de Receita e Recursos-Chave', order_index: 5 },
-        { title: 'Atividades, Parcerias e Estrutura de Custos', order_index: 6 }
-      ];
-
-      const { error: tErr } = await supabase.from('topics').insert(
-        topics.map(t => ({
+      const { data: insertedTopics, error: tErr } = await supabase.from('topics').insert(
+        faculdadeSeedData.map(t => ({
           discipline_id: dData.id,
           title: t.title,
           order_index: t.order_index
         }))
-      );
+      ).select();
 
       if (tErr) throw tErr;
+      
+      // Also seed the topic notes!
+      const notesToInsert = faculdadeSeedData.map(seedData => {
+        const correspondingTopicId = insertedTopics.find(it => it.order_index === seedData.order_index).id;
+        return {
+          topic_id: correspondingTopicId,
+          content: seedData.content,
+          user_id: session.user.id
+        };
+      });
+
+      const { error: nErr } = await supabase.from('topic_notes').insert(notesToInsert);
+      if (nErr) throw nErr;
       
       fetchDisciplines();
     } catch (err) {
@@ -94,7 +99,7 @@ export const FaculdadeV2 = ({ session }) => {
     setIsCreating(true);
     try {
       const { error } = await supabase.from('disciplines').insert({
-        user_id: session.id,
+        user_id: session.user.id,
         name: newDiscipline.name,
         description: newDiscipline.description,
         color: newDiscipline.color,

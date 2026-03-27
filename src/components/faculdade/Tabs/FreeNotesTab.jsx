@@ -15,7 +15,7 @@ export const FreeNotesTab = ({ discipline, session }) => {
         .from('free_notes')
         .select('id, content')
         .eq('discipline_id', discipline.id)
-        .eq('user_id', session.id)
+        .eq('user_id', session.user.id)
         .maybeSingle(); // Used maybeSingle because note might not exist yet
 
       if (error) throw error;

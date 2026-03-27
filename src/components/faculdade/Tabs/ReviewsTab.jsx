@@ -26,7 +26,7 @@ export const ReviewsTab = ({ discipline, session }) => {
           .from('spaced_reviews')
           .select('*')
           .in('topic_id', topicIds)
-          .eq('user_id', session.id);
+          .eq('user_id', session.user.id);
         if (revErr) throw revErr;
         setReviews(revData || []);
       }
@@ -53,7 +53,7 @@ export const ReviewsTab = ({ discipline, session }) => {
         .from('spaced_reviews')
         .upsert({
           topic_id: topicId,
-          user_id: session.id,
+          user_id: session.user.id,
           next_review_date: dateStr,
           interval_days: daysToAdd
         }, { onConflict: 'topic_id,user_id' })

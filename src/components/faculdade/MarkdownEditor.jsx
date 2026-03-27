@@ -30,7 +30,7 @@ export const MarkdownEditor = ({ session, topicId, disciplineId, initialContent 
     const saveNote = async () => {
       setSaveStatus('saving');
       try {
-        let payload = { content: debouncedContent, user_id: session.id };
+        let payload = { content: debouncedContent, user_id: session.user.id };
         let table = '';
         
         if (topicId) {
