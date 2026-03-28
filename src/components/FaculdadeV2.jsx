@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
-import { Loader2, Plus, BookOpen, Presentation, CheckCircle2, Search, X } from 'lucide-react';
+import { Loader2, Plus, BookOpen, Presentation, X } from 'lucide-react';
 import { DisciplineDetail } from './faculdade/DisciplineDetail';
 import { faculdadeSeedData } from '../data/faculdadeSeed';
 
@@ -16,6 +16,7 @@ export const FaculdadeV2 = ({ session }) => {
 
   useEffect(() => {
     fetchDisciplines();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
   const fetchDisciplines = async () => {
