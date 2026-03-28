@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../../supabase';
-import { Loader2, CheckCircle2 } from 'lucide-react';
+import { Loader2, CheckCircle2, Edit3 } from 'lucide-react';
 
 // Custom hook to debounce saves
 function useDebounce(value, delay) {
@@ -62,12 +62,16 @@ export const MarkdownEditor = ({ session, topicId, disciplineId, initialContent 
     };
 
     saveNote();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedContent]); // Exclude other dependencies to only auto-save on content change
 
   return (
     <div className="flex flex-col border border-hub-border rounded-xl overflow-hidden bg-hub-surface relative">
-      <div className="p-2 border-b border-hub-border bg-hub-inner flex items-center justify-between text-xs font-bold text-hub-muted">
-        <span className="uppercase tracking-widest">Editor Markdown (Suporta texto bruto)</span>
+      <div className="p-3 md:p-4 border-b border-hub-border bg-hub-inner flex items-center justify-between text-xs font-bold text-hub-muted">
+        <span className="font-bold uppercase tracking-widest flex items-center gap-2">
+          <Edit3 className="w-3.5 h-3.5" />
+          Notas do Tópico
+        </span>
         <div className="flex items-center">
           {saveStatus === 'saving' && <span className="flex items-center gap-1 text-yellow-500"><Loader2 className="w-3 h-3 animate-spin"/> Salvando...</span>}
           {saveStatus === 'saved' && <span className="flex items-center gap-1 text-emerald-500"><CheckCircle2 className="w-3 h-3"/> Salvo</span>}

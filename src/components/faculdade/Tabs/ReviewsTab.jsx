@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../../supabase';
-import { Loader2, CalendarClock, Brain, CheckCircle2 } from 'lucide-react';
+import { Loader2, CalendarClock, Brain, CheckCircle2, Trash2 } from 'lucide-react';
 
 export const ReviewsTab = ({ discipline, session }) => {
   const [topics, setTopics] = useState([]);
@@ -39,6 +39,7 @@ export const ReviewsTab = ({ discipline, session }) => {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discipline.id]);
 
 
@@ -46,7 +47,8 @@ export const ReviewsTab = ({ discipline, session }) => {
   const scheduleReview = async (topicId, daysToAdd) => {
     const nextDate = new Date();
     nextDate.setDate(nextDate.getDate() + daysToAdd);
-    const dateStr = nextDate.toISOString().split('T')[0];
+    // Use local Date to format YYYY-MM-DD to avoid UTC backward shift
+    const dateStr = nextDate.getFullYear() + '-' + String(nextDate.getMonth()+1).padStart(2, '0') + '-' + String(nextDate.getDate()).padStart(2, '0');
 
     try {
       const { data, error } = await supabase
@@ -72,9 +74,26 @@ export const ReviewsTab = ({ discipline, session }) => {
     }
   };
 
+  const clearReview = async (topicId) => {
+    try {
+      const { error } = await supabase
+        .from('spaced_reviews')
+        .delete()
+        .eq('topic_id', topicId)
+        .eq('user_id', session.user.id);
+      
+      if (error) throw error;
+      
+      setReviews(prev => prev.filter(r => r.topic_id !== topicId));
+    } catch (err) {
+      console.error('Error clearing review:', err);
+    }
+  };
+
   if (loading) return <div className="flex justify-center p-8"><Loader2 className="w-6 h-6 animate-spin text-hub-muted" /></div>;
 
-  const todayStr = new Date().toISOString().split('T')[0];
+  const today = new Date();
+  const todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
   
   // Pending reviews
   const pendingReviews = reviews.filter(r => r.next_review_date <= todayStr);
@@ -104,13 +123,16 @@ export const ReviewsTab = ({ discipline, session }) => {
               const topic = topics.find(t => t.id === rev.topic_id);
               if (!topic) return null;
               return (
-                <div key={rev.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-hub-base rounded-xl border border-hub-border">
+                <div key={rev.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-hub-surface rounded-xl border border-hub-border shadow-sm">
                   <span className="font-bold text-sm text-hub-strong">{topic.title}</span>
-                  <div className="flex gap-2">
-                    <button onClick={() => scheduleReview(topic.id, 1)} className="px-3 py-1.5 bg-hub-inner hover:bg-hub-hover text-[10px] font-bold uppercase rounded-lg transition-colors border border-hub-border">+ 1 dia</button>
-                    <button onClick={() => scheduleReview(topic.id, 3)} className="px-3 py-1.5 bg-hub-inner hover:bg-hub-hover text-[10px] font-bold uppercase rounded-lg transition-colors border border-hub-border">+ 3 dias</button>
-                    <button onClick={() => scheduleReview(topic.id, 7)} className="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-bold uppercase rounded-lg transition-colors flex items-center gap-1">
+                  <div className="flex flex-wrap gap-2">
+                    <button onClick={() => scheduleReview(topic.id, 1)} className="px-3 py-1.5 bg-hub-base border border-hub-border hover:border-yellow-500/50 hover:bg-yellow-500/10 text-hub-strong transition-all uppercase text-[10px] font-bold rounded-xl shadow-sm">+ 1 dia</button>
+                    <button onClick={() => scheduleReview(topic.id, 3)} className="px-3 py-1.5 bg-hub-base border border-hub-border hover:border-yellow-500/50 hover:bg-yellow-500/10 text-hub-strong transition-all uppercase text-[10px] font-bold rounded-xl shadow-sm">+ 3 dias</button>
+                    <button onClick={() => scheduleReview(topic.id, 7)} className="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-bold uppercase rounded-xl transition-all shadow-sm flex items-center gap-1">
                       <CheckCircle2 className="w-3 h-3" /> Feito (+7d)
+                    </button>
+                    <button onClick={() => clearReview(topic.id)} className="p-1.5 text-hub-faint hover:text-rose-500 hover:bg-rose-500/10 transition-colors rounded-lg flex-shrink-0" title="Limpar">
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -131,23 +153,30 @@ export const ReviewsTab = ({ discipline, session }) => {
               if (isPending) return null; // Already shown above
 
               return (
-                <div key={topic.id} className="p-4 bg-hub-base rounded-xl border border-hub-border flex flex-col justify-between gap-4">
-                  <div>
-                    <span className="font-bold text-sm text-hub-strong leading-tight block mb-1">{topic.title}</span>
-                    {review ? (
-                      <span className="text-[10px] text-hub-faint bg-hub-inner px-2 py-0.5 rounded-md font-bold uppercase tracking-widest">
-                        Próxima: {new Date(review.next_review_date).toLocaleDateString('pt-BR')} (em {review.interval_days} dias)
-                      </span>
-                    ) : (
-                      <span className="text-[10px] text-hub-faint bg-hub-inner px-2 py-0.5 rounded-md font-bold uppercase tracking-widest">
-                        Não agendada
-                      </span>
+                <div key={topic.id} className="p-4 bg-hub-surface rounded-2xl border border-hub-border shadow-sm flex flex-col justify-between gap-4">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <span className="font-bold text-sm text-hub-strong leading-tight block mb-1">{topic.title}</span>
+                      {review ? (
+                        <span className="text-[10px] text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md font-bold uppercase tracking-widest inline-flex items-center gap-1">
+                          Próxima: {new Date(review.next_review_date + 'T12:00:00').toLocaleDateString('pt-BR')}
+                        </span>
+                      ) : (
+                        <span className="text-[10px] text-hub-faint bg-hub-inner px-2 py-0.5 rounded-md font-bold uppercase tracking-widest border border-hub-border">
+                          Não agendada
+                        </span>
+                      )}
+                    </div>
+                    {review && (
+                      <button onClick={() => clearReview(topic.id)} className="p-1 text-hub-faint hover:text-rose-500 hover:bg-rose-500/10 rounded-lg transition-colors flex-shrink-0" title="Limpar">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     )}
                   </div>
-                  <div className="flex gap-2 pt-2 border-t border-hub-border/50">
-                    <button onClick={() => scheduleReview(topic.id, 1)} className="flex-1 py-1.5 bg-hub-inner hover:bg-hub-hover text-[10px] font-bold uppercase rounded-lg transition-colors border border-hub-border text-hub-muted hover:text-white">Hoje</button>
-                    <button onClick={() => scheduleReview(topic.id, 3)} className="flex-1 py-1.5 bg-hub-inner hover:bg-hub-hover text-[10px] font-bold uppercase rounded-lg transition-colors border border-hub-border text-hub-muted hover:text-white">+ 3 Dia</button>
-                    <button onClick={() => scheduleReview(topic.id, 7)} className="flex-1 py-1.5 bg-hub-inner hover:bg-hub-hover text-[10px] font-bold uppercase rounded-lg transition-colors border border-hub-border text-hub-muted hover:text-white">+ 7 Dia</button>
+                  <div className="flex gap-2 pt-3 border-t border-hub-border/50">
+                    <button onClick={() => scheduleReview(topic.id, 0)} className="flex-1 py-1.5 bg-hub-base border border-hub-border hover:border-yellow-500/50 hover:bg-yellow-500/10 text-hub-strong transition-all uppercase text-[10px] font-bold rounded-xl shadow-sm">Hoje</button>
+                    <button onClick={() => scheduleReview(topic.id, 3)} className="flex-1 py-1.5 bg-hub-base border border-hub-border hover:border-yellow-500/50 hover:bg-yellow-500/10 text-hub-strong transition-all uppercase text-[10px] font-bold rounded-xl shadow-sm">+ 3 Dias</button>
+                    <button onClick={() => scheduleReview(topic.id, 7)} className="flex-1 py-1.5 bg-hub-base border border-hub-border hover:border-yellow-500/50 hover:bg-yellow-500/10 text-hub-strong transition-all uppercase text-[10px] font-bold rounded-xl shadow-sm">+ 7 Dias</button>
                   </div>
                 </div>
               );

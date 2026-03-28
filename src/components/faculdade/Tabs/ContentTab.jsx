@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../../supabase';
-import { Loader2, Plus, ChevronDown, ChevronUp, Check, Save } from 'lucide-react';
+import { Loader2, Plus, ChevronDown, ChevronUp } from 'lucide-react';
 import { MarkdownEditor } from '../MarkdownEditor';
 
 export const ContentTab = ({ discipline, session }) => {
@@ -31,6 +31,7 @@ export const ContentTab = ({ discipline, session }) => {
 
   useEffect(() => {
     fetchTopics();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discipline.id]);
 
 
@@ -77,24 +78,23 @@ export const ContentTab = ({ discipline, session }) => {
           const noteData = topic.topic_notes && topic.topic_notes.length > 0 ? topic.topic_notes[0] : null;
 
           return (
-            <div key={topic.id} className="bg-hub-base border border-hub-border rounded-2xl overflow-hidden transition-all">
+            <div key={topic.id} className="bg-hub-surface border border-hub-border rounded-2xl overflow-hidden transition-all shadow-sm">
               <button 
                 onClick={() => setExpandedTopicId(isExpanded ? null : topic.id)}
-                className="w-full px-5 py-4 flex items-center justify-between hover:bg-hub-hover transition-colors text-left"
+                className="w-full px-6 py-5 md:px-8 md:py-6 flex items-center justify-between hover:bg-hub-hover transition-colors text-left"
               >
-                <div className="flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-lg bg-hub-inner flex items-center justify-center text-xs font-bold text-hub-muted border border-hub-border">
+                <div className="flex items-center gap-4">
+                  <span className="w-10 h-10 rounded-xl bg-hub-inner flex items-center justify-center text-sm font-black text-hub-muted border border-hub-border shadow-sm">
                     {index + 1}
                   </span>
-                  <span className="font-bold text-hub-strong text-sm md:text-base">{topic.title}</span>
+                  <span className="font-black text-hub-strong text-lg md:text-xl tracking-tight leading-tight">{topic.title}</span>
                 </div>
                 {isExpanded ? <ChevronUp className="w-5 h-5 text-hub-faint" /> : <ChevronDown className="w-5 h-5 text-hub-faint" />}
               </button>
 
               {isExpanded && (
-                <div className="px-5 pb-5 pt-2 border-t border-hub-border/50 bg-hub-inner">
-                  <div className="mt-2">
-                    <label className="text-[10px] font-bold text-hub-muted uppercase tracking-wider mb-2 block">Anotações do Tópico</label>
+                <div className="px-6 pb-6 pt-2 md:px-8 md:pb-8 border-t border-hub-border/50 bg-hub-inner">
+                  <div className="mt-4">
                     <MarkdownEditor 
                       topicId={topic.id}
                       session={session}
@@ -114,7 +114,7 @@ export const ContentTab = ({ discipline, session }) => {
         <input 
           type="text"
           placeholder="Novo Tópico..."
-          className="flex-1 bg-hub-base border border-hub-border rounded-xl px-4 py-3 text-sm text-hub-strong focus:border-yellow-500 outline-none transition-colors"
+          className="flex-1 bg-hub-surface border border-hub-border rounded-xl px-4 py-3 text-sm text-hub-strong focus:border-yellow-500 outline-none transition-colors shadow-sm"
           value={newTopicTitle}
           onChange={(e) => setNewTopicTitle(e.target.value)}
         />

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../../supabase';
-import { Play, Pause, Square, History, Clock } from 'lucide-react';
+import { Play, Pause, Square, History } from 'lucide-react';
 
 export const PomodoroTab = ({ discipline, session }) => {
   const [topics, setTopics] = useState([]);
@@ -41,16 +41,16 @@ export const PomodoroTab = ({ discipline, session }) => {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line
     fetchData();
     return () => clearInterval(timerRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discipline.id]);
 
 
 
   const saveSession = async (duration) => {
     try {
-      const { data, error } = await supabase
+      const { data, error: _err } = await supabase
         .from('pomodoro_sessions')
         .insert({
           user_id: session.user.id,
@@ -99,7 +99,7 @@ export const PomodoroTab = ({ discipline, session }) => {
       try {
         const audio = new Audio('/notification.mp3'); // Optional: Add a sound later
         audio.play().catch(() => {});
-      } catch (e) {
+      } catch {
         // ignore audio errors
       }
     } else {
@@ -134,7 +134,7 @@ export const PomodoroTab = ({ discipline, session }) => {
   return (
     <div className="flex flex-col lg:flex-row gap-8 h-full">
       {/* Left: Timer */}
-      <div className="flex-1 flex flex-col items-center justify-center space-y-8 bg-hub-base p-8 rounded-2xl border border-hub-border relative overflow-hidden">
+      <div className="flex-1 flex flex-col items-center justify-center space-y-8 bg-hub-surface p-8 rounded-2xl border border-hub-border relative overflow-hidden shadow-sm">
         {isActive && (
           <div className="absolute inset-0 bg-yellow-500/5 animate-pulse z-0 pointer-events-none"></div>
         )}
@@ -211,7 +211,7 @@ export const PomodoroTab = ({ discipline, session }) => {
       </div>
 
       {/* Right: History */}
-      <div className="w-full lg:w-72 bg-hub-base border border-hub-border rounded-2xl p-5 flex flex-col">
+      <div className="w-full lg:w-72 bg-hub-surface border border-hub-border rounded-2xl p-5 flex flex-col shadow-sm">
         <h4 className="text-sm font-bold text-hub-strong uppercase tracking-wider mb-4 flex items-center gap-2">
           <History className="w-4 h-4 text-yellow-500" /> Histórico Recente
         </h4>
