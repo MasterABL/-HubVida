@@ -19,7 +19,7 @@ export const DisciplineDetail = ({ discipline, session, onBack }) => {
   ];
 
   return (
-    <div className="w-full min-w-0 max-w-full space-y-6 animate-slide-in-up">
+    <div className="w-full min-w-0 max-w-full space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Header */}
       <div className="bg-hub-surface border border-hub-border rounded-2xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">

@@ -158,7 +158,7 @@ export const FaculdadeV2 = ({ session }) => {
       </div>
 
       {showCreateForm && (
-        <div className="bg-hub-surface border border-hub-border rounded-2xl p-6 shadow-xl relative animate-slide-in-up">
+        <div className="bg-hub-surface border border-hub-border rounded-2xl p-6 shadow-xl relative animate-in fade-in slide-in-from-bottom-4 duration-500">
           <button 
             onClick={() => setShowCreateForm(false)}
             className="absolute top-4 right-4 text-hub-faint hover:text-rose-500 bg-hub-base p-1.5 rounded-lg transition-colors"
