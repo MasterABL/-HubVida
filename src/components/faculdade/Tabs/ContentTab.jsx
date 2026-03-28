@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../../supabase';
 import { Loader2, Plus, ChevronDown, ChevronUp } from 'lucide-react';
 import { MarkdownEditor } from '../MarkdownEditor';
+import { TopicContentRenderer } from './TopicContentRenderer';
+import { faculdadeSeedData } from '../../../data/faculdadeSeed';
 
 export const ContentTab = ({ discipline, session }) => {
   const [topics, setTopics] = useState([]);
@@ -76,6 +78,7 @@ export const ContentTab = ({ discipline, session }) => {
         {topics.map((topic, index) => {
           const isExpanded = expandedTopicId === topic.id;
           const noteData = topic.topic_notes && topic.topic_notes.length > 0 ? topic.topic_notes[0] : null;
+          const staticSeedData = faculdadeSeedData.find(s => s.title === topic.title);
 
           return (
             <div key={topic.id} className="bg-hub-surface border border-hub-border rounded-2xl overflow-hidden transition-all shadow-sm">
@@ -84,16 +87,26 @@ export const ContentTab = ({ discipline, session }) => {
                 className="w-full px-6 py-5 md:px-8 md:py-6 flex items-center justify-between hover:bg-hub-hover transition-colors text-left"
               >
                 <div className="flex items-center gap-4">
-                  <span className="w-10 h-10 rounded-xl bg-hub-inner flex items-center justify-center text-sm font-black text-hub-muted border border-hub-border shadow-sm">
+                  <span className="w-10 h-10 rounded-xl bg-hub-inner flex items-center justify-center text-sm font-black text-hub-muted border border-hub-border shadow-sm flex-shrink-0">
                     {index + 1}
                   </span>
-                  <span className="font-black text-hub-strong text-lg md:text-xl tracking-tight leading-tight">{topic.title}</span>
+                  <div>
+                    <span className="font-black text-hub-strong text-lg md:text-xl tracking-tight leading-tight block">{topic.title}</span>
+                    {staticSeedData && staticSeedData.difficulty && (
+                      <span className="inline-block mt-1 text-[10px] font-bold uppercase tracking-widest text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">
+                        {staticSeedData.difficulty}
+                      </span>
+                    )}
+                  </div>
                 </div>
-                {isExpanded ? <ChevronUp className="w-5 h-5 text-hub-faint" /> : <ChevronDown className="w-5 h-5 text-hub-faint" />}
+                {isExpanded ? <ChevronUp className="w-5 h-5 text-hub-faint flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-hub-faint flex-shrink-0" />}
               </button>
 
               {isExpanded && (
                 <div className="px-6 pb-6 pt-2 md:px-8 md:pb-8 border-t border-hub-border/50 bg-hub-inner">
+                  {staticSeedData ? (
+                    <TopicContentRenderer blocks={staticSeedData.content} disciplineColor={discipline.color} />
+                  ) : null}
                   <div className="mt-4">
                     <MarkdownEditor 
                       topicId={topic.id}

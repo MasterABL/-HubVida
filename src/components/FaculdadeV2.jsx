@@ -65,28 +65,18 @@ export const FaculdadeV2 = ({ session }) => {
 
       if (dErr) throw dErr;
 
-      const { data: insertedTopics, error: tErr } = await supabase.from('topics').insert(
+      const { error: tErr } = await supabase.from('topics').insert(
         faculdadeSeedData.map(t => ({
           discipline_id: dData.id,
           title: t.title,
           order_index: t.order_index
         }))
-      ).select();
+      );
 
       if (tErr) throw tErr;
       
-      // Also seed the topic notes!
-      const notesToInsert = faculdadeSeedData.map(seedData => {
-        const correspondingTopicId = insertedTopics.find(it => it.order_index === seedData.order_index).id;
-        return {
-          topic_id: correspondingTopicId,
-          content: seedData.content,
-          user_id: session.user.id
-        };
-      });
-
-      const { error: nErr } = await supabase.from('topic_notes').insert(notesToInsert);
-      if (nErr) throw nErr;
+      // Let the topic notes remain empty for the new discipline, 
+      // theory is rendered from the static frontend seed!
       
       fetchDisciplines();
     } catch (err) {
