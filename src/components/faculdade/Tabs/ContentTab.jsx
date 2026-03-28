@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../../supabase';
 import { Loader2, Plus, ChevronDown, ChevronUp } from 'lucide-react';
 import { MarkdownEditor } from '../MarkdownEditor';
-import { TopicContentRenderer } from './TopicContentRenderer';
+import { TopicContentRenderer } from '../TopicContentRenderer';
 import { faculdadeSeedData } from '../../../data/faculdadeSeed';
 
 export const ContentTab = ({ discipline, session }) => {
