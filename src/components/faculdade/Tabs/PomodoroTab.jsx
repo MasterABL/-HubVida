@@ -178,7 +178,7 @@ export const PomodoroTab = ({ discipline, session }) => {
               strokeWidth="8" 
               className={`transition-all duration-1000 ease-linear ${mode === 'focus' ? 'stroke-rose-500' : 'stroke-emerald-500'}`}
               strokeDasharray="754" 
-              strokeDashoffset={754 - (754 * progress) / 100}
+              strokeDashoffset={754 - (754 * Math.min(100, Math.max(0, progress || 0))) / 100}
               strokeLinecap="round"
             />
           </svg>

@@ -119,7 +119,7 @@ export const BrainDump = ({ isLoaded = true, notes = [], setNotes }) => {
                 onClick={() => toggleMood(mood.id)}
                 className={`flex-none flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-bold transition-all ${isSelected
                     ? `${mood.bg} ${mood.border} ${mood.color} ring-2 ring-indigo-500/50`
-                    : 'bg-hub-hover border-hub-border text-hub-muted hover:bg-[#222222] hover:text-hub-strong'
+                    : 'bg-hub-hover border-hub-border text-hub-muted hover:bg-hub-inner hover:text-hub-strong'
                   }`}
               >
                 <Icon className="w-3.5 h-3.5" /> {mood.label}

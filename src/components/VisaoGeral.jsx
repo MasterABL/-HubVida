@@ -400,7 +400,12 @@ export const VisaoGeral = ({
                 cx="56" cy="56" r="48" fill="none" stroke="#eab308" strokeWidth="12"
                 strokeDasharray="301"
                 strokeDashoffset={
-                  301 - 301 * (visaoGeralMetrics.disciplinasAprovadas / visaoGeralMetrics.totalDisciplinas)
+                  (() => {
+                    const total = visaoGeralMetrics.totalDisciplinas || 0;
+                    const done = visaoGeralMetrics.disciplinasAprovadas || 0;
+                    if (total === 0) return 301;
+                    return 301 - 301 * (done / total);
+                  })()
                 }
                 className="transition-all duration-1000"
                 strokeLinecap="round"

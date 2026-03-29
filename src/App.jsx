@@ -825,6 +825,7 @@ export default function App() {
     return {
       progressoMes: 0,
       totalDisciplinas: 0,
+      disciplinasAprovadas: 0,
     };
   }, []);
 
